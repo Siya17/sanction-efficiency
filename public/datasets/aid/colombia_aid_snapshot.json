@@ -1,0 +1,26 @@
+{
+  "id": "colombia-aid-placeholder",
+  "caseId": "colombia-plan-colombia",
+  "title": "PLACEHOLDER_DATA_NEEDS_VERIFICATION: Plan Colombia Aid Snapshot",
+  "description": "Placeholder data representing US assistance under Plan Colombia.",
+  "series": [
+    {
+      "id": "col-us-aid-placeholder",
+      "caseId": "colombia-plan-colombia",
+      "sourceId": "usaid-placeholder",
+      "category": "aid",
+      "title": "US Assistance to Colombia (Placeholder)",
+      "description": "Simulated values for testing interface.",
+      "unit": "Million USD",
+      "data": [
+        { "year": 1999, "value": 290 },
+        { "year": 2000, "value": 1100 },
+        { "year": 2002, "value": 400 },
+        { "year": 2004, "value": 650 },
+        { "year": 2006, "value": 600 },
+        { "year": 2008, "value": 540 }
+      ],
+      "caveat": "These values are placeholder sample data for testing the interface and should be replaced with verified data before classroom use."
+    }
+  ]
+}

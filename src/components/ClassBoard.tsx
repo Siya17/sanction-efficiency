@@ -170,7 +170,15 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
                   </td>
                   <td>{submission.strongestEvidence}</td>
                   <td>{submission.biggestComplication}</td>
-                  <td>{submission.missingEvidence}</td>
+                  <td>
+                    {submission.missingEvidence}
+                    {submission.dataSnapshotReflection && (
+                      <details className="mt-2 text-sm text-gray-600">
+                        <summary className="cursor-pointer font-medium text-indigo-600">Data Snapshot Reflection</summary>
+                        <p className="mt-1 pt-1 border-t border-gray-100">{submission.dataSnapshotReflection}</p>
+                      </details>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
