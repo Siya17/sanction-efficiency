@@ -32,6 +32,7 @@ export function submissionsToCsv(submissions: StudentSubmission[]) {
     "Strongest evidence",
     "Biggest complication",
     "Missing evidence",
+    "Data snapshot reflection",
     "Created at",
   ];
 
@@ -46,6 +47,7 @@ export function submissionsToCsv(submissions: StudentSubmission[]) {
     submission.strongestEvidence,
     submission.biggestComplication,
     submission.missingEvidence,
+    submission.dataSnapshotReflection || "",
     submission.createdAt,
   ]);
 
