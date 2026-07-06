@@ -1,28 +1,30 @@
-import { FormEvent, useMemo, useState } from "react";
-import { confidenceOptions, evidenceSortCategories, verdictOptions } from "../constants/workflow";
-import type { CaseStudy, Confidence, EvidenceSortCategory, SubmissionDraft, Verdict, ActivityMode, StudentEvidenceCard, Citation } from "../types";
-import { categoryLabels, confidenceLabels, verdictLabels } from "../utils/labels";
+import { FormEvent, useState } from "react";
+import { confidenceOptions, verdictOptions } from "../constants/workflow";
+import type { CaseStudy, Confidence, SubmissionDraft, Verdict, ActivityMode, StudentEvidenceCard, Citation, StudentIndicator, StudentEvidenceSelection } from "../types";
+import { confidenceLabels, verdictLabels } from "../utils/labels";
+import { EvidenceCard as EvidenceCardComponent } from "./EvidenceCard";
 
 type VerdictBuilderProps = {
   activityMode: ActivityMode;
-  studentEvidence: StudentEvidenceCard[];
   caseStudy: CaseStudy;
-  successCriterion: string;
-  assignments: Record<string, EvidenceSortCategory>;
+  evaluationQuestion: string;
+  studentIndicators: StudentIndicator[];
+  selectedEvidence: StudentEvidenceSelection[];
+  studentEvidenceCards: StudentEvidenceCard[];
   onSubmit: (submission: SubmissionDraft) => void;
   onBack: () => void;
 };
 
 export function VerdictBuilder({
   activityMode,
-  studentEvidence,
   caseStudy,
-  successCriterion,
-  assignments,
+  evaluationQuestion,
+  studentIndicators,
+  selectedEvidence,
+  studentEvidenceCards,
   onSubmit,
   onBack,
 }: VerdictBuilderProps) {
-  const [policyAim, setPolicyAim] = useState("");
   const [verdict, setVerdict] = useState<Verdict>("mixed");
   const [confidence, setConfidence] = useState<Confidence>("medium");
   const [strongestEvidence, setStrongestEvidence] = useState("");
@@ -33,12 +35,10 @@ export function VerdictBuilder({
   const isResearch = activityMode === "research";
   
   // Research fields
-  const [researchQuestion, setResearchQuestion] = useState(`Did ${caseStudy.track === "sanctions" ? "sanctions" : "foreign aid"} work in the case of ${caseStudy.country}?`);
   const [counterargument, setCounterargument] = useState("");
   const [evidenceThatWouldChangeMind, setEvidenceThatWouldChangeMind] = useState("");
   const [remainingUncertainty, setRemainingUncertainty] = useState("");
   const [finalExplanation, setFinalExplanation] = useState("");
-  const [usingOnlyCurated, setUsingOnlyCurated] = useState(false);
   const [citations, setCitations] = useState<Citation[]>([]);
 
   const [newCitationTitle, setNewCitationTitle] = useState("");
@@ -46,23 +46,10 @@ export function VerdictBuilder({
   const [newCitationYear, setNewCitationYear] = useState("");
   const [newCitationUrl, setNewCitationUrl] = useState("");
 
-  const evidenceByCategory = useMemo(() => {
-    const allCards = [
-      ...caseStudy.evidenceCards,
-      ...studentEvidence.map(se => ({
-        id: se.id,
-        title: se.title,
-        text: se.summary,
-        type: "success_evidence" as const,
-        sourceTitle: se.sourceTitle,
-        sourceUrl: se.sourceUrl,
-      }))
-    ];
-    return evidenceSortCategories.map((category) => ({
-      category,
-      cards: allCards.filter((card) => assignments[card.id] === category),
-    }));
-  }, [assignments, caseStudy.evidenceCards, studentEvidence]);
+  const allCards = [
+    ...caseStudy.evidenceCards,
+    ...studentEvidenceCards
+  ];
 
   let canSubmit = false;
   
@@ -70,25 +57,13 @@ export function VerdictBuilder({
     canSubmit =
       finalExplanation.trim().length > 0 &&
       strongestEvidence.trim().length > 0 &&
-      (remainingUncertainty.trim().length > 0 || missingEvidence.trim().length > 0) &&
-      (studentEvidence.length > 0 || usingOnlyCurated);
+      (remainingUncertainty.trim().length > 0 || missingEvidence.trim().length > 0);
   } else {
     canSubmit =
-      policyAim.trim().length > 0 &&
       strongestEvidence.trim().length > 0 &&
       biggestComplication.trim().length > 0 &&
       missingEvidence.trim().length > 0;
   }
-
-  const activeCriterion = caseStudy.successCriteria.find(c => c.id === successCriterion)?.label || successCriterion;
-
-  const sentence = `In the case of ${caseStudy.country}, the policy aimed to ${
-    policyAim || "..."
-  }. We judge success by ${activeCriterion || "..."}. Our verdict is ${
-    verdictLabels[verdict]
-  } with ${confidenceLabels[confidence]} confidence because ${
-    strongestEvidence || "..."
-  }. But we would need ${missingEvidence || "..."} to be more certain.`;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -102,8 +77,10 @@ export function VerdictBuilder({
       country: caseStudy.country,
       track: caseStudy.track,
       policy: caseStudy.policy,
-      successCriterion,
-      policyAim,
+      evaluationQuestion,
+      studentIndicators,
+      selectedEvidence,
+      
       verdict,
       confidence,
       strongestEvidence,
@@ -114,8 +91,7 @@ export function VerdictBuilder({
     };
 
     if (isResearch) {
-      draft.studentEvidenceCards = studentEvidence;
-      draft.researchQuestion = researchQuestion;
+      draft.studentEvidenceCards = studentEvidenceCards;
       draft.supportingEvidence = strongestEvidence;
       draft.complicatingEvidence = biggestComplication;
       draft.counterargument = counterargument;
@@ -128,64 +104,105 @@ export function VerdictBuilder({
     onSubmit(draft);
   }
 
+  const getFindingLabel = (finding: string) => {
+    switch (finding) {
+      case "indicator_met": return "Met (Success)";
+      case "indicator_not_met": return "Not Met (Failure)";
+      case "mixed_results": return "Mixed / Complicated";
+      case "context": return "Context";
+      default: return finding;
+    }
+  };
+
+  const getFindingColor = (finding: string) => {
+    switch (finding) {
+      case "indicator_met": return "bg-green-100 text-green-800 border-green-200";
+      case "indicator_not_met": return "bg-red-100 text-red-800 border-red-200";
+      case "mixed_results": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      default: return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
   return (
     <main className="page">
       <div className="verdict-layout">
         <section className="sorted-summary">
-          <p className="eyebrow">Step 4</p>
+          <p className="eyebrow">Final Step</p>
           <h1>Build a cautious verdict</h1>
           <p className="student-instruction">
-            You may choose Mixed or Cannot judge yet, but you must explain why.
+            Review your findings by indicator, then determine your final verdict.
           </p>
 
-          {evidenceByCategory.map(({ category, cards }) => (
-            <div className="summary-list" key={category}>
-              <h2>{categoryLabels[category]}</h2>
-              {cards.length > 0 ? (
-                cards.map((card) => (
-                  <article key={card.id}>
-                    <strong>{card.title}</strong>
-                    <p>{card.text}</p>
-                  </article>
-                ))
-              ) : (
-                <p className="empty-text">No cards assigned.</p>
-              )}
-            </div>
-          ))}
+          <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100 mb-8">
+            <h2 className="text-indigo-900 font-bold mb-2">Your Question:</h2>
+            <p className="text-indigo-800 italic text-lg">{evaluationQuestion}</p>
+          </div>
+
+          <h2 className="font-semibold text-xl border-b pb-2 mb-6">Your Findings Dashboard</h2>
+          
+          <div className="space-y-8">
+            {/* Group evidence by indicator */}
+            {studentIndicators.map(indicator => {
+              const evidenceForIndicator = selectedEvidence.filter(e => e.indicatorId === indicator.id);
+              
+              return (
+                <div key={indicator.id} className="bg-white rounded-lg shadow-sm border p-5">
+                  <h3 className="font-bold text-lg mb-1 text-gray-900">{indicator.name || "Unnamed Indicator"}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{indicator.measures}</p>
+                  
+                  {evidenceForIndicator.length === 0 ? (
+                    <p className="text-sm text-gray-500 italic bg-gray-50 p-3 rounded">No evidence selected for this indicator.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {evidenceForIndicator.map(sel => {
+                        const card = allCards.find(c => c.id === sel.cardId);
+                        if (!card) return null;
+                        return (
+                          <div key={sel.cardId} className={`p-3 rounded border ${getFindingColor(sel.finding)}`}>
+                            <div className="flex justify-between items-start mb-1">
+                              <h4 className="font-semibold">{card.title}</h4>
+                              <span className="text-xs font-bold px-2 py-1 bg-white bg-opacity-50 rounded">
+                                {getFindingLabel(sel.finding)}
+                              </span>
+                            </div>
+                            <p className="text-sm mt-2 font-medium">Your analysis:</p>
+                            <p className="text-sm italic">"{sel.relevanceExplanation}"</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* General Context / Unassigned Evidence */}
+            {selectedEvidence.filter(e => !e.indicatorId).length > 0 && (
+              <div className="bg-gray-50 rounded-lg shadow-sm border p-5">
+                <h3 className="font-bold text-lg mb-3 text-gray-700">General Context</h3>
+                <div className="space-y-3">
+                  {selectedEvidence.filter(e => !e.indicatorId).map(sel => {
+                    const card = allCards.find(c => c.id === sel.cardId);
+                    if (!card) return null;
+                    return (
+                      <div key={sel.cardId} className={`p-3 rounded border bg-white`}>
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="font-semibold">{card.title}</h4>
+                        </div>
+                        <p className="text-sm mt-2 font-medium">Your analysis:</p>
+                        <p className="text-sm italic">"{sel.relevanceExplanation}"</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </section>
 
-        <form className="verdict-form" onSubmit={handleSubmit}>
-          {!isResearch && (
-            <label>
-              Policy aim
-              <input
-                required
-                value={policyAim}
-                onChange={(event) => setPolicyAim(event.target.value)}
-                placeholder="Example: pressure the government to negotiate"
-              />
-            </label>
-          )}
-
-          {isResearch && (
-            <label>
-              Research question
-              <input
-                required
-                value={researchQuestion}
-                onChange={(event) => setResearchQuestion(event.target.value)}
-              />
-            </label>
-          )}
-
+        <form className="verdict-form sticky top-4" onSubmit={handleSubmit}>
           <label>
-            Success criterion
-            <input value={activeCriterion} readOnly />
-          </label>
-
-          <label>
-            Verdict
+            Overall Verdict
             <select value={verdict} onChange={(event) => setVerdict(event.target.value as Verdict)}>
               {verdictOptions.map((option) => (
                 <option key={option} value={option}>
@@ -210,134 +227,135 @@ export function VerdictBuilder({
           </label>
 
           <label>
-            {isResearch ? "Main evidence supporting your verdict" : "Strongest evidence"}
-            <textarea
+            Strongest evidence supporting your verdict
+            <select 
               required
               value={strongestEvidence}
-              onChange={(event) => setStrongestEvidence(event.target.value)}
-              placeholder={isResearch ? "" : "Which card or detail most supports your verdict?"}
-            />
+              onChange={(e) => setStrongestEvidence(e.target.value)}
+              className="w-full p-2 border rounded-md"
+            >
+              <option value="">-- Select from your evidence --</option>
+              {selectedEvidence.map(sel => {
+                const card = allCards.find(c => c.id === sel.cardId);
+                return card ? (
+                  <option key={card.id} value={card.title}>{card.title}</option>
+                ) : null;
+              })}
+            </select>
           </label>
 
           <label>
-            {isResearch ? "Evidence that complicates your verdict" : "Biggest complication"}
-            <textarea
-              required={!isResearch}
+            Biggest complication or contrary evidence
+            <select 
+              required
               value={biggestComplication}
-              onChange={(event) => setBiggestComplication(event.target.value)}
-              placeholder={isResearch ? "" : "What makes this judgment hard?"}
-            />
+              onChange={(e) => setBiggestComplication(e.target.value)}
+              className="w-full p-2 border rounded-md"
+            >
+              <option value="">-- Select from your evidence --</option>
+              <option value="none">No major complications</option>
+              {selectedEvidence.map(sel => {
+                const card = allCards.find(c => c.id === sel.cardId);
+                return card ? (
+                  <option key={card.id} value={card.title}>{card.title}</option>
+                ) : null;
+              })}
+            </select>
           </label>
 
-          {isResearch && (
-            <>
-              <label>
-                Counterargument
-                <textarea
-                  value={counterargument}
-                  onChange={(event) => setCounterargument(event.target.value)}
-                  placeholder="What is the strongest argument against your verdict?"
-                />
-              </label>
-
-              <label>
-                What evidence would change your mind?
-                <textarea
-                  value={evidenceThatWouldChangeMind}
-                  onChange={(event) => setEvidenceThatWouldChangeMind(event.target.value)}
-                  placeholder="If you found out X, you would change your verdict to Y..."
-                />
-              </label>
-            </>
-          )}
-
           <label>
-            {isResearch ? "What is still missing? (Remaining Uncertainty)" : "Missing evidence"}
+            What evidence is still missing to be truly confident?
             <textarea
               required
               value={isResearch ? remainingUncertainty : missingEvidence}
               onChange={(event) => isResearch ? setRemainingUncertainty(event.target.value) : setMissingEvidence(event.target.value)}
-              placeholder="What would you need to know next?"
+              placeholder="What data or facts do you wish you had?"
             />
           </label>
 
           <label>
-            Did the data snapshot affect your verdict? If yes, how? (Optional)
+            Did the real data snapshot affect your verdict? (Optional)
             <textarea
               value={dataSnapshotReflection}
               onChange={(event) => setDataSnapshotReflection(event.target.value)}
-              placeholder="If you looked at the real data snapshot, how did it change your thinking?"
+              placeholder="If you looked at the real data snapshot, did it confirm or challenge your findings?"
             />
           </label>
 
           {isResearch && (
-            <>
-              <label>
-                Final Explanation (150–250 words)
-                <textarea
-                  required
-                  value={finalExplanation}
-                  onChange={(event) => setFinalExplanation(event.target.value)}
-                  className="h-40"
-                  placeholder="Synthesize your findings into a final, nuanced explanation..."
-                />
-              </label>
-
-              <div className="bg-gray-50 p-4 rounded-md border mt-6 mb-6">
-                <h3 className="font-semibold mb-2">Citations (Optional)</h3>
-                <ul className="list-decimal pl-5 mb-4 text-sm">
-                  {citations.map((c, i) => (
-                    <li key={i} className="mb-1">
-                      {c.authorOrOrganization || "Unknown"} ({c.publicationYear || "n.d."}). {c.title}. {c.url}
-                    </li>
-                  ))}
-                </ul>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <input type="text" placeholder="Title" value={newCitationTitle} onChange={e => setNewCitationTitle(e.target.value)} className="border p-1" />
-                  <input type="text" placeholder="Author/Org" value={newCitationAuthor} onChange={e => setNewCitationAuthor(e.target.value)} className="border p-1" />
-                  <input type="text" placeholder="Year" value={newCitationYear} onChange={e => setNewCitationYear(e.target.value)} className="border p-1" />
-                  <input type="text" placeholder="URL" value={newCitationUrl} onChange={e => setNewCitationUrl(e.target.value)} className="border p-1" />
-                </div>
-                <button 
-                  type="button" 
-                  className="mt-2 text-indigo-600 font-medium text-sm"
-                  onClick={() => {
-                    if (newCitationTitle) {
-                      setCitations([...citations, { title: newCitationTitle, authorOrOrganization: newCitationAuthor, publicationYear: newCitationYear, url: newCitationUrl }]);
-                      setNewCitationTitle(""); setNewCitationAuthor(""); setNewCitationYear(""); setNewCitationUrl("");
-                    }
-                  }}
-                >
-                  + Add Citation
-                </button>
-              </div>
-
-              {studentEvidence.length === 0 && (
-                <label className="flex items-center gap-2 mb-6 p-4 bg-orange-50 border border-orange-200 rounded text-orange-900">
-                  <input 
-                    type="checkbox" 
-                    checked={usingOnlyCurated} 
-                    onChange={e => setUsingOnlyCurated(e.target.checked)} 
-                    className="w-5 h-5"
+            <details className="bg-gray-50 border rounded-md mt-6 mb-6">
+              <summary className="font-semibold p-4 cursor-pointer outline-none">
+                Research Synthesis (Required for Research Mode)
+              </summary>
+              <div className="p-4 border-t space-y-4">
+                <label>
+                  Final Explanation (150–250 words)
+                  <textarea
+                    required={isResearch}
+                    value={finalExplanation}
+                    onChange={(event) => setFinalExplanation(event.target.value)}
+                    className="h-32 w-full mt-1"
+                    placeholder="Synthesize your findings into a final, nuanced explanation..."
                   />
-                  I am using only curated evidence for this research submission. (It is highly recommended to add your own evidence).
                 </label>
-              )}
-            </>
-          )}
+                
+                <label>
+                  Counterargument
+                  <textarea
+                    value={counterargument}
+                    onChange={(event) => setCounterargument(event.target.value)}
+                    className="w-full mt-1"
+                    placeholder="What is the strongest argument against your verdict?"
+                  />
+                </label>
 
-          {!isResearch && (
-            <div className="sentence-frame verdict-preview">
-              <h2>Final verdict preview</h2>
-              <p>{sentence}</p>
-            </div>
+                <label>
+                  What evidence would change your mind?
+                  <textarea
+                    value={evidenceThatWouldChangeMind}
+                    onChange={(event) => setEvidenceThatWouldChangeMind(event.target.value)}
+                    className="w-full mt-1"
+                    placeholder="If you found out X, you would change your verdict to Y..."
+                  />
+                </label>
+
+                <div className="mt-4">
+                  <h3 className="font-semibold text-sm mb-2">Citations (Optional)</h3>
+                  <ul className="list-decimal pl-5 mb-4 text-xs">
+                    {citations.map((c, i) => (
+                      <li key={i} className="mb-1">
+                        {c.authorOrOrganization || "Unknown"} ({c.publicationYear || "n.d."}). {c.title}. {c.url}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <input type="text" placeholder="Title" value={newCitationTitle} onChange={e => setNewCitationTitle(e.target.value)} className="border p-1" />
+                    <input type="text" placeholder="Author/Org" value={newCitationAuthor} onChange={e => setNewCitationAuthor(e.target.value)} className="border p-1" />
+                    <input type="text" placeholder="Year" value={newCitationYear} onChange={e => setNewCitationYear(e.target.value)} className="border p-1" />
+                    <input type="text" placeholder="URL" value={newCitationUrl} onChange={e => setNewCitationUrl(e.target.value)} className="border p-1" />
+                  </div>
+                  <button 
+                    type="button" 
+                    className="mt-2 text-indigo-600 font-medium text-xs"
+                    onClick={() => {
+                      if (newCitationTitle) {
+                        setCitations([...citations, { title: newCitationTitle, authorOrOrganization: newCitationAuthor, publicationYear: newCitationYear, url: newCitationUrl }]);
+                        setNewCitationTitle(""); setNewCitationAuthor(""); setNewCitationYear(""); setNewCitationUrl("");
+                      }
+                    }}
+                  >
+                    + Add Citation
+                  </button>
+                </div>
+              </div>
+            </details>
           )}
 
           {!canSubmit ? (
             <p className="hint text-red-600">Please fill in all required fields to submit.</p>
           ) : null}
 
-          <div className="button-row">
+          <div className="button-row mt-6">
             <button className="secondary-button" type="button" onClick={onBack}>
               Back to evidence
             </button>

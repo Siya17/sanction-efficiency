@@ -9,11 +9,10 @@ type DiscussionPromptsProps = {
 export function DiscussionPrompts({ submissions }: DiscussionPromptsProps) {
   const mostCommon = submissions.length > 0 ? getMostCommonVerdict(submissions) : null;
   const highConfidenceCases = getHighConfidenceCases(submissions);
-  const hasCivilianCriterion = submissions.some((submission) =>
-    submission.successCriterion.toLowerCase().includes("civilian") ||
-    submission.successCriterion.toLowerCase().includes("welfare") ||
-    submission.successCriterion.toLowerCase().includes("harm"),
-  );
+  const hasCivilianCriterion = submissions.some((submission) => {
+    const text = (submission.evaluationQuestion || submission.successCriterion || "").toLowerCase();
+    return text.includes("civilian") || text.includes("welfare") || text.includes("harm");
+  });
 
   const prompts = [
     mostCommon && mostCommon.count > 0

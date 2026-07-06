@@ -26,27 +26,47 @@ export default function App() {
       return (
         <CaseInvestigation
           activityMode={lab.activityMode}
-          assignments={lab.assignments}
-          studentEvidence={lab.studentEvidence}
           canContinue={lab.canBuildVerdict}
           caseStudy={lab.selectedCase}
-          successCriterion={lab.successCriterion}
-          onAssignEvidence={actions.assignEvidence}
+          
+          evaluationQuestion={lab.evaluationQuestion}
+          successGoal={lab.successGoal}
+          actorOrGroup={lab.actorOrGroup}
+          timePeriod={lab.timePeriod}
+          studentIndicators={lab.studentIndicators}
+          selectedEvidence={lab.selectedEvidence}
+          dataNeeds={lab.dataNeeds}
+          studentEvidenceCards={lab.studentEvidence}
+          
+          onEvaluationQuestionChange={actions.setEvaluationQuestion}
+          onSuccessGoalChange={actions.setSuccessGoal}
+          onActorOrGroupChange={actions.setActorOrGroup}
+          onTimePeriodChange={actions.setTimePeriod}
+          onIndicatorChange={(indicator) => {
+            const next = [...lab.studentIndicators];
+            const idx = next.findIndex(i => i.type === indicator.type);
+            if (idx >= 0) next[idx] = indicator;
+            else next.push(indicator);
+            actions.setStudentIndicators(next);
+          }}
+          onUpdateSelection={actions.updateSelectedEvidence}
+          onRemoveSelection={actions.removeSelectedEvidence}
+          onDataNeedsChange={actions.setDataNeeds}
+          
           onAddStudentEvidence={(card) => {
             import("./utils/studentEvidenceStorage").then((m) => {
               m.addStudentEvidence(card);
-              actions.assignEvidence(card.id, card.sortCategory);
               actions.refreshStudentEvidence();
             });
           }}
           onDeleteStudentEvidence={(cardId) => {
             import("./utils/studentEvidenceStorage").then((m) => {
               m.deleteStudentEvidence(cardId);
+              actions.removeSelectedEvidence(cardId);
               actions.refreshStudentEvidence();
             });
           }}
           onContinue={() => actions.setView("verdict")}
-          onCriterionChange={actions.setSuccessCriterion}
         />
       );
     }
@@ -55,10 +75,13 @@ export default function App() {
       return (
         <VerdictBuilder
           activityMode={lab.activityMode}
-          studentEvidence={lab.studentEvidence}
-          assignments={lab.assignments}
           caseStudy={lab.selectedCase}
-          successCriterion={lab.successCriterion}
+          
+          evaluationQuestion={lab.evaluationQuestion}
+          studentIndicators={lab.studentIndicators}
+          selectedEvidence={lab.selectedEvidence}
+          studentEvidenceCards={lab.studentEvidence}
+          
           onBack={() => actions.setView("investigation")}
           onSubmit={actions.submitVerdict}
         />

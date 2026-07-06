@@ -1,25 +1,37 @@
-import { getIndicatorsForCase } from "../data/indicators";
 import { getTimelineForCase } from "../data/timelines";
-import type { CaseStudy, EvidenceSortCategory } from "../types";
+import type { ActivityMode, CaseStudy, StudentEvidenceCard, StudentEvidenceSelection, StudentIndicator } from "../types";
 import { CaseTimeline } from "./CaseTimeline";
-import { EvidenceSorter } from "./EvidenceSorter";
-import { IndicatorCard } from "./IndicatorCard";
 import { TeacherNotes } from "./TeacherNotes";
 import { RealDataSnapshot } from "./RealDataSnapshot";
 import { ResearchGuidance } from "./ResearchGuidance";
 import { StudentEvidenceForm } from "./StudentEvidenceForm";
-import { InlineHelp } from "./InlineHelp";
-import type { ActivityMode, StudentEvidenceCard } from "../types";
+import { EvaluationQuestionBuilder } from "./EvaluationQuestionBuilder";
+import { IndicatorBuilder } from "./IndicatorBuilder";
+import { EvidenceSelector } from "./EvidenceSelector";
 
 type CaseInvestigationProps = {
   activityMode: ActivityMode;
   caseStudy: CaseStudy;
-  successCriterion: string;
-  assignments: Record<string, EvidenceSortCategory>;
-  studentEvidence: StudentEvidenceCard[];
   canContinue: boolean;
-  onCriterionChange: (criterion: string) => void;
-  onAssignEvidence: (cardId: string, category: EvidenceSortCategory) => void;
+  
+  evaluationQuestion: string;
+  successGoal: string;
+  actorOrGroup: string;
+  timePeriod: string;
+  studentIndicators: StudentIndicator[];
+  selectedEvidence: StudentEvidenceSelection[];
+  dataNeeds: string[];
+  studentEvidenceCards: StudentEvidenceCard[];
+  
+  onEvaluationQuestionChange: (val: string) => void;
+  onSuccessGoalChange: (val: string) => void;
+  onActorOrGroupChange: (val: string) => void;
+  onTimePeriodChange: (val: string) => void;
+  onIndicatorChange: (indicator: StudentIndicator) => void;
+  onUpdateSelection: (selection: StudentEvidenceSelection) => void;
+  onRemoveSelection: (cardId: string) => void;
+  onDataNeedsChange: (needs: string[]) => void;
+  
   onAddStudentEvidence: (card: StudentEvidenceCard) => void;
   onDeleteStudentEvidence: (cardId: string) => void;
   onContinue: () => void;
@@ -28,79 +40,69 @@ type CaseInvestigationProps = {
 export function CaseInvestigation({
   activityMode,
   caseStudy,
-  successCriterion,
-  assignments,
-  studentEvidence,
   canContinue,
-  onCriterionChange,
-  onAssignEvidence,
+  evaluationQuestion,
+  successGoal,
+  actorOrGroup,
+  timePeriod,
+  studentIndicators,
+  selectedEvidence,
+  dataNeeds,
+  studentEvidenceCards,
+  onEvaluationQuestionChange,
+  onSuccessGoalChange,
+  onActorOrGroupChange,
+  onTimePeriodChange,
+  onIndicatorChange,
+  onUpdateSelection,
+  onRemoveSelection,
+  onDataNeedsChange,
   onAddStudentEvidence,
   onDeleteStudentEvidence,
   onContinue,
 }: CaseInvestigationProps) {
-  const sortedCount = Object.values(assignments).filter((value) => value !== "unassigned").length;
   const timelineEvents = getTimelineForCase(caseStudy.id);
-  const indicators = getIndicatorsForCase(caseStudy.id);
-
   const isResearch = activityMode === "research";
-  const allEvidence = [
+  
+  const allCards = [
     ...caseStudy.evidenceCards,
-    ...studentEvidence.map(se => ({
-      id: se.id,
-      title: se.title,
-      text: se.summary,
-      type: "success_evidence" as const, // Default fallback type for UI rendering
-      sourceTitle: se.sourceTitle,
-      sourceUrl: se.sourceUrl,
-      isStudentAdded: true,
-      reliability: se.reliability,
-      limitation: se.limitation,
-      sortCategory: se.sortCategory // Only used in Verdict, but map it anyway
-    }))
+    ...studentEvidenceCards
   ];
 
   return (
     <main className="page">
       <div className="investigation-layout">
         <aside className="case-brief">
-          <p className="eyebrow">Steps 2 and 3</p>
-          <h1>{caseStudy.question}</h1>
-          <p className="student-instruction">
-            First, choose what "worked" means. Your verdict should be based on this one success criterion.
-          </p>
-          <p>{caseStudy.background}</p>
-
-          <dl className="fact-list">
+          <p className="eyebrow">Step 1</p>
+          <h1>Understand the case</h1>
+          <p className="student-instruction">Read the background carefully before designing your evaluation.</p>
+          
+          <div className="space-y-4 text-sm mt-4 text-gray-800">
             <div>
-              <dt>Policy</dt>
-              <dd>{caseStudy.policy}</dd>
+              <strong className="block text-gray-900">What was happening?</strong>
+              <p>{caseStudy.summary.whatWasHappening}</p>
             </div>
             <div>
-              <dt>Period</dt>
-              <dd>{caseStudy.period}</dd>
+              <strong className="block text-gray-900">What policy was used?</strong>
+              <p>{caseStudy.summary.policyUsed}</p>
             </div>
-          </dl>
+            <div>
+              <strong className="block text-gray-900">What was the policy supposed to do?</strong>
+              <p>{caseStudy.summary.policyGoal}</p>
+            </div>
+            <div>
+              <strong className="block text-gray-900">Why is it hard to judge?</strong>
+              <p>{caseStudy.summary.whyHardToJudge}</p>
+            </div>
+            <div>
+              <strong className="block text-gray-900">Possible ways to judge success:</strong>
+              <ul className="list-disc pl-5 mt-1">
+                {caseStudy.summary.possibleSuccessAngles.map(angle => <li key={angle}>{angle}</li>)}
+              </ul>
+            </div>
+          </div>
 
-          <label className="field-label" htmlFor="criterion">
-            Choose a success criterion
-            <InlineHelp term="Success criterion">
-              The benchmark you choose to measure success. A policy might fail at one goal but succeed at another.
-            </InlineHelp>
-          </label>
-          <select
-            id="criterion"
-            value={successCriterion}
-            onChange={(event) => onCriterionChange(event.target.value)}
-          >
-            <option value="">Select one criterion</option>
-            {caseStudy.successCriteria.map((criterion) => (
-              <option key={criterion.id} value={criterion.id}>
-                {criterion.label} — {criterion.explanation}
-              </option>
-            ))}
-          </select>
-
-          <div className="source-box">
+          <div className="source-box mt-6">
             <h2>Sources to inspect later</h2>
             <ul>
               {caseStudy.sources.map((source) => (
@@ -116,43 +118,52 @@ export function CaseInvestigation({
 
           <TeacherNotes note={caseStudy.teacherNote} />
 
-          <button
-            className="primary-button full-width"
-            type="button"
-            disabled={!canContinue}
-            onClick={onContinue}
-          >
-            Build verdict
-          </button>
-          {!canContinue ? (
-            <p className="hint">Choose a success criterion and sort at least 3 evidence cards.</p>
-          ) : null}
+          <div className="mt-8 bg-indigo-50 p-4 border border-indigo-100 rounded-lg sticky bottom-4">
+            <p className="text-sm text-indigo-900 mb-4">
+              {canContinue 
+                ? "You have built your evaluation and chosen evidence. Ready for the verdict?"
+                : "Complete Steps 2-4 to continue. You need a question, 3 indicators, and at least 3 selected evidence cards."}
+            </p>
+            <button
+              className="primary-button full-width"
+              type="button"
+              disabled={!canContinue}
+              onClick={onContinue}
+            >
+              Build verdict
+            </button>
+          </div>
         </aside>
 
         <section className="evidence-column">
-          <details className="optional-data-check" open>
-            <summary>Optional data check</summary>
-            <p className="student-instruction">
-              Which indicator you choose affects your judgment. Use this as a prompt, not proof.
-            </p>
-            <CaseTimeline events={timelineEvents} />
-            <div className="indicator-grid">
-              {indicators.map((indicator) => (
-                <IndicatorCard indicator={indicator} key={indicator.id} />
-              ))}
-            </div>
-          </details>
+          <p className="eyebrow mb-2">Step 2</p>
+          <EvaluationQuestionBuilder 
+            policy={caseStudy.policy}
+            successGoal={successGoal}
+            actorOrGroup={actorOrGroup}
+            timePeriod={timePeriod}
+            onSuccessGoalChange={onSuccessGoalChange}
+            onActorOrGroupChange={onActorOrGroupChange}
+            onTimePeriodChange={onTimePeriodChange}
+            onEvaluationQuestionChange={onEvaluationQuestionChange}
+          />
+
+          <p className="eyebrow mb-2">Step 3</p>
+          <IndicatorBuilder 
+            track={caseStudy.track}
+            caseId={caseStudy.id}
+            studentIndicators={studentIndicators}
+            onIndicatorChange={onIndicatorChange}
+          />
 
           {isResearch && <ResearchGuidance />}
 
-          <div className="section-heading-row">
+          <div className="section-heading-row mb-4">
             <div>
-              <h2>Sort the evidence</h2>
-              <p>Sort each evidence card into the category where it best belongs.</p>
+              <p className="eyebrow mb-2">Step 4</p>
+              <h2>Select relevant evidence</h2>
+              <p>You have selected {selectedEvidence.length} cards. (Minimum 3 required).</p>
             </div>
-            <span className="progress-chip">
-              {sortedCount}/{allEvidence.length} sorted
-            </span>
           </div>
 
           {isResearch && (
@@ -161,20 +172,49 @@ export function CaseInvestigation({
             </div>
           )}
 
-          <EvidenceSorter
-            assignments={assignments}
-            cards={allEvidence}
-            onAssign={onAssignEvidence}
+          <EvidenceSelector 
+            cards={allCards}
+            selectedEvidence={selectedEvidence}
+            studentIndicators={studentIndicators}
+            onUpdateSelection={onUpdateSelection}
+            onRemoveSelection={onRemoveSelection}
             onDeleteStudentEvidence={onDeleteStudentEvidence}
           />
 
-          <div className="mt-12 bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-2">Optional data check</h2>
-            <p className="text-gray-600 mb-6">
-              Before finalizing your verdict, inspect one real-data snapshot. Does this indicator support, weaken, or complicate your judgment?
-            </p>
-            <RealDataSnapshot caseId={caseStudy.id} />
-          </div>
+          <details className="mt-12 bg-white rounded-lg shadow p-6 border">
+            <summary className="text-xl font-semibold mb-2 cursor-pointer outline-none">Step 5: Optional data check</summary>
+            <div className="mt-4">
+              <p className="text-gray-600 mb-4">
+                Before finalizing your verdict, what data would you want to judge your question?
+              </p>
+              
+              <div className="space-y-3 mb-8">
+                {[0, 1, 2].map(index => (
+                  <div key={index}>
+                    <input 
+                      type="text" 
+                      placeholder={`Data need ${index + 1}...`}
+                      value={dataNeeds[index] || ""}
+                      onChange={(e) => {
+                        const next = [...dataNeeds];
+                        next[index] = e.target.value;
+                        onDataNeedsChange(next);
+                      }}
+                      className="w-full p-2 border rounded-md"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-gray-600 mb-6 border-t pt-6">
+                Now compare your ideas with the suggested data below. Does this indicator support, weaken, or complicate your judgment?
+              </p>
+              <CaseTimeline events={timelineEvents} />
+              <div className="mt-8">
+                <RealDataSnapshot caseId={caseStudy.id} />
+              </div>
+            </div>
+          </details>
         </section>
       </div>
     </main>
