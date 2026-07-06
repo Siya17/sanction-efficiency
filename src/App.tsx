@@ -35,6 +35,7 @@ export default function App() {
           onAddStudentEvidence={(card) => {
             import("./utils/studentEvidenceStorage").then((m) => {
               m.addStudentEvidence(card);
+              actions.assignEvidence(card.id, card.sortCategory);
               actions.refreshStudentEvidence();
             });
           }}
