@@ -1,12 +1,12 @@
-import type { View } from "../App";
+import type { AppView } from "../types";
 
 type HeaderProps = {
-  currentView: View;
-  onNavigate: (view: View) => void;
+  currentView: AppView;
+  onNavigate: (view: AppView) => void;
   boardCount: number;
 };
 
-const navItems: Array<{ view: View; label: string }> = [
+const navItems: Array<{ view: AppView; label: string }> = [
   { view: "home", label: "Home" },
   { view: "selection", label: "Cases" },
   { view: "board", label: "Class Board" },

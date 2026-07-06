@@ -10,6 +10,8 @@ export type Verdict = "worked" | "failed" | "mixed" | "cannot_judge";
 
 export type Confidence = "high" | "medium" | "low";
 
+export type AppView = "home" | "selection" | "investigation" | "verdict" | "board";
+
 export type SourceLink = {
   title: string;
   url: string;
@@ -60,3 +62,5 @@ export type StudentSubmission = {
   missingEvidence: string;
   createdAt: string;
 };
+
+export type SubmissionDraft = Omit<StudentSubmission, "id" | "createdAt">;

@@ -1,28 +1,15 @@
 import { FormEvent, useMemo, useState } from "react";
-import type {
-  CaseStudy,
-  Confidence,
-  EvidenceSortCategory,
-  StudentSubmission,
-  Verdict,
-} from "../types";
+import { confidenceOptions, evidenceSortCategories, verdictOptions } from "../constants/workflow";
+import type { CaseStudy, Confidence, EvidenceSortCategory, SubmissionDraft, Verdict } from "../types";
 import { categoryLabels, confidenceLabels, verdictLabels } from "../utils/labels";
 
 type VerdictBuilderProps = {
   caseStudy: CaseStudy;
   successCriterion: string;
   assignments: Record<string, EvidenceSortCategory>;
-  onSubmit: (submission: StudentSubmission) => void;
+  onSubmit: (submission: SubmissionDraft) => void;
   onBack: () => void;
 };
-
-const verdicts: Verdict[] = ["worked", "failed", "mixed", "cannot_judge"];
-const confidences: Confidence[] = ["high", "medium", "low"];
-const categories: EvidenceSortCategory[] = [
-  "supports_worked",
-  "supports_failed",
-  "complicates_or_missing",
-];
 
 export function VerdictBuilder({
   caseStudy,
@@ -40,7 +27,7 @@ export function VerdictBuilder({
 
   const evidenceByCategory = useMemo(
     () =>
-      categories.map((category) => ({
+      evidenceSortCategories.map((category) => ({
         category,
         cards: caseStudy.evidenceCards.filter((card) => assignments[card.id] === category),
       })),
@@ -59,7 +46,6 @@ export function VerdictBuilder({
     event.preventDefault();
 
     onSubmit({
-      id: crypto.randomUUID(),
       caseId: caseStudy.id,
       country: caseStudy.country,
       track: caseStudy.track,
@@ -71,7 +57,6 @@ export function VerdictBuilder({
       strongestEvidence,
       biggestComplication,
       missingEvidence,
-      createdAt: new Date().toISOString(),
     });
   }
 
@@ -117,7 +102,7 @@ export function VerdictBuilder({
           <label>
             Verdict
             <select value={verdict} onChange={(event) => setVerdict(event.target.value as Verdict)}>
-              {verdicts.map((option) => (
+              {verdictOptions.map((option) => (
                 <option key={option} value={option}>
                   {verdictLabels[option]}
                 </option>
@@ -131,7 +116,7 @@ export function VerdictBuilder({
               value={confidence}
               onChange={(event) => setConfidence(event.target.value as Confidence)}
             >
-              {confidences.map((option) => (
+              {confidenceOptions.map((option) => (
                 <option key={option} value={option}>
                   {confidenceLabels[option]}
                 </option>

@@ -1,105 +1,62 @@
-import { useEffect, useState } from "react";
 import { CaseInvestigation } from "./components/CaseInvestigation";
 import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
 import { Header } from "./components/Header";
 import { Home } from "./components/Home";
 import { VerdictBuilder } from "./components/VerdictBuilder";
-import { cases } from "./data/cases";
-import type { CaseStudy, EvidenceSortCategory, StudentSubmission } from "./types";
-import { clearSubmissions, getSubmissions, saveSubmission } from "./utils/localStorage";
-
-export type View = "home" | "selection" | "investigation" | "verdict" | "board";
-
-function createAssignments(caseStudy: CaseStudy | null): Record<string, EvidenceSortCategory> {
-  if (!caseStudy) {
-    return {};
-  }
-
-  return Object.fromEntries(
-    caseStudy.evidenceCards.map((card) => [card.id, "unassigned" as EvidenceSortCategory]),
-  );
-}
+import { useEvidenceLab } from "./hooks/useEvidenceLab";
 
 export default function App() {
-  const [view, setView] = useState<View>("home");
-  const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
-  const [successCriterion, setSuccessCriterion] = useState("");
-  const [assignments, setAssignments] = useState<Record<string, EvidenceSortCategory>>({});
-  const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
-
-  useEffect(() => {
-    setSubmissions(getSubmissions());
-  }, []);
-
-  function handleSelectCase(caseStudy: CaseStudy) {
-    setSelectedCase(caseStudy);
-    setSuccessCriterion("");
-    setAssignments(createAssignments(caseStudy));
-    setView("investigation");
-  }
-
-  function handleAssignEvidence(cardId: string, category: EvidenceSortCategory) {
-    setAssignments((current) => ({ ...current, [cardId]: category }));
-  }
-
-  function handleSubmit(submission: StudentSubmission) {
-    saveSubmission(submission);
-    setSubmissions(getSubmissions());
-    setView("board");
-  }
-
-  function handleClearBoard() {
-    clearSubmissions();
-    setSubmissions([]);
-  }
+  const lab = useEvidenceLab();
+  const { actions } = lab;
 
   function renderView() {
-    if (view === "home") {
-      return <Home onBoard={() => setView("board")} onStart={() => setView("selection")} />;
+    if (lab.view === "home") {
+      return <Home onBoard={actions.showBoard} onStart={actions.startCaseSelection} />;
     }
 
-    if (view === "selection") {
-      return <CaseSelection cases={cases} onSelectCase={handleSelectCase} />;
+    if (lab.view === "selection") {
+      return <CaseSelection cases={lab.cases} onSelectCase={actions.selectCase} />;
     }
 
-    if (view === "investigation" && selectedCase) {
+    if (lab.view === "investigation" && lab.selectedCase) {
       return (
         <CaseInvestigation
-          assignments={assignments}
-          caseStudy={selectedCase}
-          successCriterion={successCriterion}
-          onAssignEvidence={handleAssignEvidence}
-          onContinue={() => setView("verdict")}
-          onCriterionChange={setSuccessCriterion}
+          assignments={lab.assignments}
+          canContinue={lab.canBuildVerdict}
+          caseStudy={lab.selectedCase}
+          successCriterion={lab.successCriterion}
+          onAssignEvidence={actions.assignEvidence}
+          onContinue={() => actions.setView("verdict")}
+          onCriterionChange={actions.setSuccessCriterion}
         />
       );
     }
 
-    if (view === "verdict" && selectedCase) {
+    if (lab.view === "verdict" && lab.selectedCase) {
       return (
         <VerdictBuilder
-          assignments={assignments}
-          caseStudy={selectedCase}
-          successCriterion={successCriterion}
-          onBack={() => setView("investigation")}
-          onSubmit={handleSubmit}
+          assignments={lab.assignments}
+          caseStudy={lab.selectedCase}
+          successCriterion={lab.successCriterion}
+          onBack={() => actions.setView("investigation")}
+          onSubmit={actions.submitVerdict}
         />
       );
     }
 
     return (
       <ClassBoard
-        submissions={submissions}
-        onChooseCase={() => setView("selection")}
-        onClear={handleClearBoard}
+        submissions={lab.submissions}
+        onChooseCase={actions.startCaseSelection}
+        onClear={actions.clearBoard}
       />
     );
   }
 
   return (
     <div className="app-shell">
-      <Header boardCount={submissions.length} currentView={view} onNavigate={setView} />
+      <Header boardCount={lab.submissions.length} currentView={lab.view} onNavigate={actions.setView} />
       {renderView()}
     </div>
   );

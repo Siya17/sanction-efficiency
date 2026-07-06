@@ -5,6 +5,7 @@ type CaseInvestigationProps = {
   caseStudy: CaseStudy;
   successCriterion: string;
   assignments: Record<string, EvidenceSortCategory>;
+  canContinue: boolean;
   onCriterionChange: (criterion: string) => void;
   onAssignEvidence: (cardId: string, category: EvidenceSortCategory) => void;
   onContinue: () => void;
@@ -14,12 +15,12 @@ export function CaseInvestigation({
   caseStudy,
   successCriterion,
   assignments,
+  canContinue,
   onCriterionChange,
   onAssignEvidence,
   onContinue,
 }: CaseInvestigationProps) {
   const sortedCount = Object.values(assignments).filter((value) => value !== "unassigned").length;
-  const canContinue = successCriterion.length > 0 && sortedCount === caseStudy.evidenceCards.length;
 
   return (
     <main className="page">
@@ -79,7 +80,7 @@ export function CaseInvestigation({
             Build verdict
           </button>
           {!canContinue ? (
-            <p className="hint">Choose a success criterion and sort all six evidence cards.</p>
+            <p className="hint">Choose a success criterion and sort all {caseStudy.evidenceCards.length} evidence cards.</p>
           ) : null}
         </aside>
 

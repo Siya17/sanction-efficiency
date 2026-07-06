@@ -1,3 +1,4 @@
+import { evidenceSortCategories } from "../constants/workflow";
 import type { EvidenceCard as EvidenceCardType, EvidenceSortCategory } from "../types";
 import { categoryLabels } from "../utils/labels";
 import { EvidenceCard } from "./EvidenceCard";
@@ -8,17 +9,12 @@ type EvidenceSorterProps = {
   onAssign: (cardId: string, category: EvidenceSortCategory) => void;
 };
 
-const categories: EvidenceSortCategory[] = [
-  "supports_worked",
-  "supports_failed",
-  "complicates_or_missing",
-];
 
 export function EvidenceSorter({ cards, assignments, onAssign }: EvidenceSorterProps) {
   return (
     <section className="evidence-sorter">
       <div className="sort-summary" aria-label="Evidence sorting summary">
-        {categories.map((category) => {
+        {evidenceSortCategories.map((category) => {
           const count = Object.values(assignments).filter((value) => value === category).length;
 
           return (

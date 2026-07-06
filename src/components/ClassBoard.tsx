@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { StudentSubmission, Track } from "../types";
 import { confidenceLabels, trackLabels, verdictLabels } from "../utils/labels";
+import { submissionsToCsv } from "../utils/submissions";
 
 type ClassBoardProps = {
   submissions: StudentSubmission[];
@@ -14,10 +15,38 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
   const [filter, setFilter] = useState<Filter>("all");
 
   const filteredSubmissions = useMemo(
-    () =>
-      submissions.filter((submission) => filter === "all" || submission.track === filter),
+    () => submissions.filter((submission) => filter === "all" || submission.track === filter),
     [filter, submissions],
   );
+
+  const boardCounts = useMemo(
+    () => ({
+      total: submissions.length,
+      sanctions: submissions.filter((submission) => submission.track === "sanctions").length,
+      aid: submissions.filter((submission) => submission.track === "aid").length,
+    }),
+    [submissions],
+  );
+
+  function handleClear() {
+    const confirmed = window.confirm("Clear all verdicts from this browser's class board?");
+
+    if (confirmed) {
+      onClear();
+    }
+  }
+
+  function handleExport() {
+    const csv = submissionsToCsv(filteredSubmissions);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "did-it-work-class-board.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <main className="page">
@@ -41,15 +70,38 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
             Add verdict
           </button>
           <button
+            className="secondary-button"
+            type="button"
+            disabled={filteredSubmissions.length === 0}
+            onClick={handleExport}
+          >
+            Export CSV
+          </button>
+          <button
             className="danger-button"
             type="button"
             disabled={submissions.length === 0}
-            onClick={onClear}
+            onClick={handleClear}
           >
             Clear board
           </button>
         </div>
       </div>
+
+      <section className="board-stats" aria-label="Submission counts">
+        <div className="board-stat">
+          <span>{boardCounts.total}</span>
+          <strong>Total verdicts</strong>
+        </div>
+        <div className="board-stat">
+          <span>{boardCounts.sanctions}</span>
+          <strong>Sanctions</strong>
+        </div>
+        <div className="board-stat">
+          <span>{boardCounts.aid}</span>
+          <strong>Foreign aid</strong>
+        </div>
+      </section>
 
       {filteredSubmissions.length === 0 ? (
         <section className="empty-board">

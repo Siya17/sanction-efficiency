@@ -1,3 +1,4 @@
+import { evidenceSortChoices } from "../constants/workflow";
 import type { EvidenceCard as EvidenceCardType, EvidenceSortCategory } from "../types";
 import { categoryLabels, evidenceTypeLabels } from "../utils/labels";
 
@@ -7,12 +8,6 @@ type EvidenceCardProps = {
   onAssign: (category: EvidenceSortCategory) => void;
 };
 
-const choices: EvidenceSortCategory[] = [
-  "supports_worked",
-  "supports_failed",
-  "complicates_or_missing",
-  "unassigned",
-];
 
 export function EvidenceCard({ card, category, onAssign }: EvidenceCardProps) {
   return (
@@ -29,7 +24,7 @@ export function EvidenceCard({ card, category, onAssign }: EvidenceCardProps) {
         </a>
       ) : null}
       <div className="sort-buttons" aria-label={`Sort ${card.title}`}>
-        {choices.map((choice) => (
+        {evidenceSortChoices.map((choice) => (
           <button
             className={category === choice ? "sort-button active" : "sort-button"}
             key={choice}
