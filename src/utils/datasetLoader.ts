@@ -1,5 +1,5 @@
 import { datasetRegistry } from "../data/datasetRegistry";
-import type { CaseDatasetSnapshot, DatasetSeries, DatasetDataPoint, DatasetSource, DatasetCategory } from "../types";
+import type { CaseDatasetSnapshot } from "../types";
 
 export function getDatasetPathsForCase(caseId: string): string[] {
   return datasetRegistry
