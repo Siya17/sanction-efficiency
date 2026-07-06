@@ -68,7 +68,7 @@ export function VerdictBuilder({
       strongestEvidence,
       biggestComplication,
       missingEvidence,
-      dataSnapshotReflection,
+      dataSnapshotReflection: dataSnapshotReflection.trim() || undefined,
     });
   }
 
