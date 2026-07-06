@@ -175,6 +175,7 @@ export function CaseInvestigation({
           <EvidenceSelector 
             cards={allCards}
             selectedEvidence={selectedEvidence}
+            studentIndicators={studentIndicators}
             onUpdateSelection={onUpdateSelection}
             onRemoveSelection={onRemoveSelection}
             onDeleteStudentEvidence={onDeleteStudentEvidence}

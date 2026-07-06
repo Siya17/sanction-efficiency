@@ -1,10 +1,11 @@
 import { useState } from "react";
-import type { EvidenceCard, SelectedEvidenceUse, StudentEvidenceCard, StudentEvidenceSelection } from "../types";
+import type { EvidenceCard, StudentEvidenceCard, StudentEvidenceSelection, StudentIndicator, StudentEvidenceFinding } from "../types";
 import { EvidenceCard as EvidenceCardComponent } from "./EvidenceCard";
 
 type EvidenceSelectorProps = {
   cards: (EvidenceCard | Omit<StudentEvidenceCard, "sortCategory">)[];
   selectedEvidence: StudentEvidenceSelection[];
+  studentIndicators: StudentIndicator[];
   onUpdateSelection: (selection: StudentEvidenceSelection) => void;
   onRemoveSelection: (cardId: string) => void;
   onDeleteStudentEvidence: (cardId: string) => void;
@@ -13,6 +14,7 @@ type EvidenceSelectorProps = {
 export function EvidenceSelector({
   cards,
   selectedEvidence,
+  studentIndicators,
   onUpdateSelection,
   onRemoveSelection,
   onDeleteStudentEvidence
@@ -24,7 +26,7 @@ export function EvidenceSelector({
       <h2 className="text-xl font-semibold mb-2">Choose relevant evidence</h2>
       <p className="text-gray-600 text-sm mb-6">
         You do not need to use every card. Choose the 3–5 evidence cards that best help answer your question. 
-        For each selected card, explain why it is relevant.
+        For each selected card, link it to one of your indicators (if applicable) and explain what the data shows.
       </p>
 
       <div className="space-y-6">
@@ -50,7 +52,8 @@ export function EvidenceSelector({
                       if (e.target.checked) {
                         onUpdateSelection({
                           cardId: card.id,
-                          use: "success_evidence",
+                          finding: "indicator_met",
+                          indicatorId: studentIndicators.length > 0 ? studentIndicators[0].id : undefined,
                           relevanceExplanation: ""
                         });
                         setExpandedCards({ ...expandedCards, [card.id]: true });
@@ -80,7 +83,7 @@ export function EvidenceSelector({
                   {isExpanded && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <EvidenceCardComponent
-                        card={card as EvidenceCard} // Type casting for the component
+                        card={card as EvidenceCard}
                         onDelete={
                           'isStudentAdded' in card && card.isStudentAdded
                             ? () => onDeleteStudentEvidence(card.id)
@@ -94,30 +97,49 @@ export function EvidenceSelector({
                           
                           <div className="space-y-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Classification *</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Which indicator does this answer? *</label>
                               <select 
-                                required
-                                value={selection.use}
-                                onChange={(e) => onUpdateSelection({ ...selection, use: e.target.value as SelectedEvidenceUse })}
+                                value={selection.indicatorId || "none"}
+                                onChange={(e) => onUpdateSelection({ 
+                                  ...selection, 
+                                  indicatorId: e.target.value === "none" ? undefined : e.target.value 
+                                })}
                                 className="w-full p-2 border rounded-md bg-white"
                               >
-                                <option value="success_evidence">Evidence of success</option>
-                                <option value="failure_or_harm_evidence">Evidence of failure or harm</option>
-                                <option value="complication">Complication or uncertainty</option>
-                                <option value="not_relevant">Not relevant</option>
+                                {studentIndicators.map(ind => (
+                                  <option key={ind.id} value={ind.id}>
+                                    Indicator: {ind.name || "(Unnamed)"}
+                                  </option>
+                                ))}
+                                <option value="none">General Context (No specific indicator)</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">What does this evidence show? *</label>
+                              <select 
+                                required
+                                value={selection.finding}
+                                onChange={(e) => onUpdateSelection({ ...selection, finding: e.target.value as StudentEvidenceFinding })}
+                                className="w-full p-2 border rounded-md bg-white"
+                              >
+                                <option value="indicator_met">The indicator was met (Success/Positive)</option>
+                                <option value="indicator_not_met">The indicator was NOT met (Failure/Negative)</option>
+                                <option value="mixed_results">Mixed results / Complicated</option>
+                                <option value="context">Just background context</option>
                               </select>
                             </div>
 
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Why is this evidence relevant to your indicator or question? *
+                                Explain how the data proves this *
                               </label>
                               <textarea 
                                 required
                                 value={selection.relevanceExplanation}
                                 onChange={(e) => onUpdateSelection({ ...selection, relevanceExplanation: e.target.value })}
                                 className="w-full p-2 border rounded-md h-20"
-                                placeholder="Explain how this connects to your success criterion or harm indicator..."
+                                placeholder="E.g., This data point shows that the policy caused an immediate drop in..."
                               />
                             </div>
                           </div>

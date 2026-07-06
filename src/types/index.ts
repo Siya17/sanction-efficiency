@@ -177,16 +177,16 @@ export type IndicatorSuggestion = {
   limitation: string;
 };
 
-export type SelectedEvidenceUse =
-  | "success_evidence"
-  | "failure_or_harm_evidence"
-  | "complication"
-  | "not_relevant";
+export type StudentEvidenceFinding =
+  | "indicator_met"
+  | "indicator_not_met"
+  | "mixed_results"
+  | "context";
 
 export type StudentEvidenceSelection = {
   cardId: string;
-  use: SelectedEvidenceUse;
-  relatedIndicatorId?: string;
+  indicatorId?: string;
+  finding: StudentEvidenceFinding;
   relevanceExplanation: string;
 };
 
