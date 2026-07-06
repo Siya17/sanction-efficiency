@@ -1,6 +1,6 @@
 import { useState } from "react";
+import type React from "react";
 import type { EvidenceReliability, EvidenceSortCategory, StudentEvidenceCard } from "../types";
-import { categoryLabels } from "../utils/labels";
 
 type Props = {
   caseId: string;
