@@ -7,10 +7,11 @@ type EvidenceSorterProps = {
   cards: EvidenceCardType[];
   assignments: Record<string, EvidenceSortCategory>;
   onAssign: (cardId: string, category: EvidenceSortCategory) => void;
+  onDeleteStudentEvidence?: (cardId: string) => void;
 };
 
 
-export function EvidenceSorter({ cards, assignments, onAssign }: EvidenceSorterProps) {
+export function EvidenceSorter({ cards, assignments, onAssign, onDeleteStudentEvidence }: EvidenceSorterProps) {
   return (
     <section className="evidence-sorter">
       <div className="sort-summary" aria-label="Evidence sorting summary">
@@ -33,6 +34,7 @@ export function EvidenceSorter({ cards, assignments, onAssign }: EvidenceSorterP
             category={assignments[card.id] ?? "unassigned"}
             key={card.id}
             onAssign={(category) => onAssign(card.id, category)}
+            onDelete={card.isStudentAdded && onDeleteStudentEvidence ? () => onDeleteStudentEvidence(card.id) : undefined}
           />
         ))}
       </div>

@@ -1,13 +1,17 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getActiveCases } from "../utils/caseStorage";
 import type {
+  ActivityMode,
   AppView,
   CaseStudy,
   EvidenceSortCategory,
+  StudentEvidenceCard,
   StudentSubmission,
   SubmissionDraft,
 } from "../types";
+import { getActivityMode, saveActivityMode } from "../utils/activityModeStorage";
 import { clearSubmissions, getSubmissions, saveSubmission } from "../utils/localStorage";
+import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
 
 function createAssignments(caseStudy: CaseStudy | null): Record<string, EvidenceSortCategory> {
@@ -21,14 +25,17 @@ function createAssignments(caseStudy: CaseStudy | null): Record<string, Evidence
 }
 
 export function useEvidenceLab() {
+  const [activityMode, setActivityModeState] = useState<ActivityMode>("classroom");
   const [view, setView] = useState<AppView>("home");
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
   const [successCriterion, setSuccessCriterion] = useState("");
   const [assignments, setAssignments] = useState<Record<string, EvidenceSortCategory>>({});
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() => getActiveCases());
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
+  const [studentEvidence, setStudentEvidence] = useState<StudentEvidenceCard[]>([]);
 
   useEffect(() => {
+    setActivityModeState(getActivityMode());
     setCaseStudies(getActiveCases());
     setSubmissions(getSubmissions());
   }, []);
@@ -66,7 +73,19 @@ export function useEvidenceLab() {
     setSelectedCase(caseStudy);
     setSuccessCriterion("");
     setAssignments(createAssignments(caseStudy));
+    setStudentEvidence(getStudentEvidence(caseStudy.id));
     setView("investigation");
+  }
+
+  function setActivityMode(mode: ActivityMode) {
+    saveActivityMode(mode);
+    setActivityModeState(mode);
+  }
+
+  function refreshStudentEvidence() {
+    if (selectedCase) {
+      setStudentEvidence(getStudentEvidence(selectedCase.id));
+    }
   }
 
   function assignEvidence(cardId: string, category: EvidenceSortCategory) {
@@ -87,6 +106,8 @@ export function useEvidenceLab() {
   }
 
   return {
+    activityMode,
+    studentEvidence,
     assignments,
     canBuildVerdict,
     cases: caseStudies,
@@ -95,6 +116,8 @@ export function useEvidenceLab() {
     successCriterion,
     view,
     actions: {
+      setActivityMode,
+      refreshStudentEvidence,
       assignEvidence,
       clearBoard,
       refreshCases,
