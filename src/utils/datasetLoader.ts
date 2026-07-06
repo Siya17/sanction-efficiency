@@ -23,7 +23,17 @@ export function validateDatasetSnapshot(snapshot: unknown): CaseDatasetSnapshot 
       typeof series.title === "string" &&
       typeof series.description === "string" &&
       typeof series.caveat === "string" &&
-      Array.isArray(series.data)
+      Array.isArray(series.data) &&
+      series.data.every(
+        (point: any) =>
+          point &&
+          typeof point === "object" &&
+          typeof point.year === "number" &&
+          Number.isFinite(point.year) &&
+          typeof point.value === "number" &&
+          Number.isFinite(point.value) &&
+          (point.label === undefined || typeof point.label === "string"),
+      )
     );
   });
 
