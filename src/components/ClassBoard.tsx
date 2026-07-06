@@ -6,6 +6,7 @@ import { submissionsToCsv } from "../utils/submissions";
 type ClassBoardProps = {
   submissions: StudentSubmission[];
   onClear: () => void;
+  onCompare: () => void;
   onChooseCase: () => void;
 };
 
@@ -17,7 +18,7 @@ function matchesFilter(submission: StudentSubmission, filter: Filter) {
   return submission.verdict === filter;
 }
 
-export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardProps) {
+export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: ClassBoardProps) {
   const [filter, setFilter] = useState<Filter>("all");
 
   const filteredSubmissions = useMemo(
@@ -83,6 +84,9 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
           </select>
           <button className="secondary-button" type="button" onClick={onChooseCase}>
             Add verdict
+          </button>
+          <button className="secondary-button" type="button" onClick={onCompare}>
+            Compare cases
           </button>
           <button
             className="secondary-button"

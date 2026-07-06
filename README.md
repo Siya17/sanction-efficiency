@@ -1,4 +1,4 @@
-# Did It Work? Evidence Lab
+﻿# Did It Work? Evidence Lab
 
 A classroom-ready Vite + React + TypeScript app for a 30-45 minute pair activity about whether sanctions or foreign aid "worked" in real historical cases.
 
@@ -23,6 +23,7 @@ The app does not provide a correct answer. It helps students see that "worked" d
 - Verdict builder with sentence-frame preview
 - localStorage class-board submissions
 - Class-board filters by track and verdict
+- Comparative Mode for verdict, track, confidence, criterion, and missing-evidence patterns
 - CSV export, print button, and clear-board control
 - No backend, authentication, accounts, or live API calls
 

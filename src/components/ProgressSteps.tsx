@@ -7,6 +7,7 @@ const viewStepIndex: Record<AppView, number> = {
   investigation: 1,
   verdict: 3,
   board: 4,
+  compare: 4,
 };
 
 type ProgressStepsProps = {

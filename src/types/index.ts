@@ -10,7 +10,7 @@ export type Verdict = "worked" | "failed" | "mixed" | "cannot_judge";
 
 export type Confidence = "high" | "medium" | "low";
 
-export type AppView = "home" | "selection" | "investigation" | "verdict" | "board";
+export type AppView = "home" | "selection" | "investigation" | "verdict" | "board" | "compare";
 
 export type EvidenceCardType =
   | "policy_goal"
@@ -24,6 +24,53 @@ export type EvidenceCardType =
   | "timeline"
   | "implementation_problem"
   | "long_term_consequence";
+
+export type IndicatorKind =
+  | "economic"
+  | "civilian_welfare"
+  | "violence"
+  | "governance"
+  | "negotiation"
+  | "aid_flow"
+  | "sanctions_timeline";
+
+export type IndicatorDataPoint = {
+  year: number;
+  value: number;
+  label?: string;
+};
+
+export type CaseIndicator = {
+  id: string;
+  caseId: string;
+  title: string;
+  kind: IndicatorKind;
+  unit?: string;
+  description: string;
+  caveat: string;
+  data: IndicatorDataPoint[];
+  sourceTitle?: string;
+  sourceUrl?: string;
+};
+
+export type TimelineEvent = {
+  id: string;
+  caseId: string;
+  year: number;
+  title: string;
+  description: string;
+  type:
+    | "policy"
+    | "conflict"
+    | "negotiation"
+    | "economic"
+    | "social"
+    | "political"
+    | "aid"
+    | "sanction";
+  sourceTitle?: string;
+  sourceUrl?: string;
+};
 
 export type SourceLink = {
   title: string;

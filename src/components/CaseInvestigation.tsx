@@ -1,5 +1,9 @@
+import { getIndicatorsForCase } from "../data/indicators";
+import { getTimelineForCase } from "../data/timelines";
 import type { CaseStudy, EvidenceSortCategory } from "../types";
+import { CaseTimeline } from "./CaseTimeline";
 import { EvidenceSorter } from "./EvidenceSorter";
+import { IndicatorCard } from "./IndicatorCard";
 import { TeacherNotes } from "./TeacherNotes";
 
 type CaseInvestigationProps = {
@@ -22,6 +26,8 @@ export function CaseInvestigation({
   onContinue,
 }: CaseInvestigationProps) {
   const sortedCount = Object.values(assignments).filter((value) => value !== "unassigned").length;
+  const timelineEvents = getTimelineForCase(caseStudy.id);
+  const indicators = getIndicatorsForCase(caseStudy.id);
 
   return (
     <main className="page">
@@ -91,6 +97,19 @@ export function CaseInvestigation({
         </aside>
 
         <section className="evidence-column">
+          <details className="optional-data-check" open>
+            <summary>Optional data check</summary>
+            <p className="student-instruction">
+              Which indicator you choose affects your judgment. Use this as a prompt, not proof.
+            </p>
+            <CaseTimeline events={timelineEvents} />
+            <div className="indicator-grid">
+              {indicators.map((indicator) => (
+                <IndicatorCard indicator={indicator} key={indicator.id} />
+              ))}
+            </div>
+          </details>
+
           <div className="section-heading-row">
             <div>
               <h2>Sort the evidence</h2>

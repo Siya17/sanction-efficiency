@@ -1,6 +1,7 @@
 import { CaseInvestigation } from "./components/CaseInvestigation";
 import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
+import { ComparativeMode } from "./components/ComparativeMode";
 import { Header } from "./components/Header";
 import { Home } from "./components/Home";
 import { ProgressSteps } from "./components/ProgressSteps";
@@ -46,11 +47,22 @@ export default function App() {
       );
     }
 
+    if (lab.view === "compare") {
+      return (
+        <ComparativeMode
+          submissions={lab.submissions}
+          onBackToBoard={() => actions.setView("board")}
+          onChooseCase={actions.startCaseSelection}
+        />
+      );
+    }
+
     return (
       <ClassBoard
         submissions={lab.submissions}
         onChooseCase={actions.startCaseSelection}
         onClear={actions.clearBoard}
+        onCompare={() => actions.setView("compare")}
       />
     );
   }
