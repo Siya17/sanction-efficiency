@@ -11,15 +11,21 @@ import type {
   StudentEvidenceSelection,
 } from "../types";
 import { getActivityMode, saveActivityMode } from "../utils/activityModeStorage";
-import { clearSubmissions, getSubmissions, saveSubmission } from "../utils/localStorage";
+import { clearSubmissions, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
 import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
+import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions } from "../utils/supabase";
 
 export function useEvidenceLab() {
+  const [groupName, setGroupName] = useState<string>("");
   const [activityMode, setActivityModeState] = useState<ActivityMode>("classroom");
-  const [view, setView] = useState<AppView>("home");
+  // If no group name, default to login view
+  const [view, setView] = useState<AppView | "login">("login");
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
   
+  // Real-time states
+  const [claimedCases, setClaimedCases] = useState<ClaimedCase[]>([]);
+
   // Legacy field, kept for classroom mode compatibility if needed
   const [successCriterion, setSuccessCriterion] = useState("");
   
@@ -37,10 +43,56 @@ export function useEvidenceLab() {
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
   const [studentEvidence, setStudentEvidence] = useState<StudentEvidenceCard[]>([]);
 
+  // Initial load
   useEffect(() => {
     setActivityModeState(getActivityMode());
     setCaseStudies(getActiveCases());
-    setSubmissions(getSubmissions());
+    
+    // Load submissions (prefer Supabase if available)
+    const loadSubmissions = async () => {
+      if (supabase) {
+        const { data } = await supabaseGetSubmissions();
+        if (data) setSubmissions(data);
+      } else {
+        setSubmissions(getLocalSubmissions());
+      }
+    };
+    
+    loadSubmissions();
+  }, []);
+
+  // Supabase real-time subscriptions
+  useEffect(() => {
+    if (!supabase) return;
+
+    const fetchClaimed = async () => {
+      const { data } = await getClaimedCases();
+      if (data) setClaimedCases(data);
+    };
+    
+    fetchClaimed();
+
+    // Subscribe to claimed_cases
+    const claimedChannel = supabase
+      .channel('claimed_cases_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'claimed_cases' }, () => {
+        fetchClaimed();
+      })
+      .subscribe();
+
+    // Subscribe to submissions
+    const submissionsChannel = supabase
+      .channel('submissions_changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'submissions' }, async () => {
+        const { data } = await supabaseGetSubmissions();
+        if (data) setSubmissions(data);
+      })
+      .subscribe();
+
+    return () => {
+      supabase?.removeChannel(claimedChannel);
+      supabase?.removeChannel(submissionsChannel);
+    };
   }, []);
 
   const canBuildVerdict = Boolean(
@@ -49,6 +101,11 @@ export function useEvidenceLab() {
     studentIndicators.length >= 3 &&
     selectedEvidence.length >= 3
   );
+
+  function handleLogin(name: string) {
+    setGroupName(name);
+    setView("home");
+  }
 
   function refreshCases() {
     const nextCases = getActiveCases();
@@ -68,7 +125,22 @@ export function useEvidenceLab() {
     setView("board");
   }
 
-  function selectCase(caseStudy: CaseStudy) {
+  async function selectCase(caseStudy: CaseStudy) {
+    // If Supabase is connected, attempt to claim it
+    if (supabase) {
+      const isClaimedByOther = claimedCases.some(c => c.case_id === caseStudy.id && c.group_name !== groupName);
+      if (isClaimedByOther) {
+        alert("This case has already been claimed by another group!");
+        return;
+      }
+      
+      const { error } = await supabaseClaimCase(caseStudy.id, groupName);
+      if (error && (error as any).code !== '23505') { // Ignore unique violation if we already claimed it
+        alert("Error claiming case: " + error.message);
+        return;
+      }
+    }
+
     setSelectedCase(caseStudy);
     
     // Reset all state for the new case
@@ -83,6 +155,14 @@ export function useEvidenceLab() {
     
     setStudentEvidence(getStudentEvidence(caseStudy.id));
     setView("investigation");
+  }
+
+  async function releaseCurrentCase(targetView: AppView | "login" = "selection") {
+    if (selectedCase && supabase) {
+      await supabaseReleaseCase(selectedCase.id, groupName);
+    }
+    setSelectedCase(null);
+    setView(targetView);
   }
 
   function setActivityMode(mode: ActivityMode) {
@@ -112,20 +192,31 @@ export function useEvidenceLab() {
     setSelectedEvidence((current) => current.filter(s => s.cardId !== cardId));
   }
 
-  function submitVerdict(draft: SubmissionDraft) {
+  async function submitVerdict(draft: SubmissionDraft) {
     const submission = createSubmission(draft);
 
-    saveSubmission(submission);
-    setSubmissions(getSubmissions());
+    if (supabase) {
+      await supabaseSaveSubmission(submission, groupName);
+      // It will auto-update via subscription, but let's update local immediately
+      const { data } = await supabaseGetSubmissions();
+      if (data) setSubmissions(data);
+    } else {
+      saveLocalSubmission(submission);
+      setSubmissions(getLocalSubmissions());
+    }
+    
     setView("board");
   }
 
   function clearBoard() {
     clearSubmissions();
     setSubmissions([]);
+    // Optionally: clear Supabase (left out for safety, usually teacher only)
   }
 
   return {
+    groupName,
+    claimedCases,
     activityMode,
     studentEvidence,
     canBuildVerdict,
@@ -147,11 +238,13 @@ export function useEvidenceLab() {
     dataNeeds,
     
     actions: {
+      handleLogin,
       setActivityMode,
       refreshStudentEvidence,
       clearBoard,
       refreshCases,
       selectCase,
+      releaseCurrentCase,
       setSuccessCriterion,
       setView,
       showBoard,

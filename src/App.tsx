@@ -8,18 +8,25 @@ import { ProgressSteps } from "./components/ProgressSteps";
 import { TeacherMode } from "./components/TeacherMode";
 import { VerdictBuilder } from "./components/VerdictBuilder";
 import { useEvidenceLab } from "./hooks/useEvidenceLab";
+import type { AppView } from "./types";
+
+import { Login } from "./components/Login";
 
 export default function App() {
   const lab = useEvidenceLab();
   const { actions } = lab;
 
   function renderView() {
+    if (lab.view === "login") {
+      return <Login onLogin={actions.handleLogin} />;
+    }
+
     if (lab.view === "home") {
       return <Home onBoard={actions.showBoard} onStart={actions.startCaseSelection} />;
     }
 
     if (lab.view === "selection") {
-      return <CaseSelection cases={lab.cases} onSelectCase={actions.selectCase} />;
+      return <CaseSelection cases={lab.cases} claimedCases={lab.claimedCases} groupName={lab.groupName} onSelectCase={actions.selectCase} />;
     }
 
     if (lab.view === "investigation" && lab.selectedCase) {
@@ -119,8 +126,24 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Header boardCount={lab.submissions.length} currentView={lab.view} onNavigate={actions.setView} activityMode={lab.activityMode} onSetActivityMode={actions.setActivityMode} />
-      <ProgressSteps currentView={lab.view} />
+      {lab.view !== "login" && (
+        <>
+          <Header 
+            boardCount={lab.submissions.length} 
+            currentView={lab.view as AppView} 
+            onNavigate={(view) => {
+              if (lab.selectedCase && view !== "investigation" && view !== "verdict") {
+                actions.releaseCurrentCase(view);
+              } else {
+                actions.setView(view);
+              }
+            }} 
+            activityMode={lab.activityMode} 
+            onSetActivityMode={actions.setActivityMode} 
+          />
+          <ProgressSteps currentView={lab.view as AppView} />
+        </>
+      )}
       {renderView()}
     </div>
   );
