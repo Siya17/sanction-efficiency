@@ -1,4 +1,5 @@
-import type { TimelineEvent } from "../types";
+﻿import type { TimelineEvent } from "../types";
+import { mergeCustomTimelineEvents } from "../utils/caseStorage";
 
 export const timelines: TimelineEvent[] = [
   { id: "iraq-1990-invasion", caseId: "iraq-1990s-sanctions", year: 1990, title: "Kuwait invasion", description: "Iraq invades Kuwait; UN sanctions begin as part of the international response.", type: "conflict" },
@@ -51,5 +52,5 @@ export const timelines: TimelineEvent[] = [
 ];
 
 export function getTimelineForCase(caseId: string) {
-  return timelines.filter((event) => event.caseId === caseId).sort((a, b) => a.year - b.year);
+  return mergeCustomTimelineEvents(timelines).filter((event) => event.caseId === caseId).sort((a, b) => a.year - b.year);
 }

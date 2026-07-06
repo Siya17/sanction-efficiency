@@ -1295,3 +1295,220 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.teacher-page .student-instruction {
+  max-width: 760px;
+}
+
+.teacher-layout {
+  align-items: start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+}
+
+.case-manager-panel,
+.case-editor-panel,
+.teacher-case,
+.evidence-editor-card,
+.json-editor-section,
+.warning-box,
+.status-message,
+.error-message {
+  background: #fffdf8;
+  border: 1px solid #dfd5c4;
+  border-radius: 8px;
+}
+
+.case-manager-panel,
+.case-editor-panel {
+  padding: 1rem;
+}
+
+.case-manager-panel {
+  max-height: calc(100vh - 8rem);
+  overflow: auto;
+  position: sticky;
+  top: 6rem;
+}
+
+.teacher-case-list,
+.teacher-form,
+.evidence-editor-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.teacher-case {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.9rem;
+}
+
+.teacher-case.active {
+  border-color: #0b6c62;
+  box-shadow: inset 0 0 0 2px rgba(11, 108, 98, 0.16);
+}
+
+.teacher-case h3 {
+  margin: 0.55rem 0 0.25rem;
+}
+
+.teacher-case p,
+.teacher-case small,
+.empty-editor p,
+.json-editor-section p {
+  color: #53615e;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.case-editor-actions,
+.editor-toolbar,
+.editor-row,
+.source-editor-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.case-editor-actions button,
+.editor-row button,
+.source-editor-row button {
+  min-height: 2.4rem;
+}
+
+.editor-toolbar {
+  justify-content: space-between;
+}
+
+.editor-toolbar h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0;
+}
+
+.teacher-form-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.teacher-form label {
+  color: #25302f;
+  display: grid;
+  font-weight: 900;
+  gap: 0.4rem;
+}
+
+.editor-section {
+  border-top: 1px solid #dfd5c4;
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 1rem;
+}
+
+.editor-section h3 {
+  margin-bottom: 0;
+}
+
+.editor-row input {
+  flex: 1 1 260px;
+}
+
+.evidence-editor-card,
+.json-editor-section {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.source-editor-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr) auto;
+}
+
+.json-editor-section summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.json-editor-section textarea {
+  font-family: "Cascadia Code", Consolas, monospace;
+  min-height: 12rem;
+}
+
+.warning-box {
+  background: #fff7e8;
+  border-color: #e3c58f;
+  padding: 0.85rem;
+}
+
+.warning-box p,
+.status-message,
+.error-message {
+  font-weight: 800;
+  margin: 0;
+}
+
+.status-message,
+.error-message {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+}
+
+.status-message {
+  background: #edf7f5;
+  border-color: #8dbbb2;
+  color: #274743;
+}
+
+.error-message {
+  background: #fff2ef;
+  border-color: #cf6f5d;
+  color: #8a2f20;
+}
+
+.import-button {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.import-button input {
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+.empty-editor {
+  display: grid;
+  min-height: 18rem;
+  place-content: center;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .teacher-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .case-manager-panel {
+    max-height: none;
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .teacher-form-grid,
+  .source-editor-row {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

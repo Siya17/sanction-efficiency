@@ -24,6 +24,7 @@ The app does not provide a correct answer. It helps students see that "worked" d
 - localStorage class-board submissions
 - Class-board filters by track and verdict
 - Comparative Mode for verdict, track, confidence, criterion, and missing-evidence patterns
+- Teacher Mode for local case editing, duplication, JSON import/export, and restoring defaults
 - CSV export, print button, and clear-board control
 - No backend, authentication, accounts, or live API calls
 
@@ -84,6 +85,18 @@ Submissions are stored in the browser under a localStorage key. They stay after 
 
 Use **Clear board** in the app to remove all local submissions. Use **Export CSV** to save the currently filtered board.
 
+## Teacher Mode
+
+Open **Teacher Mode** from the top navigation to edit classroom materials without touching TypeScript files.
+
+Teacher changes are stored in this browser's localStorage. Use **Export JSON** to back up or move edited cases to another device, and **Restore defaults** to remove local edits and recover the original case set.
+
+Teacher Mode supports:
+
+- adding, duplicating, editing, and deleting custom cases
+- editing success criteria, evidence cards, sources, and teacher notes
+- importing/exporting case JSON
+- editing optional timeline and indicator data as JSON arrays
 ## Environment
 
 Copy `.env.example` to `.env.local` if you want to adjust display text without touching code:

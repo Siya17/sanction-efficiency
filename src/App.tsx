@@ -1,10 +1,11 @@
-import { CaseInvestigation } from "./components/CaseInvestigation";
+﻿import { CaseInvestigation } from "./components/CaseInvestigation";
 import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
 import { ComparativeMode } from "./components/ComparativeMode";
 import { Header } from "./components/Header";
 import { Home } from "./components/Home";
 import { ProgressSteps } from "./components/ProgressSteps";
+import { TeacherMode } from "./components/TeacherMode";
 import { VerdictBuilder } from "./components/VerdictBuilder";
 import { useEvidenceLab } from "./hooks/useEvidenceLab";
 
@@ -47,6 +48,15 @@ export default function App() {
       );
     }
 
+    if (lab.view === "teacher") {
+      return (
+        <TeacherMode
+          cases={lab.cases}
+          onCasesChanged={actions.refreshCases}
+          onChooseCase={actions.startCaseSelection}
+        />
+      );
+    }
     if (lab.view === "compare") {
       return (
         <ComparativeMode

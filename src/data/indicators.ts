@@ -1,6 +1,7 @@
-// PLACEHOLDER_DATA_NEEDS_VERIFICATION: Indicator values are classroom scaffold indices, not verified extracted datasets.
+﻿// PLACEHOLDER_DATA_NEEDS_VERIFICATION: Indicator values are classroom scaffold indices, not verified extracted datasets.
 // Replace with sourced local dataset extracts before using these as research evidence.
 import type { CaseIndicator } from "../types";
+import { mergeCustomIndicators } from "../utils/caseStorage";
 
 export const indicators: CaseIndicator[] = [
   {
@@ -148,5 +149,5 @@ export const indicators: CaseIndicator[] = [
 ];
 
 export function getIndicatorsForCase(caseId: string) {
-  return indicators.filter((indicator) => indicator.caseId === caseId);
+  return mergeCustomIndicators(indicators).filter((indicator) => indicator.caseId === caseId);
 }

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { cases } from "../data/cases";
+﻿import { useEffect, useMemo, useState } from "react";
+import { getActiveCases } from "../utils/caseStorage";
 import type {
   AppView,
   CaseStudy,
@@ -25,9 +25,11 @@ export function useEvidenceLab() {
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
   const [successCriterion, setSuccessCriterion] = useState("");
   const [assignments, setAssignments] = useState<Record<string, EvidenceSortCategory>>({});
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() => getActiveCases());
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
 
   useEffect(() => {
+    setCaseStudies(getActiveCases());
     setSubmissions(getSubmissions());
   }, []);
 
@@ -40,6 +42,17 @@ export function useEvidenceLab() {
     Boolean(selectedCase) &&
     successCriterion.length > 0 &&
     sortedCount >= 3;
+
+  function refreshCases() {
+    const nextCases = getActiveCases();
+    setCaseStudies(nextCases);
+
+    if (selectedCase) {
+      const nextSelectedCase = nextCases.find((caseStudy) => caseStudy.id === selectedCase.id) ?? selectedCase;
+      setSelectedCase(nextSelectedCase);
+      setAssignments(createAssignments(nextSelectedCase));
+    }
+  }
 
   function startCaseSelection() {
     setView("selection");
@@ -76,7 +89,7 @@ export function useEvidenceLab() {
   return {
     assignments,
     canBuildVerdict,
-    cases,
+    cases: caseStudies,
     selectedCase,
     submissions,
     successCriterion,
@@ -84,6 +97,7 @@ export function useEvidenceLab() {
     actions: {
       assignEvidence,
       clearBoard,
+      refreshCases,
       selectCase,
       setSuccessCriterion,
       setView,

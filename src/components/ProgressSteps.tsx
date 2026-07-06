@@ -1,4 +1,4 @@
-import { workflowSteps } from "../constants/workflow";
+﻿import { workflowSteps } from "../constants/workflow";
 import type { AppView } from "../types";
 
 const viewStepIndex: Record<AppView, number> = {
@@ -8,6 +8,7 @@ const viewStepIndex: Record<AppView, number> = {
   verdict: 3,
   board: 4,
   compare: 4,
+  teacher: 0,
 };
 
 type ProgressStepsProps = {

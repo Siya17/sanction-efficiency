@@ -1,4 +1,4 @@
-export type Track = "sanctions" | "aid";
+﻿export type Track = "sanctions" | "aid";
 
 export type EvidenceSortCategory =
   | "unassigned"
@@ -10,7 +10,7 @@ export type Verdict = "worked" | "failed" | "mixed" | "cannot_judge";
 
 export type Confidence = "high" | "medium" | "low";
 
-export type AppView = "home" | "selection" | "investigation" | "verdict" | "board" | "compare";
+export type AppView = "home" | "selection" | "investigation" | "verdict" | "board" | "compare" | "teacher";
 
 export type EvidenceCardType =
   | "policy_goal"

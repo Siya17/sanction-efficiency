@@ -1,4 +1,4 @@
-import type { AppView } from "../types";
+﻿import type { AppView } from "../types";
 
 type HeaderProps = {
   currentView: AppView;
@@ -10,6 +10,7 @@ const navItems: Array<{ view: AppView; label: string }> = [
   { view: "home", label: "Home" },
   { view: "selection", label: "Cases" },
   { view: "board", label: "Class Board" },
+  { view: "teacher", label: "Teacher Mode" },
 ];
 
 export function Header({ currentView, onNavigate, boardCount }: HeaderProps) {
