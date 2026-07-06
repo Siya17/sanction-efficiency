@@ -9,31 +9,30 @@ export const cases: CaseStudy[] = [
     policy: "UN comprehensive sanctions after Iraq's invasion of Kuwait",
     question: "Did sanctions work in the case of Iraq?",
     background:
-      "After Iraq invaded Kuwait in 1990, the UN imposed comprehensive sanctions to force withdrawal and later to press Iraq over weapons inspections and compliance. Students should treat this as a difficult case: sanctions were linked to war, inspections, oil-for-food rules, regime survival, containment claims, and major civilian harm. Whether sanctions worked depends heavily on whether the benchmark is withdrawal, containment, regime change, civilian protection, or long-term stability.",
+      "What happened: After Iraq invaded Kuwait in 1990, the UN imposed comprehensive sanctions to force withdrawal and later to press Iraq over weapons inspections.\n\nPolicy used: Comprehensive economic and trade sanctions linked to UN resolutions.\n\nWhy it is hard to judge: Iraq is a difficult sanctions case because success depends on the goal. If the goal was to force Saddam Hussein from power, sanctions did not achieve that. If the goal was to contain Iraq’s military capacity after the Gulf War, the judgment may look different. The case is also ethically difficult because comprehensive sanctions created serious civilian costs.",
     successCriteria: [
-      "Iraqi withdrawal or compliance",
-      "Containment of Saddam Hussein",
-      "Regime change",
-      "Civilian protection",
-      "Long-term stability",
+      { id: "behavior_change", label: "Behavior change", explanation: "Did Iraq withdraw from Kuwait and comply with UN weapons inspections?" },
+      { id: "containment", label: "Containment", explanation: "Did the policy prevent Iraq from rebuilding its military capacity?" },
+      { id: "regime_change", label: "Regime change", explanation: "Did the policy force a change in leadership?" },
+      { id: "civilian_harm", label: "Civilian harm", explanation: "Did the policy avoid serious harm to ordinary people?" }
     ],
     evidenceCards: [
-      { id: "iraq-goal", title: "Policy goal", text: "The sanctions were meant to reverse aggression, compel compliance with UN demands, and later constrain Iraq's military and weapons capacity. Those goals are not identical, so students should decide which goal they are judging.", type: "policy_goal", sourceTitle: "UN Security Council sanctions information", sourceUrl: "https://main.un.org/securitycouncil/en/sanctions/information" },
-      { id: "iraq-success", title: "Containment argument", text: "A partial-success argument says sanctions helped isolate Iraq and limited its ability to rebuild strategic capacity. This supports success if the chosen criterion is containment rather than regime change or civilian welfare.", type: "success_evidence" },
-      { id: "iraq-harm", title: "Humanitarian cost", text: "Many accounts emphasize severe civilian hardship under broad sanctions. This complicates any success claim if students judge the policy by civilian protection, proportionality, or long-term social damage.", type: "failure_or_harm" },
-      { id: "iraq-civilian-impact", title: "Who bore the costs?", text: "Ordinary households, especially vulnerable civilians, often faced the harshest daily effects, while the leadership could redirect blame or resources. Students should ask whether pressure reached decision-makers or mostly society.", type: "civilian_or_social_impact" },
-      { id: "iraq-mechanism", title: "How pressure was supposed to work", text: "The mechanism was coercion through economic isolation: reduce resources, raise costs, and make noncompliance too expensive. The case asks whether that mechanism changes elite choices under authoritarian rule.", type: "mechanism" },
-      { id: "iraq-alternative", title: "Other forces at work", text: "Military defeat, inspections, oil politics, authoritarian control, and later invasion all shaped outcomes. If behavior changed, students need to decide how much was caused by sanctions rather than those other forces.", type: "alternative_explanation" },
-      { id: "iraq-comparison", title: "Compared to what?", text: "The counterfactual is hard: without sanctions, would Iraq have rebuilt capacity faster, complied less, or suffered less civilian harm? Different comparisons lead to different verdicts.", type: "comparison_problem" },
-      { id: "iraq-missing", title: "Missing evidence", text: "Students would need better evidence about Iraqi leadership debates, how sanctions affected weapons capacity, and whether narrower sanctions could have reduced civilian harm while maintaining pressure.", type: "missing_evidence" },
+      { id: "iraq-goal", title: "Policy goal", text: "The sanctions were meant to reverse aggression, compel compliance, and constrain Iraq's military capacity.", type: "policy_goal", whyItMatters: "Different goals mean different definitions of success. You must pick one to judge.", limitation: "A policy can succeed at one goal and fail at another.", sourceTitle: "UN Security Council sanctions information", sourceUrl: "https://main.un.org/securitycouncil/en/sanctions/information" },
+      { id: "iraq-success", title: "Containment argument", text: "Sanctions isolated Iraq and limited its ability to rebuild strategic military capacity.", type: "success_evidence", whyItMatters: "This helps argue that sanctions succeeded at containing Iraq's power.", limitation: "Containment is not the same as full compliance or regime change." },
+      { id: "iraq-harm", title: "Humanitarian cost", text: "Many accounts emphasize severe civilian hardship under broad sanctions.", type: "failure_or_harm", whyItMatters: "This supports a failure verdict if you judge success by civilian protection.", limitation: "It does not disprove that military containment was achieved." },
+      { id: "iraq-civilian-impact", title: "Who bore the costs?", text: "Ordinary households faced the harshest daily effects, while the leadership redirected blame.", type: "civilian_or_social_impact", whyItMatters: "Shows that economic pain did not equally affect decision-makers.", limitation: "Does not tell us what would have happened without sanctions." },
+      { id: "iraq-mechanism", title: "How pressure worked", text: "The mechanism was coercion through economic isolation: reduce resources and raise costs.", type: "mechanism", whyItMatters: "Explains how the policy was supposed to force leaders to change.", limitation: "Assumes authoritarian leaders care more about economic costs than regime survival." },
+      { id: "iraq-alternative", title: "Other forces at work", text: "Military defeat, inspections, oil politics, and later invasion all shaped outcomes.", type: "alternative_explanation", whyItMatters: "Suggests that sanctions were only one part of the story.", limitation: "Does not mean sanctions had zero effect." },
+      { id: "iraq-comparison", title: "Compared to what?", text: "The counterfactual is hard: without sanctions, would Iraq have rebuilt capacity faster?", type: "comparison_problem", whyItMatters: "Reminds us that we must compare reality to what might have happened.", limitation: "We cannot test this in reality." },
+      { id: "iraq-missing", title: "Missing evidence", text: "We lack clear internal evidence about how Iraqi leaders weighed sanctions against other threats.", type: "missing_evidence", whyItMatters: "Lowers our confidence in deciding exactly why leaders acted.", limitation: "Missing evidence is normal in historical cases." }
     ],
     sources: [
       { title: "UN Security Council sanctions information", url: "https://main.un.org/securitycouncil/en/sanctions/information" },
       { title: "Global Sanctions Data Base", url: "https://globalsanctionsdatabase.com/" },
       { title: "TIES sanctions dataset", url: "https://sanctions.web.unc.edu/" },
-      { title: "UN Digital Library", url: "https://digitallibrary.un.org/" },
+      { title: "UN Digital Library", url: "https://digitallibrary.un.org/" }
     ],
-    teacherNote: "Good for distinguishing containment, coercion, regime change, and humanitarian standards of success.",
+    teacherNote: "Good for distinguishing containment, coercion, regime change, and humanitarian standards of success."
   },
   {
     id: "iran-nuclear-sanctions",
@@ -43,25 +42,29 @@ export const cases: CaseStudy[] = [
     policy: "Nuclear and financial sanctions linked to diplomacy",
     question: "Did sanctions work in the case of Iran?",
     background:
-      "Iran faced UN, US, and EU sanctions tied to concerns about its nuclear program. The pressure was not separate from diplomacy: negotiations, monitoring, domestic politics, and security calculations all mattered. The 2015 JCPOA makes the case look like partial success if the benchmark is bargaining or temporary nuclear limits, but the later unraveling of the agreement shows how fragile that success could be.",
-    successCriteria: ["Nuclear negotiation", "Nuclear limits or compliance", "Bargaining pressure", "Long-term policy change", "Civilian economic impact"],
+      "What happened: Iran faced UN, US, and EU sanctions tied to concerns about its nuclear program, which led to the 2015 JCPOA agreement.\n\nPolicy used: Financial and oil sanctions linked to diplomatic negotiations.\n\nWhy it is hard to judge: The 2015 JCPOA makes the case look like partial success if the benchmark is bargaining or temporary nuclear limits, but the later unraveling of the agreement shows how fragile that success could be. It is hard to know if the sanctions alone worked, or if they only worked because of diplomacy.",
+    successCriteria: [
+      { id: "bargaining_pressure", label: "Bargaining pressure", explanation: "Did sanctions help push the target toward negotiation?" },
+      { id: "behavior_change", label: "Behavior change", explanation: "Did Iran accept limits and monitoring on its nuclear program?" },
+      { id: "sustainability", label: "Sustainability", explanation: "Did the policy produce a lasting resolution?" },
+      { id: "civilian_harm", label: "Civilian harm", explanation: "Did the policy avoid serious harm to ordinary people?" }
+    ],
     evidenceCards: [
-      { id: "iran-goal", title: "Policy goal", text: "Sanctions aimed to pressure Iran into negotiations, limits, and monitoring of nuclear activities. Students should decide whether success means starting talks, reaching a deal, or producing durable compliance.", type: "policy_goal", sourceTitle: "IAEA Iran focus page", sourceUrl: "https://www.iaea.org/newscenter/focus/iran" },
-      { id: "iran-success", title: "Bargaining pressure", text: "A common interpretation is that financial and oil sanctions raised the cost of stalemate and helped make a negotiated agreement possible. This supports success if bargaining pressure is the criterion.", type: "success_evidence" },
-      { id: "iran-harm", title: "Reversible gains", text: "The nuclear dispute was not permanently resolved. Later policy reversals and renewed tensions complicate the claim that sanctions produced long-term policy change or stable compliance.", type: "failure_or_harm" },
-      { id: "iran-civilian-impact", title: "Economic effects on society", text: "Sanctions affected ordinary economic life, including inflationary pressure and access to some goods. Students should weigh whether civilian economic pain was an acceptable cost of pressure.", type: "civilian_or_social_impact" },
-      { id: "iran-mechanism", title: "Financial isolation mechanism", text: "The policy tried to restrict revenue, banking access, and international transactions so Iranian leaders would prefer negotiated limits to continued economic pressure.", type: "mechanism" },
-      { id: "iran-alternative", title: "Diplomacy and security concerns", text: "Diplomatic openings, leadership choices, threat perceptions, and verification arrangements may explain much of the outcome. Sanctions may have mattered, but they were not the only moving part.", type: "alternative_explanation" },
-      { id: "iran-comparison", title: "Pressure alone or pressure plus incentives?", text: "The hard comparison is whether sanctions alone worked, or whether sanctions worked only when paired with credible diplomatic incentives and monitoring.", type: "comparison_problem" },
-      { id: "iran-missing", title: "Missing evidence", text: "Students would need more evidence from Iranian decision-makers about whether sanctions, security fears, domestic politics, or diplomatic incentives changed their choices most.", type: "missing_evidence" },
+      { id: "iran-goal", title: "Policy goal", text: "Sanctions aimed to pressure Iran into negotiations, limits, and monitoring of nuclear activities.", type: "policy_goal", whyItMatters: "Clarifies that the goal was negotiation, not just punishment.", limitation: "Goals can shift over time." },
+      { id: "iran-success", title: "Bargaining pressure", text: "Financial and oil sanctions raised the cost of stalemate and helped make a negotiated agreement possible.", type: "success_evidence", whyItMatters: "Supports the argument that sanctions worked to create bargaining pressure.", limitation: "Does not prove sanctions alone caused the deal." },
+      { id: "iran-harm", title: "Reversible gains", text: "The nuclear dispute was not permanently resolved due to later policy reversals.", type: "failure_or_harm", whyItMatters: "Complicates claims of long-term success.", limitation: "Reversals might be blamed on later policy choices, not the original sanctions." },
+      { id: "iran-civilian-impact", title: "Economic effects on society", text: "Sanctions affected ordinary economic life, including inflationary pressure and access to some goods.", type: "civilian_or_social_impact", whyItMatters: "Shows that pressure on the government also hurt ordinary people.", limitation: "Economic pain does not always lead to political pressure." },
+      { id: "iran-mechanism", title: "Financial isolation mechanism", text: "The policy tried to restrict revenue so Iranian leaders would prefer negotiated limits.", type: "mechanism", whyItMatters: "Explains how the policy was supposed to work.", limitation: "Assumes leaders prioritize the economy over national security goals." },
+      { id: "iran-alternative", title: "Diplomacy and security concerns", text: "Diplomatic openings and security guarantees may explain much of the outcome.", type: "alternative_explanation", whyItMatters: "Suggests the carrot (diplomacy) was as important as the stick (sanctions).", limitation: "Diplomacy might not have worked without the economic pressure." },
+      { id: "iran-comparison", title: "Pressure alone?", text: "The hard comparison is whether sanctions alone worked, or if they needed incentives.", type: "comparison_problem", whyItMatters: "Reminds us to consider the combination of policies.", limitation: "We cannot separate the sanctions from the diplomacy." },
+      { id: "iran-missing", title: "Missing evidence", text: "We need more evidence from Iranian decision-makers about what changed their minds most.", type: "missing_evidence", whyItMatters: "Highlights uncertainty about internal state decisions.", limitation: "Such evidence is often classified." }
     ],
     sources: [
       { title: "IAEA: Iran", url: "https://www.iaea.org/newscenter/focus/iran" },
       { title: "EU restrictive measures against Iran", url: "https://www.consilium.europa.eu/en/policies/sanctions/iran/" },
-      { title: "US Treasury: Iran sanctions", url: "https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/iran-sanctions" },
-      { title: "TIES sanctions dataset", url: "https://sanctions.web.unc.edu/" },
+      { title: "US Treasury: Iran sanctions", url: "https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/iran-sanctions" }
     ],
-    teacherNote: "Useful for showing that sanctions may support negotiations without guaranteeing durable policy change.",
+    teacherNote: "Useful for showing that sanctions may support negotiations without guaranteeing durable policy change."
   },
   {
     id: "south-africa-apartheid-sanctions",
@@ -71,25 +74,27 @@ export const cases: CaseStudy[] = [
     policy: "Apartheid-era sanctions, divestment, boycotts, and diplomatic pressure",
     question: "Did sanctions work in the case of South Africa?",
     background:
-      "International sanctions, divestment campaigns, sports boycotts, and diplomatic isolation targeted South Africa's apartheid system. The transition to negotiations and majority rule also depended on internal resistance, labor action, elite bargaining, regional shifts, and economic change. Students should avoid the simple claim that sanctions alone ended apartheid, while still asking whether external pressure changed incentives and legitimacy.",
-    successCriteria: ["Pressure on apartheid regime", "Support for internal opposition", "International delegitimation", "Economic pressure", "Transition to negotiations"],
+      "What happened: International sanctions, divestment campaigns, and sports boycotts targeted South Africa's apartheid system, leading eventually to majority rule.\n\nPolicy used: Diplomatic isolation, trade sanctions, and corporate divestment.\n\nWhy it is hard to judge: The transition to negotiations and majority rule depended heavily on internal resistance, labor action, and economic change. It is hard to know whether the external sanctions or the internal social movements mattered more. A careful judgment avoids claiming that sanctions alone ended apartheid.",
+    successCriteria: [
+      { id: "behavior_change", label: "Behavior change", explanation: "Did the government transition to negotiations and majority rule?" },
+      { id: "bargaining_pressure", label: "Bargaining pressure", explanation: "Did sanctions put pressure on the apartheid regime?" },
+      { id: "norm_enforcement", label: "International delegitimation", explanation: "Did the policy signal that apartheid was unacceptable globally?" }
+    ],
     evidenceCards: [
-      { id: "sa-goal", title: "Policy goal", text: "External pressure aimed to delegitimize apartheid, raise costs for the government and firms, and support demands for political rights and majority rule.", type: "policy_goal" },
-      { id: "sa-success", title: "Delegitimation and pressure", text: "A success argument says sanctions, divestment, and boycotts signaled that apartheid could not be treated as normal. That pressure may have strengthened incentives for negotiation.", type: "success_evidence" },
-      { id: "sa-harm", title: "Costs to workers", text: "Economic pressure could also hurt workers and communities, including people already harmed by apartheid. Students should ask who paid the cost of international pressure.", type: "failure_or_harm" },
-      { id: "sa-civilian-impact", title: "Social movement effects", text: "For many activists, sanctions were part of a broader solidarity campaign. The social effect was not only economic harm; it also changed international attention and moral pressure.", type: "civilian_or_social_impact" },
-      { id: "sa-mechanism", title: "Isolation mechanism", text: "The mechanism was reputational and economic isolation: make apartheid costly for the state, firms, universities, sports bodies, and diplomatic partners.", type: "mechanism" },
-      { id: "sa-alternative", title: "Internal resistance", text: "Domestic organizing, strikes, civic resistance, leadership decisions, and changing security conditions were central. A careful verdict should not erase internal agency.", type: "alternative_explanation" },
-      { id: "sa-comparison", title: "Would transition have happened anyway?", text: "The comparison problem is whether apartheid would have ended on a similar timeline without sanctions because of internal crisis and negotiation pressures.", type: "comparison_problem" },
-      { id: "sa-missing", title: "Missing evidence", text: "Students would need evidence about how South African leaders, firms, and opposition groups weighed outside pressure compared with domestic mobilization.", type: "missing_evidence" },
+      { id: "sa-goal", title: "Policy goal", text: "External pressure aimed to delegitimize apartheid and raise costs for the government.", type: "policy_goal", whyItMatters: "Shows the goal was both moral (delegitimation) and practical (costs).", limitation: "Goals varied between activists and governments." },
+      { id: "sa-success", title: "Delegitimation and pressure", text: "Sanctions and boycotts signaled that apartheid could not be treated as normal, strengthening incentives for negotiation.", type: "success_evidence", whyItMatters: "Supports success on the delegitimation criterion.", limitation: "Moral pressure does not automatically force political change." },
+      { id: "sa-harm", title: "Costs to workers", text: "Economic pressure could also hurt workers and communities already harmed by apartheid.", type: "failure_or_harm", whyItMatters: "Raises questions about who paid the price of external pressure.", limitation: "Many internal groups supported sanctions despite the costs." },
+      { id: "sa-civilian-impact", title: "Social movement effects", text: "Sanctions were part of a broader solidarity campaign that changed international attention.", type: "civilian_or_social_impact", whyItMatters: "Highlights the importance of global public opinion.", limitation: "Hard to measure the exact impact of 'attention'." },
+      { id: "sa-mechanism", title: "Isolation mechanism", text: "The mechanism was reputational and economic isolation to make apartheid too costly.", type: "mechanism", whyItMatters: "Explains how isolation was intended to work.", limitation: "Some businesses bypassed the isolation." },
+      { id: "sa-alternative", title: "Internal resistance", text: "Domestic organizing, strikes, and civic resistance were central to the transition.", type: "alternative_explanation", whyItMatters: "Shows that internal actors were the primary drivers of change.", limitation: "Internal resistance might have been weaker without external support." },
+      { id: "sa-comparison", title: "Would it happen anyway?", text: "Would apartheid have ended on a similar timeline without sanctions because of internal crisis?", type: "comparison_problem", whyItMatters: "Forces us to consider the counterfactual.", limitation: "We cannot rerun history." },
+      { id: "sa-missing", title: "Missing evidence", text: "We need more evidence about how South African leaders weighed outside pressure compared with domestic strikes.", type: "missing_evidence", whyItMatters: "Shows a gap in understanding elite decision-making.", limitation: "Elites often downplay the effect of outside pressure." }
     ],
     sources: [
       { title: "UN Digital Library", url: "https://digitallibrary.un.org/" },
-      { title: "Global Sanctions Data Base", url: "https://globalsanctionsdatabase.com/" },
-      { title: "TIES sanctions dataset", url: "https://sanctions.web.unc.edu/" },
-      { title: "South African History Online", url: "https://www.sahistory.org.za/" },
+      { title: "South African History Online", url: "https://www.sahistory.org.za/" }
     ],
-    teacherNote: "Ask students to separate external leverage from the agency of South African movements and negotiators.",
+    teacherNote: "Ask students to separate external leverage from the agency of South African movements."
   },
   {
     id: "russia-2014-2022-sanctions",
@@ -99,25 +104,27 @@ export const cases: CaseStudy[] = [
     policy: "Sanctions after Crimea and expanded sanctions after the 2022 full-scale invasion of Ukraine",
     question: "Did sanctions work in the case of Russia?",
     background:
-      "Russia faced sanctions after the 2014 seizure of Crimea and much broader financial, trade, energy, technology, and individual sanctions after the 2022 full-scale invasion of Ukraine. The case remains ongoing. Students should distinguish immediate behavior change from economic cost, strategic constraint, signaling, military-industrial limits, and long-term pressure while also considering adaptation and global spillovers.",
-    successCriteria: ["Behavior change", "Economic cost", "Military-industrial constraint", "Signaling or norm enforcement", "Long-term pressure"],
+      "What happened: Russia faced sanctions after the 2014 seizure of Crimea, and much broader financial, trade, energy, and technology sanctions after the 2022 full-scale invasion of Ukraine.\n\nPolicy used: Targeted and comprehensive economic, financial, and technological sanctions.\n\nWhy it is hard to judge: The conflict is ongoing. Sanctions clearly have not stopped the war (immediate behavior change), but they have constrained the Russian economy and military supply chains (long-term pressure). Students must distinguish between stopping the war immediately and raising the long-term cost of fighting it.",
+    successCriteria: [
+      { id: "behavior_change", label: "Behavior change", explanation: "Did Russia stop the invasion or withdraw forces?" },
+      { id: "containment", label: "Military constraint", explanation: "Did sanctions limit Russia's ability to supply its military?" },
+      { id: "norm_enforcement", label: "Norm enforcement", explanation: "Did the policy signal strong international opposition to aggression?" }
+    ],
     evidenceCards: [
-      { id: "russia-goal", title: "Policy goal", text: "Sanctions aimed to impose costs, constrain war capacity, signal opposition to aggression, and pressure Russia to change course in Ukraine.", type: "policy_goal", sourceTitle: "EU sanctions against Russia", sourceUrl: "https://www.consilium.europa.eu/en/policies/sanctions-against-russia/" },
-      { id: "russia-success", title: "Costs and constraints", text: "A partial-success argument says sanctions increased costs, restricted some finance and technology access, and made parts of the war economy harder to sustain.", type: "success_evidence" },
-      { id: "russia-harm", title: "Limited immediate coercion", text: "Russia did not quickly end the war or reverse earlier territorial actions. This weakens a success claim if the criterion is immediate behavior change.", type: "failure_or_harm" },
-      { id: "russia-civilian-impact", title: "Costs beyond leaders", text: "Sanctions affected consumers, workers, firms, and global markets. Students should ask whether broader costs were necessary, proportional, or unevenly distributed.", type: "civilian_or_social_impact" },
-      { id: "russia-mechanism", title: "Strategic constraint mechanism", text: "The policy tried to reduce access to finance, technology, equipment, and markets so the target would face higher costs for continued aggression.", type: "mechanism" },
-      { id: "russia-alternative", title: "Adaptation and partners", text: "Energy revenues, import substitution, alternative suppliers, sanctions evasion, and partner countries complicate claims about how much pressure sanctions produced.", type: "alternative_explanation" },
-      { id: "russia-comparison", title: "Ongoing conflict problem", text: "Because the conflict continues, students must compare current outcomes with a hypothetical Russia facing weaker sanctions or no sanctions at all.", type: "comparison_problem" },
-      { id: "russia-missing", title: "Missing evidence", text: "Students would need better evidence about military supply bottlenecks, private elite debates, evasion networks, and long-term industrial effects.", type: "missing_evidence" },
+      { id: "russia-goal", title: "Policy goal", text: "Sanctions aimed to impose costs, constrain war capacity, and signal opposition to aggression.", type: "policy_goal", whyItMatters: "Highlights multiple goals beyond just stopping the war.", limitation: "Signaling opposition does not save lives on the battlefield." },
+      { id: "russia-success", title: "Costs and constraints", text: "Sanctions increased costs and restricted technology access, making parts of the war economy harder to sustain.", type: "success_evidence", whyItMatters: "Supports success if the goal is military constraint.", limitation: "Russia found ways to bypass some restrictions." },
+      { id: "russia-harm", title: "Limited immediate coercion", text: "Russia did not quickly end the war or reverse territorial actions.", type: "failure_or_harm", whyItMatters: "Supports failure if the goal was immediate behavior change.", limitation: "Sanctions often take years to change behavior." },
+      { id: "russia-civilian-impact", title: "Costs beyond leaders", text: "Sanctions affected consumers, workers, firms, and global energy markets.", type: "civilian_or_social_impact", whyItMatters: "Shows the wide ripple effects of major sanctions.", limitation: "Does not prove whether the costs were 'worth it'." },
+      { id: "russia-mechanism", title: "Strategic constraint", text: "The policy tried to reduce access to finance and technology to raise the cost of aggression.", type: "mechanism", whyItMatters: "Explains how economic limits affect military capability.", limitation: "Determined countries can rebuild supply chains." },
+      { id: "russia-alternative", title: "Adaptation and partners", text: "Energy revenues and alternative suppliers complicate claims about the pressure sanctions produced.", type: "alternative_explanation", whyItMatters: "Shows why the sanctions were not totally effective.", limitation: "Adaptation is expensive and inefficient." },
+      { id: "russia-comparison", title: "Ongoing conflict", text: "Students must compare current outcomes with a hypothetical Russia facing no sanctions at all.", type: "comparison_problem", whyItMatters: "Reminds us that things could be worse without sanctions.", limitation: "We cannot know the counterfactual." },
+      { id: "russia-missing", title: "Missing evidence", text: "We need better evidence about military supply bottlenecks and private elite debates.", type: "missing_evidence", whyItMatters: "Shows what information would make judgment easier.", limitation: "Current conflict data is often unreliable." }
     ],
     sources: [
       { title: "EU: Sanctions against Russia", url: "https://www.consilium.europa.eu/en/policies/sanctions-against-russia/" },
-      { title: "US Treasury: Ukraine/Russia-related sanctions", url: "https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/ukraine-russia-related-sanctions" },
-      { title: "Global Sanctions Data Base", url: "https://globalsanctionsdatabase.com/" },
-      { title: "TIES sanctions dataset", url: "https://sanctions.web.unc.edu/" },
+      { title: "US Treasury: Ukraine/Russia-related sanctions", url: "https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/ukraine-russia-related-sanctions" }
     ],
-    teacherNote: "Good for discussing ongoing cases where final outcomes are not yet knowable.",
+    teacherNote: "Good for discussing ongoing cases where final outcomes are not yet knowable."
   },
   {
     id: "afghanistan-reconstruction-aid",
@@ -127,25 +134,27 @@ export const cases: CaseStudy[] = [
     policy: "Reconstruction, development, and state-building aid",
     question: "Did foreign aid work in the case of Afghanistan?",
     background:
-      "After 2001, donors funded reconstruction, public services, infrastructure, security forces, and state-building in Afghanistan. Some communities saw real gains in education, health, roads, and opportunities, while insecurity, corruption, donor dependency, weak legitimacy, and the 2021 collapse of the Western-backed state raise hard questions about sustainability. The verdict changes sharply depending on whether students judge welfare, state capacity, legitimacy, conflict reduction, or durability.",
-    successCriteria: ["Improved welfare", "State capacity", "Legitimacy", "Reduced conflict", "Sustainability after donor withdrawal"],
+      "What happened: After 2001, donors funded reconstruction, public services, infrastructure, and state-building in Afghanistan. In 2021, the Western-backed state collapsed.\n\nPolicy used: Massive financial aid for development, health, education, and security forces.\n\nWhy it is hard to judge: Some communities saw real gains in education, health, and roads during the 20 years of aid. However, corruption, donor dependency, and the ultimate collapse of the state raise hard questions about sustainability. The verdict changes sharply depending on whether you judge short-term welfare or long-term state survival.",
+    successCriteria: [
+      { id: "welfare", label: "Welfare improvement", explanation: "Did aid improve people's lives, health, or education?" },
+      { id: "state_capacity", label: "State capacity", explanation: "Did aid help the government provide services effectively?" },
+      { id: "sustainability", label: "Sustainability", explanation: "Did the gains last after donor support decreased?" }
+    ],
     evidenceCards: [
-      { id: "afg-goal", title: "Policy goal", text: "Aid aimed to rebuild services, support a functioning state, improve livelihoods, and stabilize the country after decades of conflict.", type: "policy_goal", sourceTitle: "SIGAR", sourceUrl: "https://www.sigar.mil/" },
-      { id: "afg-success", title: "Service delivery gains", text: "A partial-success argument points to expanded schools, clinics, infrastructure, and public services in some places during the aid period.", type: "success_evidence" },
-      { id: "afg-harm", title: "Corruption and collapse", text: "A failure argument points to corruption, weak institutions, donor dependence, and the collapse of the government after foreign withdrawal.", type: "failure_or_harm" },
-      { id: "afg-civilian-impact", title: "Uneven benefits", text: "Benefits varied by gender, region, class, security conditions, and access to donor-funded programs. National gains may hide local exclusion or insecurity.", type: "civilian_or_social_impact" },
-      { id: "afg-mechanism", title: "Aid-to-capacity mechanism", text: "The policy assumed that money, technical assistance, and projects could improve services, build institutions, and increase trust in the state.", type: "mechanism" },
-      { id: "afg-alternative", title: "War shaped outcomes", text: "Military strategy, Taliban organization, regional politics, local powerbrokers, and security conditions shaped results alongside development aid.", type: "alternative_explanation" },
-      { id: "afg-comparison", title: "Short-term gains or durable change?", text: "Students must compare services during heavy donor support with what lasted after donor withdrawal and political collapse.", type: "comparison_problem" },
-      { id: "afg-missing", title: "Missing evidence", text: "Students would need local evidence about which projects lasted, who benefited, and which institutions could function without foreign money and contractors.", type: "missing_evidence" },
+      { id: "afg-goal", title: "Policy goal", text: "Aid aimed to rebuild services, support a functioning state, and improve livelihoods.", type: "policy_goal", whyItMatters: "Shows the dual goals of helping people and building a state.", limitation: "The goals sometimes conflicted with military objectives." },
+      { id: "afg-success", title: "Service delivery gains", text: "Expanded schools, clinics, and infrastructure helped many communities during the aid period.", type: "success_evidence", whyItMatters: "Supports success if judging by welfare improvements.", limitation: "Gains were easily reversed when aid stopped." },
+      { id: "afg-harm", title: "Corruption and collapse", text: "Corruption, weak institutions, and the collapse of the government point to failure.", type: "failure_or_harm", whyItMatters: "Supports failure if judging by state capacity or sustainability.", limitation: "Does not erase the years of improved welfare for some." },
+      { id: "afg-civilian-impact", title: "Uneven benefits", text: "Benefits varied heavily by region, gender, and security conditions.", type: "civilian_or_social_impact", whyItMatters: "Highlights that national averages can hide local inequalities.", limitation: "Uneven aid is still better than no aid for those who received it." },
+      { id: "afg-mechanism", title: "Aid-to-capacity mechanism", text: "The policy assumed that money and projects could build institutions and increase trust in the state.", type: "mechanism", whyItMatters: "Explains the core theory behind the aid.", limitation: "Money can also fuel corruption and reduce trust." },
+      { id: "afg-alternative", title: "War shaped outcomes", text: "Military strategy, conflict, and local powerbrokers shaped results alongside development aid.", type: "alternative_explanation", whyItMatters: "Shows that aid cannot succeed in a vacuum of insecurity.", limitation: "Aid itself also fueled some of the conflict." },
+      { id: "afg-comparison", title: "Short-term vs Durable", text: "Students must compare services during heavy donor support with what lasted after withdrawal.", type: "comparison_problem", whyItMatters: "Forces a discussion on sustainability.", limitation: "Hard to predict future trajectories." },
+      { id: "afg-missing", title: "Missing evidence", text: "We need local evidence about which specific projects lasted and who benefited most.", type: "missing_evidence", whyItMatters: "Shows the need for micro-level data.", limitation: "Data collection is hard in post-collapse environments." }
     ],
     sources: [
       { title: "SIGAR reports", url: "https://www.sigar.mil/" },
-      { title: "World Bank: Afghanistan Reconstruction Trust Fund", url: "https://www.worldbank.org/en/programs/artf" },
-      { title: "OECD Creditor Reporting System", url: "https://stats.oecd.org/Index.aspx?DataSetCode=CRS1" },
-      { title: "World Development Indicators", url: "https://databank.worldbank.org/source/world-development-indicators" },
+      { title: "World Bank: Afghanistan Reconstruction Trust Fund", url: "https://www.worldbank.org/en/programs/artf" }
     ],
-    teacherNote: "Strong case for separating short-term welfare gains from state-building and sustainability.",
+    teacherNote: "Strong case for separating short-term welfare gains from state-building and sustainability."
   },
   {
     id: "philippines-kalahi-cidss",
@@ -155,25 +164,27 @@ export const cases: CaseStudy[] = [
     policy: "KALAHI-CIDSS community-driven development aid",
     question: "Did foreign aid work in the case of the Philippines?",
     background:
-      "KALAHI-CIDSS supported community-driven development by funding local planning, participation, and small infrastructure projects, including in poorer and conflict-affected areas. The case is useful because success might mean poverty reduction, better local governance, safer delivery, participation by marginalized groups, or reduced conflict. Students should ask whether community choice improved outcomes, and whether gains were broad, durable, and protected from local power inequalities.",
-    successCriteria: ["Poverty reduction", "Community participation", "Local governance", "Conflict reduction", "Safe delivery"],
+      "What happened: KALAHI-CIDSS supported community-driven development by funding local planning and small infrastructure projects in poorer areas.\n\nPolicy used: Community-driven development (CDD) grants and technical assistance.\n\nWhy it is hard to judge: Success might mean poverty reduction, better local governance, or participation by marginalized groups. Students should ask whether community choice actually improved outcomes, and whether these small gains were protected from local inequalities or elite capture.",
+    successCriteria: [
+      { id: "welfare", label: "Welfare improvement", explanation: "Did the aid improve local living conditions?" },
+      { id: "participation", label: "Community participation", explanation: "Did the project give marginalized groups a real voice?" },
+      { id: "governance", label: "Local governance", explanation: "Did it improve trust and accountability in local government?" }
+    ],
     evidenceCards: [
-      { id: "ph-goal", title: "Policy goal", text: "The program aimed to let communities identify priorities, manage resources, and deliver small public goods through participatory local planning.", type: "policy_goal", sourceTitle: "World Bank KALAHI-CIDSS", sourceUrl: "https://www.worldbank.org/en/country/philippines/brief/kalahi-cidss-national-community-driven-development-project" },
-      { id: "ph-success", title: "Participation and fit", text: "A success argument says community planning can make projects better match local needs and can strengthen habits of participation and accountability.", type: "success_evidence" },
-      { id: "ph-harm", title: "Limited transformation", text: "A cautious view says small infrastructure and participation may improve services without deeply changing poverty, inequality, or local power relations.", type: "failure_or_harm" },
-      { id: "ph-civilian-impact", title: "Whose voice counted?", text: "Students should ask whether women, poorer households, Indigenous communities, or conflict-affected residents could influence decisions, not only attend meetings.", type: "civilian_or_social_impact" },
-      { id: "ph-mechanism", title: "Community-driven mechanism", text: "The mechanism was local choice: communities choose and monitor projects, which should improve relevance, reduce waste, and build trust in local governance.", type: "mechanism" },
-      { id: "ph-alternative", title: "Local conditions mattered", text: "Municipal capacity, local leadership, national growth, conflict intensity, and pre-existing civic networks could explain why some communities benefited more than others.", type: "alternative_explanation" },
-      { id: "ph-comparison", title: "Compared with normal delivery", text: "The key comparison is whether community-driven delivery produced better results than standard local government projects or other anti-poverty programs.", type: "comparison_problem" },
-      { id: "ph-missing", title: "Missing evidence", text: "Students would need follow-up evidence about project maintenance, elite capture, participation quality, and whether conflict-affected areas saw different results.", type: "missing_evidence" },
+      { id: "ph-goal", title: "Policy goal", text: "The program aimed to let communities identify priorities and manage resources for public goods.", type: "policy_goal", whyItMatters: "Clarifies that the process (participation) was a goal itself.", limitation: "Participation takes time and effort from poor communities." },
+      { id: "ph-success", title: "Participation and fit", text: "Community planning made projects better match local needs and strengthened participation.", type: "success_evidence", whyItMatters: "Supports success for governance and participation.", limitation: "Does not guarantee massive poverty reduction." },
+      { id: "ph-harm", title: "Limited transformation", text: "Small infrastructure may improve services without deeply changing poverty or local power relations.", type: "failure_or_harm", whyItMatters: "Complicates the idea that CDD is a cure-all for poverty.", limitation: "Small improvements are still improvements." },
+      { id: "ph-civilian-impact", title: "Whose voice counted?", text: "We must ask whether women or poorer households could influence decisions, not just attend meetings.", type: "civilian_or_social_impact", whyItMatters: "Highlights the difference between real and fake participation.", limitation: "Measuring influence is difficult." },
+      { id: "ph-mechanism", title: "Community-driven mechanism", text: "Local choice should improve relevance, reduce waste, and build trust in local governance.", type: "mechanism", whyItMatters: "Explains why letting communities decide is supposed to work.", limitation: "Assumes communities agree on priorities." },
+      { id: "ph-alternative", title: "Local conditions mattered", text: "Municipal capacity and pre-existing civic networks explain why some communities benefited more.", type: "alternative_explanation", whyItMatters: "Shows that aid depends on existing local strengths.", limitation: "Means the aid might not work everywhere." },
+      { id: "ph-comparison", title: "Compared with normal delivery", text: "Did community-driven delivery produce better results than standard local government projects?", type: "comparison_problem", whyItMatters: "Focuses the evaluation on the specific method of delivery.", limitation: "Hard to compare different types of projects." },
+      { id: "ph-missing", title: "Missing evidence", text: "We need follow-up evidence about project maintenance and whether local elites captured the benefits.", type: "missing_evidence", whyItMatters: "Points to long-term unknowns.", limitation: "Long-term monitoring is rare." }
     ],
     sources: [
       { title: "World Bank: KALAHI-CIDSS", url: "https://www.worldbank.org/en/country/philippines/brief/kalahi-cidss-national-community-driven-development-project" },
-      { title: "World Bank Independent Evaluation Group", url: "https://ieg.worldbankgroup.org/" },
-      { title: "OECD Creditor Reporting System", url: "https://stats.oecd.org/Index.aspx?DataSetCode=CRS1" },
-      { title: "World Development Indicators", url: "https://databank.worldbank.org/source/world-development-indicators" },
+      { title: "World Bank Independent Evaluation Group", url: "https://ieg.worldbankgroup.org/" }
     ],
-    teacherNote: "Good case for discussing small but meaningful local improvements versus broader structural change.",
+    teacherNote: "Good case for discussing small but meaningful local improvements versus broader structural change."
   },
   {
     id: "colombia-plan-colombia",
@@ -183,25 +194,28 @@ export const cases: CaseStudy[] = [
     policy: "Plan Colombia security and development aid",
     question: "Did foreign aid work in the case of Colombia?",
     background:
-      "Plan Colombia combined security assistance, counternarcotics policy, institution-building, and development goals. Violence declined in many areas over time and the state strengthened in some respects, but displacement, human-rights concerns, coca cultivation dynamics, and Colombia's own reforms complicate the picture. Students should decide whether they are judging violence reduction, drug production, state capacity, civilian protection, or support for later negotiations and peace.",
-    successCriteria: ["Reduced violence", "Weakened armed groups", "Reduced drug production", "Strengthened state capacity", "Supported negotiations or peace"],
+      "What happened: Plan Colombia combined security assistance, counternarcotics policy, and development aid to help the Colombian government fight armed groups and drug cartels.\n\nPolicy used: Huge amounts of military, security, and economic foreign aid.\n\nWhy it is hard to judge: Violence declined in many areas and the state strengthened. However, displacement, human rights concerns, and shifting drug production complicate the picture. Students must decide if they are judging violence reduction, civilian protection, or support for the later peace negotiations.",
+    successCriteria: [
+      { id: "reduced_violence", label: "Reduced violence", explanation: "Did the policy lower the overall level of conflict?" },
+      { id: "state_capacity", label: "State capacity", explanation: "Did the state gain control and provide better security?" },
+      { id: "civilian_harm", label: "Civilian harm", explanation: "Did the policy avoid serious harm to ordinary people?" },
+      { id: "peace", label: "Supported peace", explanation: "Did it help create conditions for a peace agreement?" }
+    ],
     evidenceCards: [
-      { id: "col-goal", title: "Policy goal", text: "Aid aimed to strengthen the Colombian state, reduce drug-linked violence, weaken armed groups, and support security and development.", type: "policy_goal", sourceTitle: "Congressional Research Service", sourceUrl: "https://crsreports.congress.gov/" },
-      { id: "col-success", title: "Security gains", text: "A partial-success argument links aid and domestic reforms to stronger state presence and reduced violence in many areas over time.", type: "success_evidence" },
-      { id: "col-harm", title: "Human rights concerns", text: "A failure or harm argument points to displacement, abuses, and uneven civilian protection, especially where militarized strategies affected vulnerable communities.", type: "failure_or_harm" },
-      { id: "col-civilian-impact", title: "Uneven community effects", text: "Some communities gained security, while others experienced displacement, militarization, crop eradication pressures, or continued armed group activity.", type: "civilian_or_social_impact" },
-      { id: "col-mechanism", title: "Security-first mechanism", text: "The policy assumed that stronger security forces, institutions, and anti-drug operations would weaken armed actors and create space for governance and development.", type: "mechanism" },
-      { id: "col-alternative", title: "Domestic reform and politics", text: "Colombian military reforms, political decisions, local governance, armed group choices, and later peace negotiations also shaped outcomes.", type: "alternative_explanation" },
-      { id: "col-comparison", title: "Security or drug-policy benchmark?", text: "The verdict may change depending on whether students compare violence trends, drug production, state capacity, or civilian well-being.", type: "comparison_problem" },
-      { id: "col-missing", title: "Missing evidence", text: "Students would need evidence separating US aid effects from Colombia's own policies, and local data on who became safer or less safe.", type: "missing_evidence" },
+      { id: "col-goal", title: "Policy goal", text: "Aid aimed to strengthen the state, reduce drug-linked violence, and weaken armed groups.", type: "policy_goal", whyItMatters: "Shows the blend of military and development goals.", limitation: "Goals were heavily focused on security over welfare." },
+      { id: "col-success", title: "Security gains", text: "Aid and domestic reforms led to stronger state presence and reduced violence in many areas.", type: "success_evidence", whyItMatters: "Supports success if judging by state capacity or violence reduction.", limitation: "Violence moved to other areas instead of disappearing." },
+      { id: "col-harm", title: "Human rights concerns", text: "Militarized strategies led to displacement and abuses, affecting vulnerable communities.", type: "failure_or_harm", whyItMatters: "Supports failure if judging by civilian harm.", limitation: "Does not negate the national drop in violence." },
+      { id: "col-civilian-impact", title: "Uneven community effects", text: "Some communities gained security, while others experienced militarization and displacement.", type: "civilian_or_social_impact", whyItMatters: "Highlights inequality in who benefits from security aid.", limitation: "A national view might look positive while local views look negative." },
+      { id: "col-mechanism", title: "Security-first mechanism", text: "Assumed that stronger security forces would weaken armed actors and create space for development.", type: "mechanism", whyItMatters: "Explains the theory behind military aid.", limitation: "Security does not automatically create development." },
+      { id: "col-alternative", title: "Domestic reform", text: "Colombian military reforms, political decisions, and later peace negotiations also shaped outcomes.", type: "alternative_explanation", whyItMatters: "Shows that domestic actions were as important as foreign aid.", limitation: "Domestic reforms were funded by the aid." },
+      { id: "col-comparison", title: "Security or drug policy?", text: "The verdict changes depending on whether you compare violence trends or drug production levels.", type: "comparison_problem", whyItMatters: "Forces clarity on the success criterion.", limitation: "Drug production often adapts to enforcement." },
+      { id: "col-missing", title: "Missing evidence", text: "We need evidence separating US aid effects from Colombia's own policies.", type: "missing_evidence", whyItMatters: "Shows the attribution problem in aid evaluation.", limitation: "Hard to separate intertwined funds." }
     ],
     sources: [
       { title: "Congressional Research Service reports", url: "https://crsreports.congress.gov/" },
-      { title: "OECD Creditor Reporting System", url: "https://stats.oecd.org/Index.aspx?DataSetCode=CRS1" },
-      { title: "World Development Indicators", url: "https://databank.worldbank.org/source/world-development-indicators" },
-      { title: "UNODC crop monitoring", url: "https://www.unodc.org/unodc/en/crop-monitoring/index.html" },
+      { title: "UNODC crop monitoring", url: "https://www.unodc.org/unodc/en/crop-monitoring/index.html" }
     ],
-    teacherNote: "Useful for separating security outcomes from human-rights and counternarcotics outcomes.",
+    teacherNote: "Useful for separating security outcomes from human-rights and counternarcotics outcomes."
   },
   {
     id: "rwanda-reconstruction-aid",
@@ -211,24 +225,26 @@ export const cases: CaseStudy[] = [
     policy: "Post-genocide reconstruction and development aid",
     question: "Did foreign aid work in the case of Rwanda?",
     background:
-      "After the 1994 genocide, Rwanda received aid for reconstruction, health, education, infrastructure, poverty reduction, and governance. The case raises difficult questions because many observers point to strong development and state-capacity gains, while others emphasize political control, limited civic space, aid dependence, and attribution problems. Students should decide whether success means reconstruction, welfare gains, governance openness, or sustainable development beyond donor support.",
-    successCriteria: ["Reconstruction", "Poverty reduction", "Health or education gains", "State capacity", "Aid dependence", "Governance or political openness"],
+      "What happened: After the 1994 genocide, Rwanda received massive aid for reconstruction, health, education, and poverty reduction.\n\nPolicy used: Development and budget support aid directly aligned with government plans.\n\nWhy it is hard to judge: Many observers point to incredible development, health, and state-capacity gains. However, others emphasize tight political control, limited civic space, and aid dependence. Students must decide whether success means pure economic development or whether it must include political openness.",
+    successCriteria: [
+      { id: "welfare", label: "Welfare improvement", explanation: "Did health, education, and poverty improve?" },
+      { id: "state_capacity", label: "State capacity", explanation: "Did aid help the government provide services effectively?" },
+      { id: "governance", label: "Political openness", explanation: "Did the policy support accountable and open governance?" }
+    ],
     evidenceCards: [
-      { id: "rw-goal", title: "Policy goal", text: "Aid aimed to support reconstruction, restore services, strengthen public administration, and help recovery after mass violence.", type: "policy_goal", sourceTitle: "World Bank Rwanda overview", sourceUrl: "https://www.worldbank.org/en/country/rwanda/overview" },
-      { id: "rw-success", title: "Development progress", text: "A success argument points to service delivery, planning capacity, infrastructure, and human-development gains in the post-genocide period.", type: "success_evidence" },
-      { id: "rw-harm", title: "Governance tradeoffs", text: "A complication is whether development gains came with limits on political openness, dissent, or accountability. Students must decide whether that affects the aid verdict.", type: "failure_or_harm" },
-      { id: "rw-civilian-impact", title: "Who benefited?", text: "Students should ask whether gains reached rural households, survivors, poorer communities, and marginalized groups, or whether national averages hide uneven experiences.", type: "civilian_or_social_impact" },
-      { id: "rw-mechanism", title: "State-capacity mechanism", text: "The policy assumed that aid aligned with government planning could rebuild institutions, expand services, and improve development outcomes.", type: "mechanism" },
-      { id: "rw-alternative", title: "Domestic strategy", text: "Strong government planning, social discipline, security priorities, regional politics, and domestic policy choices may explain outcomes alongside aid.", type: "alternative_explanation" },
-      { id: "rw-comparison", title: "Aid or government effectiveness?", text: "The comparison problem is whether outcomes came from foreign aid, domestic governance choices, post-conflict recovery dynamics, or the interaction of all three.", type: "comparison_problem" },
-      { id: "rw-missing", title: "Missing evidence", text: "Students would need evidence about donor dependence, local voice, political tradeoffs, and which gains would continue if aid declined.", type: "missing_evidence" },
+      { id: "rw-goal", title: "Policy goal", text: "Aid aimed to support reconstruction, restore services, and help recovery after mass violence.", type: "policy_goal", whyItMatters: "Sets the baseline of recovering from total collapse.", limitation: "Goals rarely focused explicitly on democracy." },
+      { id: "rw-success", title: "Development progress", text: "Service delivery, infrastructure, and human-development saw massive gains in the post-genocide period.", type: "success_evidence", whyItMatters: "Provides strong support for welfare and state capacity success.", limitation: "Economic growth does not mean political freedom." },
+      { id: "rw-harm", title: "Governance tradeoffs", text: "Development gains came with tight limits on political openness, dissent, and accountability.", type: "failure_or_harm", whyItMatters: "Supports failure if judging by political openness.", limitation: "Some argue tight control was needed for stability." },
+      { id: "rw-civilian-impact", title: "Who benefited?", text: "Did gains reach rural households and marginalized groups, or do national averages hide uneven experiences?", type: "civilian_or_social_impact", whyItMatters: "Questions the depth of the economic success.", limitation: "Most countries have uneven development." },
+      { id: "rw-mechanism", title: "State-capacity mechanism", text: "Assumed that aid aligned with government planning could rapidly rebuild institutions and expand services.", type: "mechanism", whyItMatters: "Explains why donors gave money directly to the government.", limitation: "Direct funding strengthens the ruling party's power." },
+      { id: "rw-alternative", title: "Domestic strategy", text: "Strong government planning, social discipline, and domestic policy choices drove the outcomes.", type: "alternative_explanation", whyItMatters: "Suggests the Rwandan government deserves the credit, not just the aid.", limitation: "The government could not have done it without the funding." },
+      { id: "rw-comparison", title: "Aid or effectiveness?", text: "Did outcomes come from foreign aid, domestic governance choices, or the interaction of both?", type: "comparison_problem", whyItMatters: "Highlights the difficulty of crediting foreign aid alone.", limitation: "They are impossible to separate." },
+      { id: "rw-missing", title: "Missing evidence", text: "We need evidence about which gains would continue if foreign aid declined significantly.", type: "missing_evidence", whyItMatters: "Questions the long-term sustainability of the progress.", limitation: "Can only be tested if aid is actually withdrawn." }
     ],
     sources: [
       { title: "World Bank: Rwanda overview", url: "https://www.worldbank.org/en/country/rwanda/overview" },
-      { title: "OECD Creditor Reporting System", url: "https://stats.oecd.org/Index.aspx?DataSetCode=CRS1" },
-      { title: "World Development Indicators", url: "https://databank.worldbank.org/source/world-development-indicators" },
-      { title: "UNDP Rwanda", url: "https://www.undp.org/rwanda" },
+      { title: "UNDP Rwanda", url: "https://www.undp.org/rwanda" }
     ],
-    teacherNote: "Good case for asking whether development success and political openness must be judged separately.",
-  },
+    teacherNote: "Good case for asking whether development success and political openness must be judged separately."
+  }
 ];

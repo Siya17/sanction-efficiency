@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { indicators as defaultIndicators } from "../data/indicators";
 import { timelines as defaultTimelines } from "../data/timelines";
 import type { CaseIndicator, CaseStudy, EvidenceCard, EvidenceCardType, SourceLink, TimelineEvent } from "../types";
@@ -51,7 +51,7 @@ function createBlankCase(): CaseStudy {
     policy: "",
     question: "Did the policy work in this case?",
     background: "",
-    successCriteria: ["Behavior or outcome changed"],
+    successCriteria: [{ id: "behavior_change", label: "Behavior or outcome changed", explanation: "Default explanation" }],
     evidenceCards: [createBlankEvidenceCard(id)],
     sources: [],
     teacherNote: "",
@@ -206,11 +206,11 @@ export function TeacherMode({ cases, onCasesChanged, onChooseCase }: TeacherMode
     setDraft((current) => (current ? { ...current, ...changes } : current));
   }
 
-  function updateCriterion(index: number, value: string) {
+  function updateCriterion(index: number, value: string, field: "label" | "explanation") {
     setDraft((current) => {
       if (!current) return current;
       const successCriteria = [...current.successCriteria];
-      successCriteria[index] = value;
+      successCriteria[index] = { ...successCriteria[index], [field]: value };
       return { ...current, successCriteria };
     });
   }
@@ -467,14 +467,15 @@ export function TeacherMode({ cases, onCasesChanged, onChooseCase }: TeacherMode
                   <button
                     className="secondary-button"
                     type="button"
-                    onClick={() => updateDraft({ successCriteria: [...draft.successCriteria, "New success criterion"] })}
+                    onClick={() => updateDraft({ successCriteria: [...draft.successCriteria, { id: createId("criterion"), label: "New criterion", explanation: "" }] })}
                   >
                     Add criterion
                   </button>
                 </div>
                 {draft.successCriteria.map((criterion, index) => (
-                  <div className="editor-row" key={`${criterion}-${index}`}>
-                    <input value={criterion} onChange={(event) => updateCriterion(index, event.target.value)} />
+                  <div className="editor-row" key={`${criterion.id}-${index}`}>
+                    <input value={criterion.label} onChange={(event) => updateCriterion(index, event.target.value, "label")} placeholder="Label" />
+                    <input value={criterion.explanation} onChange={(event) => updateCriterion(index, event.target.value, "explanation")} placeholder="Explanation" />
                     <button
                       className="danger-button"
                       type="button"

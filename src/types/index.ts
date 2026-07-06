@@ -85,11 +85,12 @@ export type EvidenceCard = {
   title: string;
   text: string;
   type: EvidenceCardType;
+  whyItMatters?: string;
+  limitation?: string;
   sourceTitle?: string;
   sourceUrl?: string;
   isStudentAdded?: boolean;
   reliability?: EvidenceReliability;
-  limitation?: string;
 };
 
 export type Citation = {
@@ -118,6 +119,12 @@ export type StudentEvidenceCard = {
   createdAt: string;
 };
 
+export type SuccessCriterion = {
+  id: string;
+  label: string;
+  explanation: string;
+};
+
 export type CaseStudy = {
   id: string;
   track: Track;
@@ -126,7 +133,7 @@ export type CaseStudy = {
   policy: string;
   question: string;
   background: string;
-  successCriteria: string[];
+  successCriteria: SuccessCriterion[];
   evidenceCards: EvidenceCard[];
   sources: SourceLink[];
   teacherNote?: string;

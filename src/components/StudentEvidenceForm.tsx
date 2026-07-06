@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type React from "react";
 import type { EvidenceReliability, EvidenceSortCategory, StudentEvidenceCard } from "../types";
-
+import { categoryLabels } from "../utils/labels";
+import { InlineHelp } from "./InlineHelp";
 type Props = {
   caseId: string;
   onAddEvidence: (card: StudentEvidenceCard) => void;
@@ -158,12 +159,22 @@ export function StudentEvidenceForm({ caseId, onAddEvidence }: Props) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Why did you sort it this way? *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Why did you sort it this way? *
+              <InlineHelp term="Why did you sort it this way?">
+                This will be the "Why it matters" part of your evidence card. Connect your evidence directly to the success criterion you chose.
+              </InlineHelp>
+            </label>
             <textarea required value={explanation} onChange={e => setExplanation(e.target.value)} className="w-full p-2 border rounded-md h-20" placeholder="Explain how this connects to your success criterion..." />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">What can this evidence NOT prove? (Limitations) *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              What can this evidence NOT prove? (Limitations) *
+              <InlineHelp term="Limitations">
+                Good researchers admit what their evidence doesn't show. E.g., a drop in trade proves economic cost, but not political change.
+              </InlineHelp>
+            </label>
             <textarea required value={limitation} onChange={e => setLimitation(e.target.value)} className="w-full p-2 border rounded-md h-20" placeholder="e.g., 'This shows prices went up, but not whether the leadership cared.'" />
           </div>
 

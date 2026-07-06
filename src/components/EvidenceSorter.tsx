@@ -2,6 +2,7 @@ import { evidenceSortCategories } from "../constants/workflow";
 import type { EvidenceCard as EvidenceCardType, EvidenceSortCategory } from "../types";
 import { categoryLabels } from "../utils/labels";
 import { EvidenceCard } from "./EvidenceCard";
+import { InlineHelp } from "./InlineHelp";
 
 type EvidenceSorterProps = {
   cards: EvidenceCardType[];
@@ -18,10 +19,21 @@ export function EvidenceSorter({ cards, assignments, onAssign, onDeleteStudentEv
         {evidenceSortCategories.map((category) => {
           const count = Object.values(assignments).filter((value) => value === category).length;
 
+          const explanations: Record<string, string> = {
+            supports_success: "Evidence that the policy achieved its goal or had positive effects.",
+            supports_failure: "Evidence that the policy failed its goal or caused harm.",
+            complicates: "Evidence that makes it hard to give a simple yes or no answer.",
+          };
+
           return (
             <div className="summary-box" key={category}>
               <span>{count}</span>
-              <strong>{categoryLabels[category]}</strong>
+              <strong>
+                {categoryLabels[category]}
+                <InlineHelp term={categoryLabels[category]}>
+                  {explanations[category]}
+                </InlineHelp>
+              </strong>
             </div>
           );
         })}

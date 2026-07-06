@@ -8,6 +8,7 @@ import { TeacherNotes } from "./TeacherNotes";
 import { RealDataSnapshot } from "./RealDataSnapshot";
 import { ResearchGuidance } from "./ResearchGuidance";
 import { StudentEvidenceForm } from "./StudentEvidenceForm";
+import { InlineHelp } from "./InlineHelp";
 import type { ActivityMode, StudentEvidenceCard } from "../types";
 
 type CaseInvestigationProps = {
@@ -82,6 +83,9 @@ export function CaseInvestigation({
 
           <label className="field-label" htmlFor="criterion">
             Choose a success criterion
+            <InlineHelp term="Success criterion">
+              The benchmark you choose to measure success. A policy might fail at one goal but succeed at another.
+            </InlineHelp>
           </label>
           <select
             id="criterion"
@@ -90,8 +94,8 @@ export function CaseInvestigation({
           >
             <option value="">Select one criterion</option>
             {caseStudy.successCriteria.map((criterion) => (
-              <option key={criterion} value={criterion}>
-                {criterion}
+              <option key={criterion.id} value={criterion.id}>
+                {criterion.label} — {criterion.explanation}
               </option>
             ))}
           </select>

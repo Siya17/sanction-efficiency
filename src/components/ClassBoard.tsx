@@ -64,10 +64,10 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
           <p className="eyebrow">Step 5</p>
           <h1>Class Board</h1>
           <div className="discussion-prompts">
-            <p>Across the cases, why is "Did it work?" hard to answer?</p>
+            <p>Why is "Did it work?" hard to answer without a specific criterion?</p>
             <p>Which verdict changed most depending on the success criterion?</p>
-            <p>Where did a policy produce both success and harm?</p>
-            <p>What information was most often missing?</p>
+            <p>Where did a policy achieve its goal but also cause civilian harm?</p>
+            <p>What missing evidence would make you more confident?</p>
           </div>
         </div>
         <div className="board-actions">

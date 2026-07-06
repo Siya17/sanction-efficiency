@@ -96,7 +96,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Header boardCount={lab.submissions.length} currentView={lab.view} onNavigate={actions.setView} />
+      <Header boardCount={lab.submissions.length} currentView={lab.view} onNavigate={actions.setView} activityMode={lab.activityMode} onSetActivityMode={actions.setActivityMode} />
       <ProgressSteps currentView={lab.view} />
       {renderView()}
     </div>

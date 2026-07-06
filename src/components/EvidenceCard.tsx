@@ -36,7 +36,13 @@ export function EvidenceCard({ card, category, onAssign, onDelete }: EvidenceCar
       <h3 className="text-lg font-bold text-gray-900 mt-2 mb-2">{card.title}</h3>
       <p className="text-gray-700 text-sm mb-4 leading-relaxed">{card.text}</p>
       
-      {isStudentAdded && card.limitation && (
+      {card.whyItMatters && (
+        <div className="mb-2 bg-blue-50 border border-blue-100 p-2 rounded text-xs text-blue-800">
+          <strong className="block mb-1">Why it matters:</strong> {card.whyItMatters}
+        </div>
+      )}
+
+      {card.limitation && (
         <div className="mb-4 bg-orange-50 border border-orange-100 p-2 rounded text-xs text-orange-800">
           <strong className="block mb-1">Limitation:</strong> {card.limitation}
         </div>

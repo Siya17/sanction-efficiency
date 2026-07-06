@@ -1,4 +1,4 @@
-﻿# Did It Work? Evidence Lab
+# Did Sanctions Work? Evidence Lab
 
 A classroom-ready Vite + React + TypeScript app for a 30-45 minute pair activity about whether sanctions or foreign aid "worked" in real historical cases.
 

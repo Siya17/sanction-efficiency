@@ -1,5 +1,5 @@
 export const appConfig = {
-  title: import.meta.env.VITE_APP_TITLE || "Did It Work? Evidence Lab",
+  title: import.meta.env.VITE_APP_TITLE || "Did Sanctions Work? Evidence Lab",
   subtitle:
     import.meta.env.VITE_APP_SUBTITLE ||
     "A classroom investigation of sanctions and foreign aid.",

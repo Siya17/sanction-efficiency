@@ -80,9 +80,11 @@ export function VerdictBuilder({
       missingEvidence.trim().length > 0;
   }
 
+  const activeCriterion = caseStudy.successCriteria.find(c => c.id === successCriterion)?.label || successCriterion;
+
   const sentence = `In the case of ${caseStudy.country}, the policy aimed to ${
     policyAim || "..."
-  }. We judge success by ${successCriterion || "..."}. Our verdict is ${
+  }. We judge success by ${activeCriterion || "..."}. Our verdict is ${
     verdictLabels[verdict]
   } with ${confidenceLabels[confidence]} confidence because ${
     strongestEvidence || "..."
@@ -179,7 +181,7 @@ export function VerdictBuilder({
 
           <label>
             Success criterion
-            <input value={successCriterion} readOnly />
+            <input value={activeCriterion} readOnly />
           </label>
 
           <label>

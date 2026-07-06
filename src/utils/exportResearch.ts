@@ -4,7 +4,7 @@ import { verdictLabels, confidenceLabels, trackLabels } from "./labels";
 export function formatResearchMarkdown(submission: StudentSubmission): string {
   const isResearch = submission.activityMode === "research";
 
-  let md = `# Did It Work? Evidence Lab — ${isResearch ? "Research " : ""}Submission\n\n`;
+  let md = `# Did Sanctions Work? Evidence Lab — ${isResearch ? "Research " : ""}Submission\n\n`;
   md += `## Case\n`;
   md += `- **Country**: ${submission.country}\n`;
   md += `- **Track**: ${trackLabels[submission.track] || submission.track}\n`;
