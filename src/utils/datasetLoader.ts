@@ -44,17 +44,20 @@ export async function loadDatasetSnapshot(caseId: string): Promise<CaseDatasetSn
   // We load the first dataset mapped to the case for simplicity
   const path = paths[0];
 
+  // Prefix with Vite's BASE_URL so this works when deployed under a subpath.
+  const url = `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+
   try {
-    const response = await fetch(path);
+    const response = await fetch(url);
     if (!response.ok) {
-      console.warn(`Failed to fetch dataset from ${path}: ${response.statusText}`);
+      console.warn(`Failed to fetch dataset from ${url}: ${response.statusText}`);
       return null;
     }
-    
+
     const data = await response.json();
     return validateDatasetSnapshot(data);
   } catch (error) {
-    console.warn(`Error loading dataset from ${path}:`, error);
+    console.warn(`Error loading dataset from ${url}:`, error);
     return null;
   }
 }
