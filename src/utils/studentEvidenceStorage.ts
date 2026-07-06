@@ -7,12 +7,18 @@ export function getStudentEvidence(caseId?: string): StudentEvidenceCard[] {
   if (!raw) return [];
 
   try {
-    const parsed = JSON.parse(raw);
-    const cards = Array.isArray(parsed) ? parsed : [];
-    if (caseId) {
-      return cards.filter((card: StudentEvidenceCard) => card.caseId === caseId);
-    }
-    return cards;
+    const parsed: unknown = JSON.parse(raw);
+    const cards: StudentEvidenceCard[] = Array.isArray(parsed)
+      ? parsed.filter(
+          (card): card is StudentEvidenceCard =>
+            Boolean(card) &&
+            typeof card === "object" &&
+            typeof (card as StudentEvidenceCard).id === "string" &&
+            typeof (card as StudentEvidenceCard).caseId === "string",
+        )
+      : [];
+
+    return caseId ? cards.filter((card) => card.caseId === caseId) : cards;
   } catch {
     return [];
   }
