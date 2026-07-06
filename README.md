@@ -26,15 +26,15 @@ The app does not provide a correct answer. It helps students see that "worked" d
 - Comparative Mode for verdict, track, confidence, criterion, and missing-evidence patterns
 - Teacher Mode for local case editing, duplication, JSON import/export, and restoring defaults
 - CSV export, print button, and clear-board control
-- No backend, authentication, accounts, or live API calls
+- **Real-time Collaboration:** Optional Supabase integration for first-come, first-served case claiming and syncing the Class Board across devices.
 
 ## Tech Stack
 
 - Vite
 - React
 - TypeScript
+- Supabase (Optional, for real-time sync)
 - Static case data
-- Browser localStorage
 
 ## Getting Started
 
@@ -46,6 +46,39 @@ npm.cmd run dev
 Then open the local URL printed by Vite, usually `http://localhost:5173`.
 
 If PowerShell blocks `npm`, use `npm.cmd` rather than `npm`.
+
+## Supabase Real-time Setup (Optional)
+
+To enable real-time case claiming and Class Board syncing across different devices:
+
+1. Create a free project at [Supabase](https://supabase.com/).
+2. Run the following SQL in the Supabase SQL Editor:
+
+```sql
+create table public.claimed_cases (
+  case_id text primary key,
+  group_name text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+create table public.submissions (
+  id uuid primary key,
+  group_name text not null,
+  case_id text not null,
+  verdict text not null,
+  data jsonb not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter publication supabase_realtime add table public.claimed_cases;
+alter publication supabase_realtime add table public.submissions;
+```
+3. Add a `.env` file to the root of your project with your API keys:
+```env
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+If these variables are missing, the app will gracefully fall back to `localStorage`.
 
 ## Scripts
 
@@ -81,7 +114,7 @@ Students can submit after they have filled in the policy aim, strongest evidence
 
 ## Class Board Storage
 
-Submissions are stored in the browser under a localStorage key. They stay after refresh on the same device/browser.
+Submissions are stored in the browser under a localStorage key by default. If Supabase is configured, submissions will sync in real-time across all devices.
 
 Use **Clear board** in the app to remove all local submissions. Use **Export CSV** to save the currently filtered board.
 
@@ -97,6 +130,7 @@ Teacher Mode supports:
 - editing success criteria, evidence cards, sources, and teacher notes
 - importing/exporting case JSON
 - editing optional timeline and indicator data as JSON arrays
+
 ## Environment
 
 Copy `.env.example` to `.env.local` if you want to adjust display text without touching code:
@@ -107,10 +141,11 @@ Copy-Item .env.example .env.local
 
 All variables must use the `VITE_` prefix to be available in the app.
 
-## Deployment
+## Deployment (Vercel)
 
-This app can be deployed as a static Vite site. Build output goes to `dist/`:
+The easiest way to get a sharable link for your classroom is to deploy this to Vercel:
 
-```powershell
-npm.cmd run build
-```
+1. Push your code to GitHub.
+2. Import the repository in Vercel.
+3. Add the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to Vercel's Environment Variables.
+4. Deploy!
