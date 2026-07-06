@@ -1,5 +1,5 @@
 import { appConfig } from "../config/app";
-import { activityTiming, workflowSteps } from "../constants/workflow";
+import { InlineHelp } from "./InlineHelp";
 
 type HomeProps = {
   onStart: () => void;
@@ -14,36 +14,36 @@ export function Home({ onStart, onBoard }: HomeProps) {
           <p className="eyebrow">Classroom investigation</p>
           <h1>{appConfig.title}</h1>
           <p className="subtitle">{appConfig.subtitle}</p>
-          <p className="intro">
-            Your task is not to decide whether a policy was good or bad in general. Your task is to decide
-            whether it worked in a specific case, and what evidence would be needed to know.
-          </p>
-          <div className="button-row">
+          <div className="intro">
+            <p>
+              Many people ask whether 
+              <strong> sanctions</strong>
+              <InlineHelp term="Sanctions">
+                Economic or political penalties, like trade bans or frozen assets, used by countries to pressure a target government or group to change its behavior.
+              </InlineHelp>
+              {" "}or{" "}
+              <strong>foreign aid</strong>
+              <InlineHelp term="Foreign aid">
+                Money, food, or resources given by one country or organization to help another country, often to support development, health, or security.
+              </InlineHelp>
+              {" "} "worked." This app helps you answer that question carefully.
+            </p>
+            <ol style={{ textAlign: "left", marginTop: "1rem", marginBottom: "1rem", paddingLeft: "1.5rem" }}>
+              <li><strong>Choose a real case</strong></li>
+              <li><strong>Decide what "worked" means</strong></li>
+              <li><strong>Use evidence to make a cautious verdict</strong></li>
+            </ol>
+            <p style={{ background: "#fef3c7", padding: "10px", borderRadius: "6px", color: "#92400e", fontSize: "0.95rem" }}>
+              <strong>Note:</strong> There may not be one correct answer. A good answer explains the evidence and the uncertainty.
+            </p>
+          </div>
+          <div className="button-row" style={{ marginTop: "2rem" }}>
             <button className="primary-button" type="button" onClick={onStart}>
               Start with a case
             </button>
             <button className="secondary-button" type="button" onClick={onBoard}>
               View class board
             </button>
-          </div>
-        </div>
-
-        <div className="workflow-panel" aria-label="Class workflow">
-          <h2>Activity guide</h2>
-          {workflowSteps.map((step, index) => (
-            <div className="workflow-step" key={step}>
-              <span>{index + 1}</span>
-              <strong>{step}</strong>
-            </div>
-          ))}
-          <div className="timing-guide">
-            <h3>Suggested timing</h3>
-            {activityTiming.map((item) => (
-              <div key={item.label}>
-                <span>{item.label}</span>
-                <strong>{item.time}</strong>
-              </div>
-            ))}
           </div>
         </div>
       </section>

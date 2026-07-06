@@ -1,4 +1,6 @@
 export type Track = "sanctions" | "aid";
+export type ActivityMode = "classroom" | "research";
+export type EvidenceReliability = "high" | "medium" | "low" | "uncertain";
 
 export type EvidenceSortCategory =
   | "unassigned"
@@ -83,8 +85,44 @@ export type EvidenceCard = {
   title: string;
   text: string;
   type: EvidenceCardType;
+  whyItMatters?: string;
+  limitation?: string;
   sourceTitle?: string;
   sourceUrl?: string;
+  isStudentAdded?: boolean;
+  reliability?: EvidenceReliability;
+};
+
+export type Citation = {
+  title: string;
+  url?: string;
+  authorOrOrganization?: string;
+  publicationYear?: string;
+  note?: string;
+};
+
+export type StudentEvidenceCard = {
+  id: string;
+  caseId: string;
+  title: string;
+  summary: string;
+  sourceTitle: string;
+  sourceUrl?: string;
+  authorOrOrganization?: string;
+  publicationYear?: string;
+  quoteOrDataPoint?: string;
+  reliability: EvidenceReliability;
+  sortCategory: EvidenceSortCategory;
+  explanation: string;
+  limitation: string;
+  notes?: string;
+  createdAt: string;
+};
+
+export type SuccessCriterion = {
+  id: string;
+  label: string;
+  explanation: string;
 };
 
 export type CaseStudy = {
@@ -95,7 +133,7 @@ export type CaseStudy = {
   policy: string;
   question: string;
   background: string;
-  successCriteria: string[];
+  successCriteria: SuccessCriterion[];
   evidenceCards: EvidenceCard[];
   sources: SourceLink[];
   teacherNote?: string;
@@ -115,6 +153,17 @@ export type StudentSubmission = {
   biggestComplication: string;
   missingEvidence: string;
   dataSnapshotReflection?: string;
+  activityMode?: ActivityMode;
+  studentEvidenceCards?: StudentEvidenceCard[];
+  researchQuestion?: string;
+  supportingEvidence?: string;
+  complicatingEvidence?: string;
+  counterargument?: string;
+  evidenceThatWouldChangeMind?: string;
+  remainingUncertainty?: string;
+  sourceReliabilityNote?: string;
+  finalExplanation?: string;
+  citationList?: Citation[];
   createdAt: string;
 };
 

@@ -6,29 +6,58 @@ import { EvidenceSorter } from "./EvidenceSorter";
 import { IndicatorCard } from "./IndicatorCard";
 import { TeacherNotes } from "./TeacherNotes";
 import { RealDataSnapshot } from "./RealDataSnapshot";
+import { ResearchGuidance } from "./ResearchGuidance";
+import { StudentEvidenceForm } from "./StudentEvidenceForm";
+import { InlineHelp } from "./InlineHelp";
+import type { ActivityMode, StudentEvidenceCard } from "../types";
 
 type CaseInvestigationProps = {
+  activityMode: ActivityMode;
   caseStudy: CaseStudy;
   successCriterion: string;
   assignments: Record<string, EvidenceSortCategory>;
+  studentEvidence: StudentEvidenceCard[];
   canContinue: boolean;
   onCriterionChange: (criterion: string) => void;
   onAssignEvidence: (cardId: string, category: EvidenceSortCategory) => void;
+  onAddStudentEvidence: (card: StudentEvidenceCard) => void;
+  onDeleteStudentEvidence: (cardId: string) => void;
   onContinue: () => void;
 };
 
 export function CaseInvestigation({
+  activityMode,
   caseStudy,
   successCriterion,
   assignments,
+  studentEvidence,
   canContinue,
   onCriterionChange,
   onAssignEvidence,
+  onAddStudentEvidence,
+  onDeleteStudentEvidence,
   onContinue,
 }: CaseInvestigationProps) {
   const sortedCount = Object.values(assignments).filter((value) => value !== "unassigned").length;
   const timelineEvents = getTimelineForCase(caseStudy.id);
   const indicators = getIndicatorsForCase(caseStudy.id);
+
+  const isResearch = activityMode === "research";
+  const allEvidence = [
+    ...caseStudy.evidenceCards,
+    ...studentEvidence.map(se => ({
+      id: se.id,
+      title: se.title,
+      text: se.summary,
+      type: "success_evidence" as const, // Default fallback type for UI rendering
+      sourceTitle: se.sourceTitle,
+      sourceUrl: se.sourceUrl,
+      isStudentAdded: true,
+      reliability: se.reliability,
+      limitation: se.limitation,
+      sortCategory: se.sortCategory // Only used in Verdict, but map it anyway
+    }))
+  ];
 
   return (
     <main className="page">
@@ -54,6 +83,9 @@ export function CaseInvestigation({
 
           <label className="field-label" htmlFor="criterion">
             Choose a success criterion
+            <InlineHelp term="Success criterion">
+              The benchmark you choose to measure success. A policy might fail at one goal but succeed at another.
+            </InlineHelp>
           </label>
           <select
             id="criterion"
@@ -62,8 +94,8 @@ export function CaseInvestigation({
           >
             <option value="">Select one criterion</option>
             {caseStudy.successCriteria.map((criterion) => (
-              <option key={criterion} value={criterion}>
-                {criterion}
+              <option key={criterion.id} value={criterion.id}>
+                {criterion.label} — {criterion.explanation}
               </option>
             ))}
           </select>
@@ -111,19 +143,29 @@ export function CaseInvestigation({
             </div>
           </details>
 
+          {isResearch && <ResearchGuidance />}
+
           <div className="section-heading-row">
             <div>
               <h2>Sort the evidence</h2>
               <p>Sort each evidence card into the category where it best belongs.</p>
             </div>
             <span className="progress-chip">
-              {sortedCount}/{caseStudy.evidenceCards.length} sorted
+              {sortedCount}/{allEvidence.length} sorted
             </span>
           </div>
+
+          {isResearch && (
+            <div className="mb-8">
+              <StudentEvidenceForm caseId={caseStudy.id} onAddEvidence={onAddStudentEvidence} />
+            </div>
+          )}
+
           <EvidenceSorter
             assignments={assignments}
-            cards={caseStudy.evidenceCards}
+            cards={allEvidence}
             onAssign={onAssignEvidence}
+            onDeleteStudentEvidence={onDeleteStudentEvidence}
           />
 
           <div className="mt-12 bg-white rounded-lg shadow p-6">

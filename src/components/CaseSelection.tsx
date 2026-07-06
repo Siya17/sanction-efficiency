@@ -14,8 +14,8 @@ export function CaseSelection({ cases, onSelectCase }: CaseSelectionProps) {
     <main className="page">
       <div className="page-heading">
         <p className="eyebrow">Step 1</p>
-        <h1>Choose one case</h1>
-        <p>Choose one case. Your goal is not to win a debate; your goal is to make a careful judgment.</p>
+        <h1>Choose a real case</h1>
+        <p>Pick one historical case to investigate. There is no trick question—just look at the evidence carefully.</p>
       </div>
 
       <section className="case-section">

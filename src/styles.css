@@ -1512,3 +1512,45 @@ textarea {
     flex-direction: column;
   }
 }
+
+/* Print Styles */
+@media print {
+  .app-header,
+  .top-nav,
+  .board-actions,
+  .brand-button,
+  .nav-button,
+  .primary-button,
+  .secondary-button,
+  .danger-button {
+    display: none !important;
+  }
+
+  body, .page {
+    background: white;
+    color: black;
+  }
+
+  .board-table-wrap {
+    overflow: visible;
+  }
+
+  details {
+    display: block;
+  }
+  
+  details summary {
+    display: none;
+  }
+
+  details > * {
+    display: block !important;
+  }
+
+  .board-table th,
+  .board-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 12px;
+  }
+}
