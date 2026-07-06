@@ -1,5 +1,6 @@
 import type { CaseStudy, EvidenceSortCategory } from "../types";
 import { EvidenceSorter } from "./EvidenceSorter";
+import { TeacherNotes } from "./TeacherNotes";
 
 type CaseInvestigationProps = {
   caseStudy: CaseStudy;
@@ -28,6 +29,9 @@ export function CaseInvestigation({
         <aside className="case-brief">
           <p className="eyebrow">Steps 2 and 3</p>
           <h1>{caseStudy.question}</h1>
+          <p className="student-instruction">
+            First, choose what "worked" means. Your verdict should be based on this one success criterion.
+          </p>
           <p>{caseStudy.background}</p>
 
           <dl className="fact-list">
@@ -71,6 +75,8 @@ export function CaseInvestigation({
             </ul>
           </div>
 
+          <TeacherNotes note={caseStudy.teacherNote} />
+
           <button
             className="primary-button full-width"
             type="button"
@@ -80,7 +86,7 @@ export function CaseInvestigation({
             Build verdict
           </button>
           {!canContinue ? (
-            <p className="hint">Choose a success criterion and sort all {caseStudy.evidenceCards.length} evidence cards.</p>
+            <p className="hint">Choose a success criterion and sort at least 3 evidence cards.</p>
           ) : null}
         </aside>
 
@@ -88,7 +94,7 @@ export function CaseInvestigation({
           <div className="section-heading-row">
             <div>
               <h2>Sort the evidence</h2>
-              <p>Assign each card to the claim it best supports.</p>
+              <p>Sort each evidence card into the category where it best belongs.</p>
             </div>
             <span className="progress-chip">
               {sortedCount}/{caseStudy.evidenceCards.length} sorted

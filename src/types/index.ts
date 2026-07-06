@@ -12,6 +12,19 @@ export type Confidence = "high" | "medium" | "low";
 
 export type AppView = "home" | "selection" | "investigation" | "verdict" | "board";
 
+export type EvidenceCardType =
+  | "policy_goal"
+  | "success_evidence"
+  | "failure_or_harm"
+  | "civilian_or_social_impact"
+  | "mechanism"
+  | "alternative_explanation"
+  | "comparison_problem"
+  | "missing_evidence"
+  | "timeline"
+  | "implementation_problem"
+  | "long_term_consequence";
+
 export type SourceLink = {
   title: string;
   url: string;
@@ -22,13 +35,7 @@ export type EvidenceCard = {
   id: string;
   title: string;
   text: string;
-  type:
-    | "policy_goal"
-    | "supporting_evidence"
-    | "complicating_evidence"
-    | "data_point"
-    | "missing_evidence"
-    | "alternative_explanation";
+  type: EvidenceCardType;
   sourceTitle?: string;
   sourceUrl?: string;
 };

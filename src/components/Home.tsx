@@ -1,5 +1,5 @@
 import { appConfig } from "../config/app";
-import { workflowSteps } from "../constants/workflow";
+import { activityTiming, workflowSteps } from "../constants/workflow";
 
 type HomeProps = {
   onStart: () => void;
@@ -15,8 +15,8 @@ export function Home({ onStart, onBoard }: HomeProps) {
           <h1>{appConfig.title}</h1>
           <p className="subtitle">{appConfig.subtitle}</p>
           <p className="intro">
-            Your task is not to guess whether a policy was good or bad. Your task is to decide
-            what evidence would be needed to judge whether it worked.
+            Your task is not to decide whether a policy was good or bad in general. Your task is to decide
+            whether it worked in a specific case, and what evidence would be needed to know.
           </p>
           <div className="button-row">
             <button className="primary-button" type="button" onClick={onStart}>
@@ -29,12 +29,22 @@ export function Home({ onStart, onBoard }: HomeProps) {
         </div>
 
         <div className="workflow-panel" aria-label="Class workflow">
+          <h2>Activity guide</h2>
           {workflowSteps.map((step, index) => (
             <div className="workflow-step" key={step}>
               <span>{index + 1}</span>
               <strong>{step}</strong>
             </div>
           ))}
+          <div className="timing-guide">
+            <h3>Suggested timing</h3>
+            {activityTiming.map((item) => (
+              <div key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.time}</strong>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

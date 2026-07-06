@@ -24,6 +24,14 @@ export const workflowSteps = [
   "Choose case",
   "Define success",
   "Sort evidence",
-  "Submit verdict",
-  "Compare",
+  "Build verdict",
+  "Compare results",
+];
+
+export const activityTiming = [
+  { label: "Choose case", time: "2 min" },
+  { label: "Define success", time: "5 min" },
+  { label: "Sort evidence", time: "10 min" },
+  { label: "Build verdict", time: "5 min" },
+  { label: "Class discussion", time: "10-12 min" },
 ];

@@ -9,7 +9,7 @@ function createId() {
 }
 
 function escapeCsvValue(value: string) {
-  return `"${value.replaceAll('"', '""')}"`;
+  return `"${value.replace(/"/g, '""')}"`;
 }
 
 export function createSubmission(draft: SubmissionDraft): StudentSubmission {

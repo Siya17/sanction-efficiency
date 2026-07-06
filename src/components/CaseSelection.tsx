@@ -15,7 +15,7 @@ export function CaseSelection({ cases, onSelectCase }: CaseSelectionProps) {
       <div className="page-heading">
         <p className="eyebrow">Step 1</p>
         <h1>Choose one case</h1>
-        <p>Pick a sanctions or foreign aid case. Each pair can investigate a different case.</p>
+        <p>Choose one case. Your goal is not to win a debate; your goal is to make a careful judgment.</p>
       </div>
 
       <section className="case-section">

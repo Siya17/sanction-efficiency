@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { StudentSubmission, Track } from "../types";
+import type { StudentSubmission, Track, Verdict } from "../types";
 import { confidenceLabels, trackLabels, verdictLabels } from "../utils/labels";
 import { submissionsToCsv } from "../utils/submissions";
 
@@ -9,13 +9,19 @@ type ClassBoardProps = {
   onChooseCase: () => void;
 };
 
-type Filter = "all" | Track;
+type Filter = "all" | Track | Verdict;
+
+function matchesFilter(submission: StudentSubmission, filter: Filter) {
+  if (filter === "all") return true;
+  if (filter === "sanctions" || filter === "aid") return submission.track === filter;
+  return submission.verdict === filter;
+}
 
 export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardProps) {
   const [filter, setFilter] = useState<Filter>("all");
 
   const filteredSubmissions = useMemo(
-    () => submissions.filter((submission) => filter === "all" || submission.track === filter),
+    () => submissions.filter((submission) => matchesFilter(submission, filter)),
     [filter, submissions],
   );
 
@@ -49,12 +55,17 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
   }
 
   return (
-    <main className="page">
+    <main className="page board-page">
       <div className="board-header">
         <div>
           <p className="eyebrow">Step 5</p>
           <h1>Class Board</h1>
-          <p>Across these cases, why is "Did it work?" hard to answer?</p>
+          <div className="discussion-prompts">
+            <p>Across the cases, why is "Did it work?" hard to answer?</p>
+            <p>Which verdict changed most depending on the success criterion?</p>
+            <p>Where did a policy produce both success and harm?</p>
+            <p>What information was most often missing?</p>
+          </div>
         </div>
         <div className="board-actions">
           <select
@@ -62,9 +73,13 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
             value={filter}
             onChange={(event) => setFilter(event.target.value as Filter)}
           >
-            <option value="all">All tracks</option>
+            <option value="all">All</option>
             <option value="sanctions">Sanctions</option>
             <option value="aid">Foreign aid</option>
+            <option value="worked">Worked</option>
+            <option value="failed">Failed</option>
+            <option value="mixed">Mixed</option>
+            <option value="cannot_judge">Cannot judge yet</option>
           </select>
           <button className="secondary-button" type="button" onClick={onChooseCase}>
             Add verdict
@@ -76,6 +91,9 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
             onClick={handleExport}
           >
             Export CSV
+          </button>
+          <button className="secondary-button" type="button" onClick={() => window.print()}>
+            Print
           </button>
           <button
             className="danger-button"
@@ -123,6 +141,7 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
                 <th>Verdict</th>
                 <th>Confidence</th>
                 <th>Strongest evidence</th>
+                <th>Biggest complication</th>
                 <th>Missing evidence</th>
               </tr>
             </thead>
@@ -130,12 +149,23 @@ export function ClassBoard({ submissions, onClear, onChooseCase }: ClassBoardPro
               {filteredSubmissions.map((submission) => (
                 <tr key={submission.id}>
                   <td>{submission.country}</td>
-                  <td>{trackLabels[submission.track]}</td>
+                  <td>
+                    <span className={`track-pill ${submission.track}`}>{trackLabels[submission.track]}</span>
+                  </td>
                   <td>{submission.policy}</td>
                   <td>{submission.successCriterion}</td>
-                  <td>{verdictLabels[submission.verdict]}</td>
-                  <td>{confidenceLabels[submission.confidence]}</td>
+                  <td>
+                    <span className={`verdict-badge ${submission.verdict}`}>
+                      {verdictLabels[submission.verdict]}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`confidence-badge ${submission.confidence}`}>
+                      {confidenceLabels[submission.confidence]}
+                    </span>
+                  </td>
                   <td>{submission.strongestEvidence}</td>
+                  <td>{submission.biggestComplication}</td>
                   <td>{submission.missingEvidence}</td>
                 </tr>
               ))}

@@ -34,6 +34,12 @@ export function VerdictBuilder({
     [assignments, caseStudy.evidenceCards],
   );
 
+  const canSubmit =
+    policyAim.trim().length > 0 &&
+    strongestEvidence.trim().length > 0 &&
+    biggestComplication.trim().length > 0 &&
+    missingEvidence.trim().length > 0;
+
   const sentence = `In the case of ${caseStudy.country}, the policy aimed to ${
     policyAim || "..."
   }. We judge success by ${successCriterion || "..."}. Our verdict is ${
@@ -44,6 +50,10 @@ export function VerdictBuilder({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!canSubmit) {
+      return;
+    }
 
     onSubmit({
       caseId: caseStudy.id,
@@ -66,9 +76,8 @@ export function VerdictBuilder({
         <section className="sorted-summary">
           <p className="eyebrow">Step 4</p>
           <h1>Build a cautious verdict</h1>
-          <p>
-            Use your sorted evidence to make a claim, then name what still keeps the answer
-            uncertain.
+          <p className="student-instruction">
+            You may choose Mixed or Cannot judge yet, but you must explain why.
           </p>
 
           {evidenceByCategory.map(({ category, cards }) => (
@@ -97,6 +106,11 @@ export function VerdictBuilder({
               onChange={(event) => setPolicyAim(event.target.value)}
               placeholder="Example: pressure the government to negotiate"
             />
+          </label>
+
+          <label>
+            Success criterion
+            <input value={successCriterion} readOnly />
           </label>
 
           <label>
@@ -154,16 +168,20 @@ export function VerdictBuilder({
             />
           </label>
 
-          <div className="sentence-frame">
-            <h2>Sentence frame</h2>
+          <div className="sentence-frame verdict-preview">
+            <h2>Final verdict preview</h2>
             <p>{sentence}</p>
           </div>
+
+          {!canSubmit ? (
+            <p className="hint">Fill in the aim, strongest evidence, biggest complication, and missing evidence before submitting.</p>
+          ) : null}
 
           <div className="button-row">
             <button className="secondary-button" type="button" onClick={onBack}>
               Back to evidence
             </button>
-            <button className="primary-button" type="submit">
+            <button className="primary-button" type="submit" disabled={!canSubmit}>
               Submit to board
             </button>
           </div>

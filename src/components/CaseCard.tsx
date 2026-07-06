@@ -14,9 +14,11 @@ export function CaseCard({ caseStudy, onSelect }: CaseCardProps) {
         <span className="period-label">{caseStudy.period}</span>
       </div>
       <h3>{caseStudy.country}</h3>
-      <p>{caseStudy.policy}</p>
+      <p className="case-policy">{caseStudy.policy}</p>
+      <p className="case-question">{caseStudy.question}</p>
+      <span className="evidence-count">{caseStudy.evidenceCards.length} evidence cards</span>
       <button className="secondary-button full-width" type="button" onClick={() => onSelect(caseStudy)}>
-        Investigate
+        Investigate this case
       </button>
     </article>
   );

@@ -39,7 +39,7 @@ export function useEvidenceLab() {
   const canBuildVerdict =
     Boolean(selectedCase) &&
     successCriterion.length > 0 &&
-    sortedCount === selectedCase?.evidenceCards.length;
+    sortedCount >= 3;
 
   function startCaseSelection() {
     setView("selection");

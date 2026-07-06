@@ -3,6 +3,7 @@ import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
 import { Header } from "./components/Header";
 import { Home } from "./components/Home";
+import { ProgressSteps } from "./components/ProgressSteps";
 import { VerdictBuilder } from "./components/VerdictBuilder";
 import { useEvidenceLab } from "./hooks/useEvidenceLab";
 
@@ -57,6 +58,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <Header boardCount={lab.submissions.length} currentView={lab.view} onNavigate={actions.setView} />
+      <ProgressSteps currentView={lab.view} />
       {renderView()}
     </div>
   );
