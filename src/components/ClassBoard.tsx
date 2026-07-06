@@ -145,7 +145,7 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
                 <th>Case</th>
                 <th>Track</th>
                 <th>Policy</th>
-                <th>Success criterion</th>
+                <th>Evaluation Question</th>
                 <th>Verdict</th>
                 <th>Confidence</th>
                 <th>Strongest evidence</th>
@@ -161,7 +161,7 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
                     <span className={`track-pill ${submission.track}`}>{trackLabels[submission.track]}</span>
                   </td>
                   <td>{submission.policy}</td>
-                  <td>{submission.successCriterion}</td>
+                  <td>{submission.evaluationQuestion || submission.successCriterion || "N/A"}</td>
                   <td>
                     <span className={`verdict-badge ${submission.verdict}`}>
                       {verdictLabels[submission.verdict]}

@@ -1,28 +1,30 @@
-import { FormEvent, useMemo, useState } from "react";
-import { confidenceOptions, evidenceSortCategories, verdictOptions } from "../constants/workflow";
-import type { CaseStudy, Confidence, EvidenceSortCategory, SubmissionDraft, Verdict, ActivityMode, StudentEvidenceCard, Citation } from "../types";
-import { categoryLabels, confidenceLabels, verdictLabels } from "../utils/labels";
+import { FormEvent, useState } from "react";
+import { confidenceOptions, verdictOptions } from "../constants/workflow";
+import type { CaseStudy, Confidence, SubmissionDraft, Verdict, ActivityMode, StudentEvidenceCard, Citation, StudentIndicator, StudentEvidenceSelection } from "../types";
+import { confidenceLabels, verdictLabels } from "../utils/labels";
+import { EvidenceCard as EvidenceCardComponent } from "./EvidenceCard";
 
 type VerdictBuilderProps = {
   activityMode: ActivityMode;
-  studentEvidence: StudentEvidenceCard[];
   caseStudy: CaseStudy;
-  successCriterion: string;
-  assignments: Record<string, EvidenceSortCategory>;
+  evaluationQuestion: string;
+  studentIndicators: StudentIndicator[];
+  selectedEvidence: StudentEvidenceSelection[];
+  studentEvidenceCards: StudentEvidenceCard[];
   onSubmit: (submission: SubmissionDraft) => void;
   onBack: () => void;
 };
 
 export function VerdictBuilder({
   activityMode,
-  studentEvidence,
   caseStudy,
-  successCriterion,
-  assignments,
+  evaluationQuestion,
+  studentIndicators,
+  selectedEvidence,
+  studentEvidenceCards,
   onSubmit,
   onBack,
 }: VerdictBuilderProps) {
-  const [policyAim, setPolicyAim] = useState("");
   const [verdict, setVerdict] = useState<Verdict>("mixed");
   const [confidence, setConfidence] = useState<Confidence>("medium");
   const [strongestEvidence, setStrongestEvidence] = useState("");
@@ -33,12 +35,10 @@ export function VerdictBuilder({
   const isResearch = activityMode === "research";
   
   // Research fields
-  const [researchQuestion, setResearchQuestion] = useState(`Did ${caseStudy.track === "sanctions" ? "sanctions" : "foreign aid"} work in the case of ${caseStudy.country}?`);
   const [counterargument, setCounterargument] = useState("");
   const [evidenceThatWouldChangeMind, setEvidenceThatWouldChangeMind] = useState("");
   const [remainingUncertainty, setRemainingUncertainty] = useState("");
   const [finalExplanation, setFinalExplanation] = useState("");
-  const [usingOnlyCurated, setUsingOnlyCurated] = useState(false);
   const [citations, setCitations] = useState<Citation[]>([]);
 
   const [newCitationTitle, setNewCitationTitle] = useState("");
@@ -46,23 +46,10 @@ export function VerdictBuilder({
   const [newCitationYear, setNewCitationYear] = useState("");
   const [newCitationUrl, setNewCitationUrl] = useState("");
 
-  const evidenceByCategory = useMemo(() => {
-    const allCards = [
-      ...caseStudy.evidenceCards,
-      ...studentEvidence.map(se => ({
-        id: se.id,
-        title: se.title,
-        text: se.summary,
-        type: "success_evidence" as const,
-        sourceTitle: se.sourceTitle,
-        sourceUrl: se.sourceUrl,
-      }))
-    ];
-    return evidenceSortCategories.map((category) => ({
-      category,
-      cards: allCards.filter((card) => assignments[card.id] === category),
-    }));
-  }, [assignments, caseStudy.evidenceCards, studentEvidence]);
+  const allCards = [
+    ...caseStudy.evidenceCards,
+    ...studentEvidenceCards
+  ];
 
   let canSubmit = false;
   
@@ -70,25 +57,13 @@ export function VerdictBuilder({
     canSubmit =
       finalExplanation.trim().length > 0 &&
       strongestEvidence.trim().length > 0 &&
-      (remainingUncertainty.trim().length > 0 || missingEvidence.trim().length > 0) &&
-      (studentEvidence.length > 0 || usingOnlyCurated);
+      (remainingUncertainty.trim().length > 0 || missingEvidence.trim().length > 0);
   } else {
     canSubmit =
-      policyAim.trim().length > 0 &&
       strongestEvidence.trim().length > 0 &&
       biggestComplication.trim().length > 0 &&
       missingEvidence.trim().length > 0;
   }
-
-  const activeCriterion = caseStudy.successCriteria.find(c => c.id === successCriterion)?.label || successCriterion;
-
-  const sentence = `In the case of ${caseStudy.country}, the policy aimed to ${
-    policyAim || "..."
-  }. We judge success by ${activeCriterion || "..."}. Our verdict is ${
-    verdictLabels[verdict]
-  } with ${confidenceLabels[confidence]} confidence because ${
-    strongestEvidence || "..."
-  }. But we would need ${missingEvidence || "..."} to be more certain.`;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -102,8 +77,10 @@ export function VerdictBuilder({
       country: caseStudy.country,
       track: caseStudy.track,
       policy: caseStudy.policy,
-      successCriterion,
-      policyAim,
+      evaluationQuestion,
+      studentIndicators,
+      selectedEvidence,
+      
       verdict,
       confidence,
       strongestEvidence,
@@ -114,8 +91,7 @@ export function VerdictBuilder({
     };
 
     if (isResearch) {
-      draft.studentEvidenceCards = studentEvidence;
-      draft.researchQuestion = researchQuestion;
+      draft.studentEvidenceCards = studentEvidenceCards;
       draft.supportingEvidence = strongestEvidence;
       draft.complicatingEvidence = biggestComplication;
       draft.counterargument = counterargument;
@@ -132,58 +108,42 @@ export function VerdictBuilder({
     <main className="page">
       <div className="verdict-layout">
         <section className="sorted-summary">
-          <p className="eyebrow">Step 4</p>
+          <p className="eyebrow">Final Step</p>
           <h1>Build a cautious verdict</h1>
           <p className="student-instruction">
-            You may choose Mixed or Cannot judge yet, but you must explain why.
+            Review the evidence you selected before answering your evaluation question.
           </p>
 
-          {evidenceByCategory.map(({ category, cards }) => (
-            <div className="summary-list" key={category}>
-              <h2>{categoryLabels[category]}</h2>
-              {cards.length > 0 ? (
-                cards.map((card) => (
-                  <article key={card.id}>
-                    <strong>{card.title}</strong>
-                    <p>{card.text}</p>
-                  </article>
-                ))
-              ) : (
-                <p className="empty-text">No cards assigned.</p>
-              )}
-            </div>
-          ))}
+          <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100 mb-6">
+            <h2 className="text-indigo-900 font-bold mb-2">Your Question:</h2>
+            <p className="text-indigo-800 italic">{evaluationQuestion}</p>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="font-semibold text-lg border-b pb-2">Your Selected Evidence</h2>
+            {selectedEvidence.map((sel) => {
+              const card = allCards.find(c => c.id === sel.cardId);
+              if (!card) return null;
+              
+              return (
+                <div key={sel.cardId} className="bg-white p-4 rounded border">
+                  <h3 className="font-bold">{card.title}</h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Used as: <span className="font-medium capitalize">{sel.use.replace(/_/g, ' ')}</span>
+                  </p>
+                  <div className="bg-gray-50 p-3 rounded text-sm mb-3">
+                    {('text' in card) ? card.text : card.summary}
+                  </div>
+                  <div className="text-sm">
+                    <strong>Your explanation:</strong> {sel.relevanceExplanation}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </section>
 
         <form className="verdict-form" onSubmit={handleSubmit}>
-          {!isResearch && (
-            <label>
-              Policy aim
-              <input
-                required
-                value={policyAim}
-                onChange={(event) => setPolicyAim(event.target.value)}
-                placeholder="Example: pressure the government to negotiate"
-              />
-            </label>
-          )}
-
-          {isResearch && (
-            <label>
-              Research question
-              <input
-                required
-                value={researchQuestion}
-                onChange={(event) => setResearchQuestion(event.target.value)}
-              />
-            </label>
-          )}
-
-          <label>
-            Success criterion
-            <input value={activeCriterion} readOnly />
-          </label>
-
           <label>
             Verdict
             <select value={verdict} onChange={(event) => setVerdict(event.target.value as Verdict)}>
@@ -215,7 +175,7 @@ export function VerdictBuilder({
               required
               value={strongestEvidence}
               onChange={(event) => setStrongestEvidence(event.target.value)}
-              placeholder={isResearch ? "" : "Which card or detail most supports your verdict?"}
+              placeholder={isResearch ? "" : "Which evidence most supports your verdict?"}
             />
           </label>
 
@@ -311,26 +271,7 @@ export function VerdictBuilder({
                   + Add Citation
                 </button>
               </div>
-
-              {studentEvidence.length === 0 && (
-                <label className="flex items-center gap-2 mb-6 p-4 bg-orange-50 border border-orange-200 rounded text-orange-900">
-                  <input 
-                    type="checkbox" 
-                    checked={usingOnlyCurated} 
-                    onChange={e => setUsingOnlyCurated(e.target.checked)} 
-                    className="w-5 h-5"
-                  />
-                  I am using only curated evidence for this research submission. (It is highly recommended to add your own evidence).
-                </label>
-              )}
             </>
-          )}
-
-          {!isResearch && (
-            <div className="sentence-frame verdict-preview">
-              <h2>Final verdict preview</h2>
-              <p>{sentence}</p>
-            </div>
           )}
 
           {!canSubmit ? (

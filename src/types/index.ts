@@ -112,7 +112,7 @@ export type StudentEvidenceCard = {
   publicationYear?: string;
   quoteOrDataPoint?: string;
   reliability: EvidenceReliability;
-  sortCategory: EvidenceSortCategory;
+  sortCategory: EvidenceSortCategory; // Kept for backward compatibility
   explanation: string;
   limitation: string;
   notes?: string;
@@ -125,6 +125,15 @@ export type SuccessCriterion = {
   explanation: string;
 };
 
+export type CaseSummary = {
+  quickSummary: string;
+  whatWasHappening: string;
+  policyUsed: string;
+  policyGoal: string;
+  whyHardToJudge: string;
+  possibleSuccessAngles: string[];
+};
+
 export type CaseStudy = {
   id: string;
   track: Track;
@@ -132,11 +141,53 @@ export type CaseStudy = {
   period: string;
   policy: string;
   question: string;
-  background: string;
+  background?: string; // Optional for backward compatibility
+  summary: CaseSummary;
   successCriteria: SuccessCriterion[];
   evidenceCards: EvidenceCard[];
   sources: SourceLink[];
   teacherNote?: string;
+};
+
+export type StudentIndicatorType =
+  | "success"
+  | "harm_or_cost"
+  | "uncertainty_or_alternative";
+
+export type StudentIndicator = {
+  id: string;
+  caseId: string;
+  type: StudentIndicatorType;
+  name: string;
+  measures: string;
+  whyItMatters: string;
+  direction: string;
+  limitation: string;
+};
+
+export type IndicatorSuggestion = {
+  id: string;
+  track: "sanctions" | "aid";
+  caseId?: string;
+  type: StudentIndicatorType;
+  label: string;
+  measures: string;
+  whyItMatters: string;
+  possibleData?: string;
+  limitation: string;
+};
+
+export type SelectedEvidenceUse =
+  | "success_evidence"
+  | "failure_or_harm_evidence"
+  | "complication"
+  | "not_relevant";
+
+export type StudentEvidenceSelection = {
+  cardId: string;
+  use: SelectedEvidenceUse;
+  relatedIndicatorId?: string;
+  relevanceExplanation: string;
 };
 
 export type StudentSubmission = {
@@ -145,8 +196,18 @@ export type StudentSubmission = {
   country: string;
   track: Track;
   policy: string;
-  successCriterion: string;
-  policyAim: string;
+  successCriterion?: string; // Optional now, since we have evaluationQuestion
+  policyAim?: string; // Optional now
+  
+  // New Stage 9 fields
+  evaluationQuestion?: string;
+  successGoal?: string;
+  actorOrGroup?: string;
+  timePeriod?: string;
+  studentIndicators?: StudentIndicator[];
+  selectedEvidence?: StudentEvidenceSelection[];
+  dataNeeds?: string[];
+  
   verdict: Verdict;
   confidence: Confidence;
   strongestEvidence: string;
@@ -212,3 +273,4 @@ export type CaseDatasetSnapshot = {
 };
 
 export type SubmissionDraft = Omit<StudentSubmission, "id" | "createdAt">;
+

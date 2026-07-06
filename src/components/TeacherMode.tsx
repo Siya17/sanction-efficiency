@@ -51,6 +51,14 @@ function createBlankCase(): CaseStudy {
     policy: "",
     question: "Did the policy work in this case?",
     background: "",
+    summary: {
+      quickSummary: "",
+      whatWasHappening: "",
+      policyUsed: "",
+      policyGoal: "",
+      whyHardToJudge: "",
+      possibleSuccessAngles: []
+    },
     successCriteria: [{ id: "behavior_change", label: "Behavior or outcome changed", explanation: "Default explanation" }],
     evidenceCards: [createBlankEvidenceCard(id)],
     sources: [],

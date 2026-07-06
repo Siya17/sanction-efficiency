@@ -8,8 +8,19 @@ export const cases: CaseStudy[] = [
     period: "1990s",
     policy: "UN comprehensive sanctions after Iraq's invasion of Kuwait",
     question: "Did sanctions work in the case of Iraq?",
-    background:
-      "What happened: After Iraq invaded Kuwait in 1990, the UN imposed comprehensive sanctions to force withdrawal and later to press Iraq over weapons inspections.\n\nPolicy used: Comprehensive economic and trade sanctions linked to UN resolutions.\n\nWhy it is hard to judge: Iraq is a difficult sanctions case because success depends on the goal. If the goal was to force Saddam Hussein from power, sanctions did not achieve that. If the goal was to contain Iraq’s military capacity after the Gulf War, the judgment may look different. The case is also ethically difficult because comprehensive sanctions created serious civilian costs.",
+    summary: {
+      quickSummary: "After Iraq invaded Kuwait in 1990, the UN imposed comprehensive economic and trade sanctions.",
+      whatWasHappening: "Saddam Hussein's regime invaded neighboring Kuwait. The international community responded with a massive coalition to push Iraq out, followed by strict UN sanctions to prevent Iraq from rebuilding its military and to force cooperation with weapons inspectors.",
+      policyUsed: "Comprehensive economic and trade sanctions linked to UN resolutions.",
+      policyGoal: "To reverse aggression, compel compliance with weapons inspections, and constrain Iraq's military capacity.",
+      whyHardToJudge: "Iraq is a difficult case because success depends heavily on the goal. If the goal was to force Saddam Hussein from power, sanctions failed. If the goal was to contain Iraq’s military capacity after the Gulf War, they may have succeeded. Additionally, the comprehensive sanctions caused devastating civilian harm, making it ethically complex.",
+      possibleSuccessAngles: [
+        "Military containment",
+        "Behavior change (inspections compliance)",
+        "Regime change",
+        "Minimizing civilian harm"
+      ]
+    },
     successCriteria: [
       { id: "behavior_change", label: "Behavior change", explanation: "Did Iraq withdraw from Kuwait and comply with UN weapons inspections?" },
       { id: "containment", label: "Containment", explanation: "Did the policy prevent Iraq from rebuilding its military capacity?" },
@@ -41,8 +52,19 @@ export const cases: CaseStudy[] = [
     period: "2000s-2010s",
     policy: "Nuclear and financial sanctions linked to diplomacy",
     question: "Did sanctions work in the case of Iran?",
-    background:
-      "What happened: Iran faced UN, US, and EU sanctions tied to concerns about its nuclear program, which led to the 2015 JCPOA agreement.\n\nPolicy used: Financial and oil sanctions linked to diplomatic negotiations.\n\nWhy it is hard to judge: The 2015 JCPOA makes the case look like partial success if the benchmark is bargaining or temporary nuclear limits, but the later unraveling of the agreement shows how fragile that success could be. It is hard to know if the sanctions alone worked, or if they only worked because of diplomacy.",
+    summary: {
+      quickSummary: "Iran faced UN, US, and EU sanctions tied to concerns about its nuclear program, leading to the 2015 JCPOA agreement.",
+      whatWasHappening: "Concerns grew internationally that Iran's nuclear program was designed to build a weapon. The US, EU, and UN imposed escalating sanctions targeting Iran's oil exports and financial system to force them to the negotiating table.",
+      policyUsed: "Financial and oil sanctions linked to diplomatic negotiations.",
+      policyGoal: "To pressure Iran into negotiations, limits, and monitoring of nuclear activities.",
+      whyHardToJudge: "The 2015 JCPOA makes the case look like partial success if the benchmark is bargaining or temporary nuclear limits. However, the later unraveling of the agreement shows how fragile that success could be. It is hard to know if the sanctions alone worked, or if they only worked because of the diplomatic incentives offered alongside them.",
+      possibleSuccessAngles: [
+        "Creating bargaining pressure",
+        "Changing nuclear behavior",
+        "Long-term sustainability of the agreement",
+        "Minimizing civilian harm"
+      ]
+    },
     successCriteria: [
       { id: "bargaining_pressure", label: "Bargaining pressure", explanation: "Did sanctions help push the target toward negotiation?" },
       { id: "behavior_change", label: "Behavior change", explanation: "Did Iran accept limits and monitoring on its nuclear program?" },
@@ -73,8 +95,19 @@ export const cases: CaseStudy[] = [
     period: "1970s-1990s",
     policy: "Apartheid-era sanctions, divestment, boycotts, and diplomatic pressure",
     question: "Did sanctions work in the case of South Africa?",
-    background:
-      "What happened: International sanctions, divestment campaigns, and sports boycotts targeted South Africa's apartheid system, leading eventually to majority rule.\n\nPolicy used: Diplomatic isolation, trade sanctions, and corporate divestment.\n\nWhy it is hard to judge: The transition to negotiations and majority rule depended heavily on internal resistance, labor action, and economic change. It is hard to know whether the external sanctions or the internal social movements mattered more. A careful judgment avoids claiming that sanctions alone ended apartheid.",
+    summary: {
+      quickSummary: "International sanctions, divestment campaigns, and sports boycotts targeted South Africa's apartheid system, leading eventually to majority rule.",
+      whatWasHappening: "The white minority government maintained apartheid, a system of institutionalized racial segregation and discrimination. A global anti-apartheid movement pushed for boycotts, divestment, and sanctions to isolate the regime.",
+      policyUsed: "Diplomatic isolation, trade sanctions, sports boycotts, and corporate divestment.",
+      policyGoal: "To delegitimize apartheid and raise costs for the government until it dismantled the system.",
+      whyHardToJudge: "The transition to negotiations and majority rule depended heavily on internal resistance, labor action, and economic change. It is hard to know whether the external sanctions or the internal social movements mattered more. A careful judgment avoids claiming that sanctions alone ended apartheid.",
+      possibleSuccessAngles: [
+        "International delegitimation",
+        "Economic pressure on the regime",
+        "Changing the government's behavior",
+        "Supporting internal resistance"
+      ]
+    },
     successCriteria: [
       { id: "behavior_change", label: "Behavior change", explanation: "Did the government transition to negotiations and majority rule?" },
       { id: "bargaining_pressure", label: "Bargaining pressure", explanation: "Did sanctions put pressure on the apartheid regime?" },
@@ -103,8 +136,19 @@ export const cases: CaseStudy[] = [
     period: "2014-present",
     policy: "Sanctions after Crimea and expanded sanctions after the 2022 full-scale invasion of Ukraine",
     question: "Did sanctions work in the case of Russia?",
-    background:
-      "What happened: Russia faced sanctions after the 2014 seizure of Crimea, and much broader financial, trade, energy, and technology sanctions after the 2022 full-scale invasion of Ukraine.\n\nPolicy used: Targeted and comprehensive economic, financial, and technological sanctions.\n\nWhy it is hard to judge: The conflict is ongoing. Sanctions clearly have not stopped the war (immediate behavior change), but they have constrained the Russian economy and military supply chains (long-term pressure). Students must distinguish between stopping the war immediately and raising the long-term cost of fighting it.",
+    summary: {
+      quickSummary: "Russia faced sanctions after the 2014 seizure of Crimea, and much broader financial, trade, energy, and technology sanctions after the 2022 full-scale invasion of Ukraine.",
+      whatWasHappening: "Russia launched a full-scale invasion of Ukraine in 2022. Western countries responded with massive coordinated economic sanctions intended to cripple Russia's war machine.",
+      policyUsed: "Targeted and comprehensive economic, financial, energy, and technological sanctions.",
+      policyGoal: "To impose costs, constrain war capacity, and signal opposition to aggression.",
+      whyHardToJudge: "The conflict is ongoing. Sanctions clearly have not stopped the war (immediate behavior change), but they have constrained the Russian economy and military supply chains (long-term pressure). Students must distinguish between stopping the war immediately and raising the long-term cost of fighting it.",
+      possibleSuccessAngles: [
+        "Immediate behavior change (withdrawal)",
+        "Military and strategic constraint",
+        "Economic degradation",
+        "Norm enforcement"
+      ]
+    },
     successCriteria: [
       { id: "behavior_change", label: "Behavior change", explanation: "Did Russia stop the invasion or withdraw forces?" },
       { id: "containment", label: "Military constraint", explanation: "Did sanctions limit Russia's ability to supply its military?" },
@@ -133,8 +177,19 @@ export const cases: CaseStudy[] = [
     period: "2001-2021",
     policy: "Reconstruction, development, and state-building aid",
     question: "Did foreign aid work in the case of Afghanistan?",
-    background:
-      "What happened: After 2001, donors funded reconstruction, public services, infrastructure, and state-building in Afghanistan. In 2021, the Western-backed state collapsed.\n\nPolicy used: Massive financial aid for development, health, education, and security forces.\n\nWhy it is hard to judge: Some communities saw real gains in education, health, and roads during the 20 years of aid. However, corruption, donor dependency, and the ultimate collapse of the state raise hard questions about sustainability. The verdict changes sharply depending on whether you judge short-term welfare or long-term state survival.",
+    summary: {
+      quickSummary: "After 2001, donors funded reconstruction, public services, and state-building in Afghanistan. In 2021, the Western-backed state collapsed.",
+      whatWasHappening: "Following the US-led invasion in 2001, the international community poured billions of dollars into Afghanistan to rebuild its government, military, and public services amidst an ongoing insurgency.",
+      policyUsed: "Massive financial aid for development, health, education, and security forces.",
+      policyGoal: "To rebuild services, support a functioning state, and improve livelihoods.",
+      whyHardToJudge: "Some communities saw real gains in education, health, and roads during the 20 years of aid. However, corruption, donor dependency, and the ultimate collapse of the state raise hard questions about sustainability. The verdict changes sharply depending on whether you judge short-term welfare or long-term state survival.",
+      possibleSuccessAngles: [
+        "Welfare improvement during the aid period",
+        "State capacity and governance",
+        "Long-term sustainability",
+        "Security outcomes"
+      ]
+    },
     successCriteria: [
       { id: "welfare", label: "Welfare improvement", explanation: "Did aid improve people's lives, health, or education?" },
       { id: "state_capacity", label: "State capacity", explanation: "Did aid help the government provide services effectively?" },
@@ -163,8 +218,19 @@ export const cases: CaseStudy[] = [
     period: "2000s-2010s",
     policy: "KALAHI-CIDSS community-driven development aid",
     question: "Did foreign aid work in the case of the Philippines?",
-    background:
-      "What happened: KALAHI-CIDSS supported community-driven development by funding local planning and small infrastructure projects in poorer areas.\n\nPolicy used: Community-driven development (CDD) grants and technical assistance.\n\nWhy it is hard to judge: Success might mean poverty reduction, better local governance, or participation by marginalized groups. Students should ask whether community choice actually improved outcomes, and whether these small gains were protected from local inequalities or elite capture.",
+    summary: {
+      quickSummary: "KALAHI-CIDSS supported community-driven development by funding local planning and small infrastructure projects in poorer areas.",
+      whatWasHappening: "To fight poverty, the government and international donors implemented a program where communities themselves proposed, designed, and managed small local infrastructure projects (like water systems or roads).",
+      policyUsed: "Community-driven development (CDD) grants and technical assistance.",
+      policyGoal: "To let communities identify priorities and manage resources for public goods.",
+      whyHardToJudge: "Success might mean poverty reduction, better local governance, or participation by marginalized groups. Students should ask whether community choice actually improved outcomes, and whether these small gains were protected from local inequalities or elite capture.",
+      possibleSuccessAngles: [
+        "Welfare improvement (better infrastructure)",
+        "Community participation and empowerment",
+        "Improved local governance",
+        "Poverty reduction"
+      ]
+    },
     successCriteria: [
       { id: "welfare", label: "Welfare improvement", explanation: "Did the aid improve local living conditions?" },
       { id: "participation", label: "Community participation", explanation: "Did the project give marginalized groups a real voice?" },
@@ -193,8 +259,19 @@ export const cases: CaseStudy[] = [
     period: "2000s-2010s",
     policy: "Plan Colombia security and development aid",
     question: "Did foreign aid work in the case of Colombia?",
-    background:
-      "What happened: Plan Colombia combined security assistance, counternarcotics policy, and development aid to help the Colombian government fight armed groups and drug cartels.\n\nPolicy used: Huge amounts of military, security, and economic foreign aid.\n\nWhy it is hard to judge: Violence declined in many areas and the state strengthened. However, displacement, human rights concerns, and shifting drug production complicate the picture. Students must decide if they are judging violence reduction, civilian protection, or support for the later peace negotiations.",
+    summary: {
+      quickSummary: "Plan Colombia combined security assistance, counternarcotics policy, and development aid to help the Colombian government fight armed groups and drug cartels.",
+      whatWasHappening: "Colombia was struggling with a decades-long conflict involving guerrilla groups, paramilitaries, and powerful drug cartels. The US provided massive funding and training to strengthen the Colombian military and eradicate coca crops.",
+      policyUsed: "Huge amounts of military, security, and economic foreign aid.",
+      policyGoal: "To strengthen the state, reduce drug-linked violence, and weaken armed groups.",
+      whyHardToJudge: "Violence declined in many areas and the state strengthened. However, displacement, human rights concerns, and shifting drug production complicate the picture. Students must decide if they are judging violence reduction, civilian protection, or support for the later peace negotiations.",
+      possibleSuccessAngles: [
+        "Reduced violence",
+        "State capacity and control",
+        "Minimizing civilian harm",
+        "Supporting peace negotiations"
+      ]
+    },
     successCriteria: [
       { id: "reduced_violence", label: "Reduced violence", explanation: "Did the policy lower the overall level of conflict?" },
       { id: "state_capacity", label: "State capacity", explanation: "Did the state gain control and provide better security?" },
@@ -224,8 +301,19 @@ export const cases: CaseStudy[] = [
     period: "1994-2010s",
     policy: "Post-genocide reconstruction and development aid",
     question: "Did foreign aid work in the case of Rwanda?",
-    background:
-      "What happened: After the 1994 genocide, Rwanda received massive aid for reconstruction, health, education, and poverty reduction.\n\nPolicy used: Development and budget support aid directly aligned with government plans.\n\nWhy it is hard to judge: Many observers point to incredible development, health, and state-capacity gains. However, others emphasize tight political control, limited civic space, and aid dependence. Students must decide whether success means pure economic development or whether it must include political openness.",
+    summary: {
+      quickSummary: "After the 1994 genocide, Rwanda received massive aid for reconstruction, health, education, and poverty reduction.",
+      whatWasHappening: "Following the devastating 1994 genocide, international donors provided substantial aid to rebuild the country, channeling funds directly through the strong, centralized Rwandan government.",
+      policyUsed: "Development and budget support aid directly aligned with government plans.",
+      policyGoal: "To support reconstruction, restore services, and help recovery after mass violence.",
+      whyHardToJudge: "Many observers point to incredible development, health, and state-capacity gains. However, others emphasize tight political control, limited civic space, and aid dependence. Students must decide whether success means pure economic development or whether it must include political openness.",
+      possibleSuccessAngles: [
+        "Welfare and economic improvement",
+        "State capacity",
+        "Political openness and human rights",
+        "Poverty reduction"
+      ]
+    },
     successCriteria: [
       { id: "welfare", label: "Welfare improvement", explanation: "Did health, education, and poverty improve?" },
       { id: "state_capacity", label: "State capacity", explanation: "Did aid help the government provide services effectively?" },
