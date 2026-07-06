@@ -1,0 +1,26 @@
+{
+  "id": "afghanistan-aid-placeholder",
+  "caseId": "afghanistan-reconstruction-aid",
+  "title": "PLACEHOLDER_DATA_NEEDS_VERIFICATION: Afghanistan Aid Snapshot",
+  "description": "Placeholder data representing estimated official development assistance to Afghanistan.",
+  "series": [
+    {
+      "id": "afg-oda-placeholder",
+      "caseId": "afghanistan-reconstruction-aid",
+      "sourceId": "wb-placeholder",
+      "category": "aid",
+      "title": "Net official development assistance received (Placeholder)",
+      "description": "Simulated values for testing interface.",
+      "unit": "Billion USD",
+      "data": [
+        { "year": 2001, "value": 0.4 },
+        { "year": 2005, "value": 2.8 },
+        { "year": 2010, "value": 6.2 },
+        { "year": 2011, "value": 6.7 },
+        { "year": 2015, "value": 4.2 },
+        { "year": 2020, "value": 4.2 }
+      ],
+      "caveat": "These values are placeholder sample data for testing the interface and should be replaced with verified data before classroom use."
+    }
+  ]
+}

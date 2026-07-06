@@ -1,0 +1,26 @@
+{
+  "id": "iraq-sanctions-placeholder",
+  "caseId": "iraq-1990s-sanctions",
+  "title": "PLACEHOLDER_DATA_NEEDS_VERIFICATION: Iraq Economic Snapshot",
+  "description": "Placeholder data representing estimated economic indicators during the 1990s sanctions on Iraq.",
+  "series": [
+    {
+      "id": "iraq-gdp-placeholder",
+      "caseId": "iraq-1990s-sanctions",
+      "sourceId": "wb-placeholder",
+      "category": "economic",
+      "title": "Estimated GDP per capita (Placeholder)",
+      "description": "Simulated values for testing interface.",
+      "unit": "USD (Current)",
+      "data": [
+        { "year": 1989, "value": 3500 },
+        { "year": 1990, "value": 2800 },
+        { "year": 1991, "value": 1200 },
+        { "year": 1992, "value": 900 },
+        { "year": 1995, "value": 600 },
+        { "year": 1999, "value": 750 }
+      ],
+      "caveat": "These values are placeholder sample data for testing the interface and should be replaced with verified data before classroom use."
+    }
+  ]
+}

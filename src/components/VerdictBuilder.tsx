@@ -24,6 +24,7 @@ export function VerdictBuilder({
   const [strongestEvidence, setStrongestEvidence] = useState("");
   const [biggestComplication, setBiggestComplication] = useState("");
   const [missingEvidence, setMissingEvidence] = useState("");
+  const [dataSnapshotReflection, setDataSnapshotReflection] = useState("");
 
   const evidenceByCategory = useMemo(
     () =>
@@ -67,6 +68,7 @@ export function VerdictBuilder({
       strongestEvidence,
       biggestComplication,
       missingEvidence,
+      dataSnapshotReflection,
     });
   }
 
@@ -165,6 +167,15 @@ export function VerdictBuilder({
               value={missingEvidence}
               onChange={(event) => setMissingEvidence(event.target.value)}
               placeholder="What would you need to know next?"
+            />
+          </label>
+
+          <label>
+            Did the data snapshot affect your verdict? If yes, how? (Optional)
+            <textarea
+              value={dataSnapshotReflection}
+              onChange={(event) => setDataSnapshotReflection(event.target.value)}
+              placeholder="If you looked at the real data snapshot, how did it change your thinking?"
             />
           </label>
 

@@ -1,4 +1,4 @@
-﻿export type Track = "sanctions" | "aid";
+export type Track = "sanctions" | "aid";
 
 export type EvidenceSortCategory =
   | "unassigned"
@@ -114,7 +114,52 @@ export type StudentSubmission = {
   strongestEvidence: string;
   biggestComplication: string;
   missingEvidence: string;
+  dataSnapshotReflection?: string;
   createdAt: string;
+};
+
+export type DatasetCategory =
+  | "sanctions"
+  | "aid"
+  | "conflict"
+  | "development"
+  | "governance"
+  | "economic"
+  | "civilian_welfare";
+
+export type DatasetSource = {
+  id: string;
+  title: string;
+  provider: string;
+  url: string;
+  note: string;
+  lastChecked?: string;
+};
+
+export type DatasetDataPoint = {
+  year: number;
+  value: number;
+  label?: string;
+};
+
+export type DatasetSeries = {
+  id: string;
+  caseId: string;
+  sourceId: string;
+  category: DatasetCategory;
+  title: string;
+  description: string;
+  unit?: string;
+  data: DatasetDataPoint[];
+  caveat: string;
+};
+
+export type CaseDatasetSnapshot = {
+  id: string;
+  caseId: string;
+  title: string;
+  description: string;
+  series: DatasetSeries[];
 };
 
 export type SubmissionDraft = Omit<StudentSubmission, "id" | "createdAt">;

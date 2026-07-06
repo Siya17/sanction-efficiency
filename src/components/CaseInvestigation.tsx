@@ -5,6 +5,7 @@ import { CaseTimeline } from "./CaseTimeline";
 import { EvidenceSorter } from "./EvidenceSorter";
 import { IndicatorCard } from "./IndicatorCard";
 import { TeacherNotes } from "./TeacherNotes";
+import { RealDataSnapshot } from "./RealDataSnapshot";
 
 type CaseInvestigationProps = {
   caseStudy: CaseStudy;
@@ -124,6 +125,14 @@ export function CaseInvestigation({
             cards={caseStudy.evidenceCards}
             onAssign={onAssignEvidence}
           />
+
+          <div className="mt-12 bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-2">Optional data check</h2>
+            <p className="text-gray-600 mb-6">
+              Before finalizing your verdict, inspect one real-data snapshot. Does this indicator support, weaken, or complicate your judgment?
+            </p>
+            <RealDataSnapshot caseId={caseStudy.id} />
+          </div>
         </section>
       </div>
     </main>
