@@ -168,7 +168,7 @@ export function VerdictBuilder({
             <h2>Your share-out sentence</h2>
             <p>
               Judging success as <strong>{successLens || "[your success test]"}</strong>, we{" "}
-              {verdict === "cannot_judge_yet" ? (
+              {verdict === "cannot_judge" ? (
                 <>
                   <strong>cannot judge this policy yet</strong>
                 </>
