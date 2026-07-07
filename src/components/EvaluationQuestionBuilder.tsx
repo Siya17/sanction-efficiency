@@ -63,7 +63,7 @@ export function EvaluationQuestionBuilder({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Success goal *
             <InlineHelp term="Success goal">
-              What exactly are you trying to achieve? (e.g., creating nuclear bargaining pressure, reducing poverty, stopping violence)
+              What exactly are you trying to achieve? (e.g., stopping violence, reducing poverty, forcing negotiations)
             </InlineHelp>
           </label>
           <input 
@@ -71,7 +71,7 @@ export function EvaluationQuestionBuilder({
             required
             value={successGoal} 
             onChange={(e) => onSuccessGoalChange(e.target.value)} 
-            placeholder="e.g., creating nuclear bargaining pressure"
+            placeholder="e.g., reducing poverty or stopping violence"
             className="w-full p-2 border rounded-md" 
           />
         </div>
@@ -80,7 +80,7 @@ export function EvaluationQuestionBuilder({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Actor or group *
             <InlineHelp term="Actor or group">
-              Who is the policy aimed at or who is it trying to help? (e.g., the Iranian government, rural farmers, the military)
+              Who is the policy aimed at or who is it trying to help? (e.g., the target government, rural farmers, the military)
             </InlineHelp>
           </label>
           <input 
@@ -88,7 +88,7 @@ export function EvaluationQuestionBuilder({
             required
             value={actorOrGroup} 
             onChange={(e) => onActorOrGroupChange(e.target.value)} 
-            placeholder="e.g., the Iranian government"
+            placeholder="e.g., the target government or local communities"
             className="w-full p-2 border rounded-md" 
           />
         </div>
@@ -105,7 +105,7 @@ export function EvaluationQuestionBuilder({
             required
             value={timePeriod} 
             onChange={(e) => onTimePeriodChange(e.target.value)} 
-            placeholder="e.g., the period before and during the JCPOA negotiations"
+            placeholder="e.g., the first 5 years, or after the withdrawal"
             className="w-full p-2 border rounded-md" 
           />
         </div>
