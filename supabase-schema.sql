@@ -48,12 +48,29 @@ create table if not exists public.submissions (
 -- ---------------------------------------------------------------------------
 -- Row Level Security
 -- This is a public classroom app with no user accounts, so the anon key must be
--- able to read, insert, and delete freely. Disabling RLS is the simplest way to
--- allow that. (Trade-off: anyone with the public anon key can edit the board.
--- Fine for a classroom; do not store sensitive data here.)
+-- able to read, insert, and delete freely. We keep RLS ENABLED and add a fully
+-- permissive policy for the anon (and authenticated) roles. This is more robust
+-- than disabling RLS: Supabase enables RLS by default on tables made in the UI
+-- and warns about disabled RLS, so an explicit policy avoids the
+-- "new row violates row-level security policy" error in every setup path.
+--
+-- Trade-off: anyone with the public anon key can read/edit the board. That is
+-- fine for a classroom — do not store sensitive data here.
+--
+-- Policies are recreated (drop-if-exists) so re-running this file is safe.
+-- `for all` covers select/insert/update/delete; using(true)+with check(true)
+-- allow every row.
 -- ---------------------------------------------------------------------------
-alter table public.claimed_cases disable row level security;
-alter table public.submissions disable row level security;
+alter table public.claimed_cases enable row level security;
+alter table public.submissions   enable row level security;
+
+drop policy if exists "Public full access to claims" on public.claimed_cases;
+create policy "Public full access to claims" on public.claimed_cases
+  for all to anon, authenticated using (true) with check (true);
+
+drop policy if exists "Public full access to submissions" on public.submissions;
+create policy "Public full access to submissions" on public.submissions
+  for all to anon, authenticated using (true) with check (true);
 
 -- ---------------------------------------------------------------------------
 -- Realtime

@@ -197,9 +197,18 @@ create table if not exists public.submissions (
   created_at timestamptz not null default timezone('utc'::text, now())
 );
 
--- Disable Row Level Security since this is a public classroom app
-alter table public.claimed_cases disable row level security;
-alter table public.submissions disable row level security;
+-- Keep Row Level Security ON and allow the public classroom key full access.
+-- (More reliable than disabling RLS, which Supabase turns back on by default.)
+alter table public.claimed_cases enable row level security;
+alter table public.submissions   enable row level security;
+
+drop policy if exists "Public full access to claims" on public.claimed_cases;
+create policy "Public full access to claims" on public.claimed_cases
+  for all to anon, authenticated using (true) with check (true);
+
+drop policy if exists "Public full access to submissions" on public.submissions;
+create policy "Public full access to submissions" on public.submissions
+  for all to anon, authenticated using (true) with check (true);
 
 -- Turn on live updates (safe to run more than once)
 do $$
@@ -239,3 +248,11 @@ end $$;
    - Click **Add**
 6. Click the big **Deploy** button.
 7. Wait a couple of minutes, and Vercel will give you a live link to your website! Share this link with your students.
+
+### Troubleshooting
+
+**"new row violates row-level security policy for table ..."**
+This means the table has Row Level Security on with no policy allowing access (common if a table was created in the Supabase Table Editor instead of the SQL Editor). Fix it by opening **SQL Editor -> New query**, pasting the contents of **`supabase-schema.sql`**, and clicking **Run**. It adds the permissive classroom policy and is safe to run again.
+
+**The class board does not update live across devices**
+Make sure both tables are in the realtime publication — re-running `supabase-schema.sql` handles this. Also confirm `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set in Vercel and that you redeployed after adding them.
