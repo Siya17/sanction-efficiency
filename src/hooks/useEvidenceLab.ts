@@ -1,43 +1,32 @@
 import { useEffect, useState } from "react";
 import { getActiveCases } from "../utils/caseStorage";
 import type {
-  ActivityMode,
   AppView,
   CaseStudy,
   StudentEvidenceCard,
   StudentSubmission,
   SubmissionDraft,
-  StudentIndicator,
-  StudentEvidenceSelection,
 } from "../types";
-import { getActivityMode, saveActivityMode } from "../utils/activityModeStorage";
 import { clearSubmissions, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
 import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
 import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions } from "../utils/supabase";
 
+// Minimum number of self-researched findings before a group can give a verdict.
+export const MIN_FINDINGS = 2;
+
 export function useEvidenceLab() {
   const [groupName, setGroupName] = useState<string>("");
-  const [activityMode, setActivityModeState] = useState<ActivityMode>("classroom");
   // If no group name, default to login view
   const [view, setView] = useState<AppView | "login">("login");
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null);
-  
+
   // Real-time states
   const [claimedCases, setClaimedCases] = useState<ClaimedCase[]>([]);
 
-  // Legacy field, kept for classroom mode compatibility if needed
-  const [successCriterion, setSuccessCriterion] = useState("");
-  
-  // New Stage 9 fields
-  const [evaluationQuestion, setEvaluationQuestion] = useState("");
-  const [successGoal, setSuccessGoal] = useState("");
-  const [actorOrGroup, setActorOrGroup] = useState("");
-  const [timePeriod, setTimePeriod] = useState("");
-  
-  const [studentIndicators, setStudentIndicators] = useState<StudentIndicator[]>([]);
-  const [selectedEvidence, setSelectedEvidence] = useState<StudentEvidenceSelection[]>([]);
-  const [dataNeeds, setDataNeeds] = useState<string[]>([]);
+  // What the group decided "success" should mean for this case.
+  const [successLens, setSuccessLens] = useState("");
+  const [successNote, setSuccessNote] = useState("");
 
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() => getActiveCases());
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
@@ -45,9 +34,8 @@ export function useEvidenceLab() {
 
   // Initial load
   useEffect(() => {
-    setActivityModeState(getActivityMode());
     setCaseStudies(getActiveCases());
-    
+
     // Load submissions (prefer Supabase if available)
     const loadSubmissions = async () => {
       if (supabase) {
@@ -57,7 +45,7 @@ export function useEvidenceLab() {
         setSubmissions(getLocalSubmissions());
       }
     };
-    
+
     loadSubmissions();
   }, []);
 
@@ -69,7 +57,7 @@ export function useEvidenceLab() {
       const { data } = await getClaimedCases();
       if (data) setClaimedCases(data);
     };
-    
+
     fetchClaimed();
 
     // Subscribe to claimed_cases
@@ -97,9 +85,8 @@ export function useEvidenceLab() {
 
   const canBuildVerdict = Boolean(
     selectedCase &&
-    evaluationQuestion.length > 0 &&
-    studentIndicators.length >= 3 &&
-    selectedEvidence.length >= 3
+    successLens.trim().length > 0 &&
+    studentEvidence.length >= MIN_FINDINGS
   );
 
   function handleLogin(name: string) {
@@ -133,7 +120,7 @@ export function useEvidenceLab() {
         alert("This case has already been claimed by another group!");
         return;
       }
-      
+
       const { error } = await supabaseClaimCase(caseStudy.id, groupName);
       if (error && (error as any).code !== '23505') { // Ignore unique violation if we already claimed it
         alert("Error claiming case: " + error.message);
@@ -142,17 +129,11 @@ export function useEvidenceLab() {
     }
 
     setSelectedCase(caseStudy);
-    
-    // Reset all state for the new case
-    setSuccessCriterion("");
-    setEvaluationQuestion("");
-    setSuccessGoal("");
-    setActorOrGroup("");
-    setTimePeriod("");
-    setStudentIndicators([]);
-    setSelectedEvidence([]);
-    setDataNeeds([]);
-    
+
+    // Reset the group's working state for the new case.
+    setSuccessLens("");
+    setSuccessNote("");
+
     setStudentEvidence(getStudentEvidence(caseStudy.id));
     setView("investigation");
   }
@@ -165,31 +146,10 @@ export function useEvidenceLab() {
     setView(targetView);
   }
 
-  function setActivityMode(mode: ActivityMode) {
-    saveActivityMode(mode);
-    setActivityModeState(mode);
-  }
-
   function refreshStudentEvidence() {
     if (selectedCase) {
       setStudentEvidence(getStudentEvidence(selectedCase.id));
     }
-  }
-
-  function updateSelectedEvidence(selection: StudentEvidenceSelection) {
-    setSelectedEvidence((current) => {
-      const existing = current.findIndex(s => s.cardId === selection.cardId);
-      if (existing >= 0) {
-        const next = [...current];
-        next[existing] = selection;
-        return next;
-      }
-      return [...current, selection];
-    });
-  }
-
-  function removeSelectedEvidence(cardId: string) {
-    setSelectedEvidence((current) => current.filter(s => s.cardId !== cardId));
   }
 
   async function submitVerdict(draft: SubmissionDraft) {
@@ -204,7 +164,7 @@ export function useEvidenceLab() {
       saveLocalSubmission(submission);
       setSubmissions(getLocalSubmissions());
     }
-    
+
     setView("board");
   }
 
@@ -217,50 +177,30 @@ export function useEvidenceLab() {
   return {
     groupName,
     claimedCases,
-    activityMode,
     studentEvidence,
     canBuildVerdict,
     cases: caseStudies,
     selectedCase,
     submissions,
     view,
-    
-    // Legacy
-    successCriterion,
-    
-    // New state
-    evaluationQuestion,
-    successGoal,
-    actorOrGroup,
-    timePeriod,
-    studentIndicators,
-    selectedEvidence,
-    dataNeeds,
-    
+
+    successLens,
+    successNote,
+
     actions: {
       handleLogin,
-      setActivityMode,
       refreshStudentEvidence,
       clearBoard,
       refreshCases,
       selectCase,
       releaseCurrentCase,
-      setSuccessCriterion,
       setView,
       showBoard,
       startCaseSelection,
       submitVerdict,
-      
-      // New actions
-      setEvaluationQuestion,
-      setSuccessGoal,
-      setActorOrGroup,
-      setTimePeriod,
-      setStudentIndicators,
-      setSelectedEvidence,
-      setDataNeeds,
-      updateSelectedEvidence,
-      removeSelectedEvidence,
+
+      setSuccessLens,
+      setSuccessNote,
     },
   };
 }

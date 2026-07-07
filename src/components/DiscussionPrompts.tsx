@@ -10,7 +10,7 @@ export function DiscussionPrompts({ submissions }: DiscussionPromptsProps) {
   const mostCommon = submissions.length > 0 ? getMostCommonVerdict(submissions) : null;
   const highConfidenceCases = getHighConfidenceCases(submissions);
   const hasCivilianCriterion = submissions.some((submission) => {
-    const text = (submission.evaluationQuestion || submission.successCriterion || "").toLowerCase();
+    const text = (submission.successLens || submission.successNote || "").toLowerCase();
     return text.includes("civilian") || text.includes("welfare") || text.includes("harm");
   });
 

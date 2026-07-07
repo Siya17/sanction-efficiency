@@ -19,7 +19,7 @@ export function groupByCriterion(submissions: StudentSubmission[]) {
   const groups = new Map<string, StudentSubmission[]>();
 
   submissions.forEach((submission) => {
-    const key = submission.successCriterion || "Unspecified criterion";
+    const key = submission.successLens || "Unspecified success test";
     groups.set(key, [...(groups.get(key) ?? []), submission]);
   });
 

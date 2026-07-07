@@ -1,7 +1,7 @@
-import { CaseInvestigation } from "./components/CaseInvestigation";
 import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
 import { ComparativeMode } from "./components/ComparativeMode";
+import { GuidedInvestigation } from "./components/GuidedInvestigation";
 import { Header } from "./components/Header";
 import { Home } from "./components/Home";
 import { ProgressSteps } from "./components/ProgressSteps";
@@ -22,7 +22,7 @@ export default function App() {
     }
 
     if (lab.view === "home") {
-      return <Home onBoard={actions.showBoard} onStart={actions.startCaseSelection} />;
+      return <Home cases={lab.cases} onBoard={actions.showBoard} onStart={actions.startCaseSelection} />;
     }
 
     if (lab.view === "selection") {
@@ -31,35 +31,14 @@ export default function App() {
 
     if (lab.view === "investigation" && lab.selectedCase) {
       return (
-        <CaseInvestigation
-          activityMode={lab.activityMode}
-          canContinue={lab.canBuildVerdict}
+        <GuidedInvestigation
           caseStudy={lab.selectedCase}
-          
-          evaluationQuestion={lab.evaluationQuestion}
-          successGoal={lab.successGoal}
-          actorOrGroup={lab.actorOrGroup}
-          timePeriod={lab.timePeriod}
-          studentIndicators={lab.studentIndicators}
-          selectedEvidence={lab.selectedEvidence}
-          dataNeeds={lab.dataNeeds}
+          successLens={lab.successLens}
+          successNote={lab.successNote}
+          onSuccessLensChange={actions.setSuccessLens}
+          onSuccessNoteChange={actions.setSuccessNote}
           studentEvidenceCards={lab.studentEvidence}
-          
-          onEvaluationQuestionChange={actions.setEvaluationQuestion}
-          onSuccessGoalChange={actions.setSuccessGoal}
-          onActorOrGroupChange={actions.setActorOrGroup}
-          onTimePeriodChange={actions.setTimePeriod}
-          onIndicatorChange={(indicator) => {
-            const next = [...lab.studentIndicators];
-            const idx = next.findIndex(i => i.type === indicator.type);
-            if (idx >= 0) next[idx] = indicator;
-            else next.push(indicator);
-            actions.setStudentIndicators(next);
-          }}
-          onUpdateSelection={actions.updateSelectedEvidence}
-          onRemoveSelection={actions.removeSelectedEvidence}
-          onDataNeedsChange={actions.setDataNeeds}
-          
+          canContinue={lab.canBuildVerdict}
           onAddStudentEvidence={(card) => {
             import("./utils/studentEvidenceStorage").then((m) => {
               m.addStudentEvidence(card);
@@ -69,7 +48,6 @@ export default function App() {
           onDeleteStudentEvidence={(cardId) => {
             import("./utils/studentEvidenceStorage").then((m) => {
               m.deleteStudentEvidence(cardId);
-              actions.removeSelectedEvidence(cardId);
               actions.refreshStudentEvidence();
             });
           }}
@@ -81,14 +59,10 @@ export default function App() {
     if (lab.view === "verdict" && lab.selectedCase) {
       return (
         <VerdictBuilder
-          activityMode={lab.activityMode}
           caseStudy={lab.selectedCase}
-          
-          evaluationQuestion={lab.evaluationQuestion}
-          studentIndicators={lab.studentIndicators}
-          selectedEvidence={lab.selectedEvidence}
+          successLens={lab.successLens}
+          successNote={lab.successNote}
           studentEvidenceCards={lab.studentEvidence}
-          
           onBack={() => actions.setView("investigation")}
           onSubmit={actions.submitVerdict}
         />
@@ -128,18 +102,16 @@ export default function App() {
     <div className="app-shell">
       {lab.view !== "login" && (
         <>
-          <Header 
-            boardCount={lab.submissions.length} 
-            currentView={lab.view as AppView} 
+          <Header
+            boardCount={lab.submissions.length}
+            currentView={lab.view as AppView}
             onNavigate={(view) => {
               if (lab.selectedCase && view !== "investigation" && view !== "verdict") {
                 actions.releaseCurrentCase(view);
               } else {
                 actions.setView(view);
               }
-            }} 
-            activityMode={lab.activityMode} 
-            onSetActivityMode={actions.setActivityMode} 
+            }}
           />
           <ProgressSteps currentView={lab.view as AppView} />
         </>

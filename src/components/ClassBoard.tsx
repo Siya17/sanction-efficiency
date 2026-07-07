@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import type { StudentSubmission, Track, Verdict } from "../types";
 import { confidenceLabels, trackLabels, verdictLabels } from "../utils/labels";
 import { submissionsToCsv } from "../utils/submissions";
-import { exportResearchAsJson, exportResearchAsMarkdown } from "../utils/exportResearch";
 
 type ClassBoardProps = {
   submissions: StudentSubmission[];
@@ -11,12 +10,11 @@ type ClassBoardProps = {
   onChooseCase: () => void;
 };
 
-type Filter = "all" | Track | Verdict | "classroom" | "research";
+type Filter = "all" | Track | Verdict;
 
 function matchesFilter(submission: StudentSubmission, filter: Filter) {
   if (filter === "all") return true;
   if (filter === "sanctions" || filter === "aid") return submission.track === filter;
-  if (filter === "classroom" || filter === "research") return (submission.activityMode || "classroom") === filter;
   return submission.verdict === filter;
 }
 
@@ -39,7 +37,6 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
 
   function handleClear() {
     const confirmed = window.confirm("Clear all verdicts from this browser's class board?");
-
     if (confirmed) {
       onClear();
     }
@@ -64,9 +61,9 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
           <p className="eyebrow">Step 5</p>
           <h1>Class Board</h1>
           <div className="discussion-prompts">
-            <p>Why is "Did it work?" hard to answer without a specific criterion?</p>
-            <p>Which verdict changed most depending on the success criterion?</p>
-            <p>Where did a policy achieve its goal but also cause civilian harm?</p>
+            <p>Why is "Did it work?" hard to answer without deciding what success means?</p>
+            <p>Which verdict changed most depending on the success test chosen?</p>
+            <p>Where did a policy meet its goal but also cause serious harm?</p>
             <p>What missing evidence would make you more confident?</p>
           </div>
         </div>
@@ -77,8 +74,6 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
             onChange={(event) => setFilter(event.target.value as Filter)}
           >
             <option value="all">All</option>
-            <option value="classroom">Classroom Mode</option>
-            <option value="research">Research Mode</option>
             <option value="sanctions">Sanctions</option>
             <option value="aid">Foreign aid</option>
             <option value="worked">Worked</option>
@@ -132,7 +127,7 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
       {filteredSubmissions.length === 0 ? (
         <section className="empty-board">
           <h2>No verdicts yet</h2>
-          <p>Submit one pair's verdict, then refresh to confirm it stays on the board.</p>
+          <p>Submit one group's verdict, then refresh to confirm it stays on the board.</p>
           <button className="primary-button" type="button" onClick={onChooseCase}>
             Choose a case
           </button>
@@ -145,7 +140,7 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
                 <th>Case</th>
                 <th>Track</th>
                 <th>Policy</th>
-                <th>Evaluation Question</th>
+                <th>Success test</th>
                 <th>Verdict</th>
                 <th>Confidence</th>
                 <th>Strongest evidence</th>
@@ -161,7 +156,7 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
                     <span className={`track-pill ${submission.track}`}>{trackLabels[submission.track]}</span>
                   </td>
                   <td>{submission.policy}</td>
-                  <td>{submission.evaluationQuestion || submission.successCriterion || "N/A"}</td>
+                  <td>{submission.successLens || "—"}</td>
                   <td>
                     <span className={`verdict-badge ${submission.verdict}`}>
                       {verdictLabels[submission.verdict]}
@@ -176,55 +171,18 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
                   <td>{submission.biggestComplication}</td>
                   <td>
                     {submission.missingEvidence}
-                    {submission.dataSnapshotReflection && (
-                      <details className="mt-2 text-sm text-gray-600 border p-2 bg-gray-50 rounded">
-                        <summary className="cursor-pointer font-medium text-indigo-600">Data Snapshot Reflection</summary>
-                        <p className="mt-1 pt-1 border-t border-gray-200">{submission.dataSnapshotReflection}</p>
-                      </details>
-                    )}
-                    {submission.activityMode === "research" && (
-                      <details className="mt-2 text-sm text-gray-800 border p-2 bg-indigo-50 rounded">
-                        <summary className="cursor-pointer font-bold text-indigo-800 mb-1">Research Details</summary>
-                        <div className="mt-2 space-y-3 pt-2 border-t border-indigo-100">
-                          {submission.researchQuestion && (
-                            <div>
-                              <strong className="block text-indigo-900">Research Question:</strong>
-                              <p>{submission.researchQuestion}</p>
-                            </div>
-                          )}
-                          {submission.finalExplanation && (
-                            <div>
-                              <strong className="block text-indigo-900">Final Explanation:</strong>
-                              <p>{submission.finalExplanation}</p>
-                            </div>
-                          )}
-                          {submission.counterargument && (
-                            <div>
-                              <strong className="block text-indigo-900">Counterargument:</strong>
-                              <p>{submission.counterargument}</p>
-                            </div>
-                          )}
-                          {submission.evidenceThatWouldChangeMind && (
-                            <div>
-                              <strong className="block text-indigo-900">What would change mind:</strong>
-                              <p>{submission.evidenceThatWouldChangeMind}</p>
-                            </div>
-                          )}
-                          {submission.studentEvidenceCards && submission.studentEvidenceCards.length > 0 && (
-                            <div>
-                              <strong className="block text-indigo-900 mb-1">Student Evidence ({submission.studentEvidenceCards.length}):</strong>
-                              <ul className="list-disc pl-4 space-y-1">
-                                {submission.studentEvidenceCards.map((c, i) => (
-                                  <li key={i}>{c.title} <span className="text-gray-500">({c.reliability})</span></li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                          <div className="flex gap-2 mt-4 pt-2 border-t border-indigo-100">
-                            <button onClick={() => exportResearchAsMarkdown(submission)} className="text-xs bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700">Export MD</button>
-                            <button onClick={() => exportResearchAsJson(submission)} className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded hover:bg-indigo-200">Export JSON</button>
-                          </div>
-                        </div>
+                    {submission.studentEvidenceCards && submission.studentEvidenceCards.length > 0 && (
+                      <details className="board-findings">
+                        <summary>
+                          {submission.studentEvidenceCards.length} findings researched
+                        </summary>
+                        <ul>
+                          {submission.studentEvidenceCards.map((card) => (
+                            <li key={card.id}>
+                              {card.title} <span className="board-findings-source">({card.sourceTitle})</span>
+                            </li>
+                          ))}
+                        </ul>
                       </details>
                     )}
                   </td>

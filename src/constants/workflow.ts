@@ -6,11 +6,6 @@ export const evidenceSortCategories = [
   "complicates_or_missing",
 ] as const satisfies readonly EvidenceSortCategory[];
 
-export const evidenceSortChoices = [
-  ...evidenceSortCategories,
-  "unassigned",
-] as const satisfies readonly EvidenceSortCategory[];
-
 export const verdictOptions = [
   "worked",
   "failed",
@@ -22,16 +17,16 @@ export const confidenceOptions = ["high", "medium", "low"] as const satisfies re
 
 export const workflowSteps = [
   "Choose case",
-  "Define success",
-  "Sort evidence",
-  "Build verdict",
+  "Understand it",
+  "Find evidence",
+  "Give verdict",
   "Compare results",
 ];
 
 export const activityTiming = [
-  { label: "Choose case", time: "2 min" },
+  { label: "Meet the case", time: "8 min" },
   { label: "Define success", time: "5 min" },
-  { label: "Sort evidence", time: "10 min" },
-  { label: "Build verdict", time: "5 min" },
-  { label: "Class discussion", time: "10-12 min" },
+  { label: "Find evidence", time: "12 min" },
+  { label: "Give verdict", time: "5 min" },
+  { label: "Class discussion", time: "5 min" },
 ];

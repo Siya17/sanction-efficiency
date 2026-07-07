@@ -1,7 +1,7 @@
 export type Track = "sanctions" | "aid";
-export type ActivityMode = "classroom" | "research";
 export type EvidenceReliability = "high" | "medium" | "low" | "uncertain";
 
+// How a student classified a piece of evidence they found.
 export type EvidenceSortCategory =
   | "unassigned"
   | "supports_worked"
@@ -42,6 +42,7 @@ export type IndicatorDataPoint = {
   label?: string;
 };
 
+// Curated indicator series, still editable in Teacher Mode (not shown to students).
 export type CaseIndicator = {
   id: string;
   caseId: string;
@@ -80,6 +81,7 @@ export type SourceLink = {
   note?: string;
 };
 
+// Curated evidence, still editable in Teacher Mode (not shown to students).
 export type EvidenceCard = {
   id: string;
   title: string;
@@ -93,14 +95,7 @@ export type EvidenceCard = {
   reliability?: EvidenceReliability;
 };
 
-export type Citation = {
-  title: string;
-  url?: string;
-  authorOrOrganization?: string;
-  publicationYear?: string;
-  note?: string;
-};
-
+// A piece of evidence a student found and recorded themselves.
 export type StudentEvidenceCard = {
   id: string;
   caseId: string;
@@ -112,7 +107,7 @@ export type StudentEvidenceCard = {
   publicationYear?: string;
   quoteOrDataPoint?: string;
   reliability: EvidenceReliability;
-  sortCategory: EvidenceSortCategory; // Kept for backward compatibility
+  sortCategory: EvidenceSortCategory; // worked / failed / complicated
   explanation: string;
   limitation: string;
   notes?: string;
@@ -150,127 +145,27 @@ export type CaseStudy = {
   teacherNote?: string;
 };
 
-export type StudentIndicatorType =
-  | "success"
-  | "harm_or_cost"
-  | "uncertainty_or_alternative";
-
-export type StudentIndicator = {
-  id: string;
-  caseId: string;
-  type: StudentIndicatorType;
-  name: string;
-  measures: string;
-  whyItMatters: string;
-  direction: string;
-  limitation: string;
-};
-
-export type IndicatorSuggestion = {
-  id: string;
-  track: "sanctions" | "aid";
-  caseId?: string;
-  type: StudentIndicatorType;
-  label: string;
-  measures: string;
-  whyItMatters: string;
-  possibleData?: string;
-  limitation: string;
-};
-
-export type StudentEvidenceFinding =
-  | "supports_success"
-  | "shows_failure"
-  | "complicates"
-  | "irrelevant";
-
-export type StudentEvidenceSelection = {
-  cardId: string;
-  indicatorId?: string;
-  finding: StudentEvidenceFinding;
-};
-
 export type StudentSubmission = {
   id: string;
   caseId: string;
   country: string;
   track: Track;
   policy: string;
-  successCriterion?: string; // Optional now, since we have evaluationQuestion
-  policyAim?: string; // Optional now
-  
-  // New Stage 9 fields
-  evaluationQuestion?: string;
-  successGoal?: string;
-  actorOrGroup?: string;
-  timePeriod?: string;
-  studentIndicators?: StudentIndicator[];
-  selectedEvidence?: StudentEvidenceSelection[];
-  dataNeeds?: string[];
-  
+
+  // What the group decided "success" should mean for this case.
+  successLens?: string;
+  successNote?: string;
+
   verdict: Verdict;
   confidence: Confidence;
   strongestEvidence: string;
   biggestComplication: string;
   missingEvidence: string;
-  dataSnapshotReflection?: string;
-  activityMode?: ActivityMode;
+
+  // The evidence the group found and recorded themselves.
   studentEvidenceCards?: StudentEvidenceCard[];
-  researchQuestion?: string;
-  supportingEvidence?: string;
-  complicatingEvidence?: string;
-  counterargument?: string;
-  evidenceThatWouldChangeMind?: string;
-  remainingUncertainty?: string;
-  sourceReliabilityNote?: string;
-  finalExplanation?: string;
-  citationList?: Citation[];
+
   createdAt: string;
 };
 
-export type DatasetCategory =
-  | "sanctions"
-  | "aid"
-  | "conflict"
-  | "development"
-  | "governance"
-  | "economic"
-  | "civilian_welfare";
-
-export type DatasetSource = {
-  id: string;
-  title: string;
-  provider: string;
-  url: string;
-  note: string;
-  lastChecked?: string;
-};
-
-export type DatasetDataPoint = {
-  year: number;
-  value: number;
-  label?: string;
-};
-
-export type DatasetSeries = {
-  id: string;
-  caseId: string;
-  sourceId: string;
-  category: DatasetCategory;
-  title: string;
-  description: string;
-  unit?: string;
-  data: DatasetDataPoint[];
-  caveat: string;
-};
-
-export type CaseDatasetSnapshot = {
-  id: string;
-  caseId: string;
-  title: string;
-  description: string;
-  series: DatasetSeries[];
-};
-
 export type SubmissionDraft = Omit<StudentSubmission, "id" | "createdAt">;
-

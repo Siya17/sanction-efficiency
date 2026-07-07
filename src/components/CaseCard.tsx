@@ -10,7 +10,7 @@ type CaseCardProps = {
 
 export function CaseCard({ caseStudy, claimedBy, disabled, onSelect }: CaseCardProps) {
   return (
-    <article className={`case-card ${disabled ? 'opacity-70 grayscale-[0.5]' : ''}`}>
+    <article className={`case-card ${disabled ? "case-card-disabled" : ""}`}>
       <div className="case-card-header">
         <span className={`track-pill ${caseStudy.track}`}>{trackLabels[caseStudy.track]}</span>
         <span className="period-label">{caseStudy.period}</span>
@@ -18,21 +18,16 @@ export function CaseCard({ caseStudy, claimedBy, disabled, onSelect }: CaseCardP
       <h3>{caseStudy.country}</h3>
       <p className="case-policy">{caseStudy.policy}</p>
       <p className="case-question">{caseStudy.question}</p>
-      <span className="evidence-count">{caseStudy.evidenceCards.length} evidence cards</span>
-      
-      {claimedBy && (
-        <div className="mt-3 p-2 bg-yellow-100 text-yellow-800 text-sm font-semibold rounded text-center border border-yellow-200">
-          Claimed by: {claimedBy}
-        </div>
-      )}
 
-      <button 
-        className="secondary-button full-width mt-3" 
-        type="button" 
+      {claimedBy && <div className="claimed-note">Claimed by: {claimedBy}</div>}
+
+      <button
+        className="secondary-button full-width"
+        type="button"
         disabled={disabled}
         onClick={() => onSelect(caseStudy)}
       >
-        {disabled ? 'Unavailable' : 'Investigate this case'}
+        {disabled ? "Unavailable" : "Investigate this case"}
       </button>
     </article>
   );

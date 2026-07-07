@@ -1,51 +1,60 @@
-import { appConfig } from "../config/app";
-import { InlineHelp } from "./InlineHelp";
+import type { CaseStudy } from "../types";
 
 type HomeProps = {
+  cases: CaseStudy[];
   onStart: () => void;
   onBoard: () => void;
 };
 
-export function Home({ onStart, onBoard }: HomeProps) {
+const steps = [
+  { title: "Meet the case", detail: "Read what happened, in plain English, with tricky terms explained." },
+  { title: "Define success", detail: "Decide what “working” should actually mean for this case." },
+  { title: "Find evidence", detail: "Research real numbers and facts yourself, and note your sources." },
+  { title: "Give a verdict", detail: "Weigh what you found and defend a careful judgement." },
+];
+
+export function Home({ cases, onStart, onBoard }: HomeProps) {
+  const caseCount = cases.length;
+
   return (
-    <main className="page home-page">
+    <main className="page">
       <section className="hero-section">
         <div className="hero-copy">
-          <p className="eyebrow">Classroom investigation</p>
-          <h1>{appConfig.title}</h1>
-          <p className="subtitle">{appConfig.subtitle}</p>
-          <div className="intro">
-            <p>
-              Many people ask whether 
-              <strong> sanctions</strong>
-              <InlineHelp term="Sanctions">
-                Economic or political penalties, like trade bans or frozen assets, used by countries to pressure a target government or group to change its behavior.
-              </InlineHelp>
-              {" "}or{" "}
-              <strong>foreign aid</strong>
-              <InlineHelp term="Foreign aid">
-                Money, food, or resources given by one country or organization to help another country, often to support development, health, or security.
-              </InlineHelp>
-              {" "} "worked." This app helps you answer that question carefully.
-            </p>
-            <ol style={{ textAlign: "left", marginTop: "1rem", marginBottom: "1rem", paddingLeft: "1.5rem" }}>
-              <li><strong>Choose a real case</strong></li>
-              <li><strong>Decide what "worked" means</strong></li>
-              <li><strong>Use evidence to make a cautious verdict</strong></li>
-            </ol>
-            <p style={{ background: "#fef3c7", padding: "10px", borderRadius: "6px", color: "#92400e", fontSize: "0.95rem" }}>
-              <strong>Note:</strong> There may not be one correct answer. A good answer explains the evidence and the uncertainty.
-            </p>
-          </div>
-          <div className="button-row" style={{ marginTop: "2rem" }}>
-            <button className="primary-button" type="button" onClick={onStart}>
-              Start with a case
+          <p className="eyebrow">Evidence Lab</p>
+          <h1>Did it actually work?</h1>
+          <p className="subtitle">Judge whether real sanctions and foreign-aid policies succeeded.</p>
+          <p className="intro">
+            "Did it work?" sounds simple, but it hides a hard question: <strong>work at what?</strong> In this activity
+            your group picks one real case, decides what success should mean, and then goes and finds the evidence
+            yourselves. You will not be handed the answer — you will build it.
+          </p>
+          <p className="intro">
+            You do not need to know these cases already. Everything you need to understand them is explained as you go,
+            and you can hover any underlined term for a quick definition.
+          </p>
+          <div className="button-row">
+            <button type="button" className="primary-button" onClick={onStart}>
+              Choose a case
             </button>
-            <button className="secondary-button" type="button" onClick={onBoard}>
+            <button type="button" className="secondary-button" onClick={onBoard}>
               View class board
             </button>
           </div>
         </div>
+
+        <aside className="workflow-panel">
+          <p className="eyebrow">Four steps · about 35 minutes</p>
+          {steps.map((step, index) => (
+            <div className="workflow-step" key={step.title}>
+              <span>{index + 1}</span>
+              <div>
+                <strong>{step.title}</strong>
+                <p>{step.detail}</p>
+              </div>
+            </div>
+          ))}
+          <p className="hint">{caseCount} real cases to choose from — sanctions and foreign aid.</p>
+        </aside>
       </section>
     </main>
   );
