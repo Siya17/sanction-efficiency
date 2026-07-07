@@ -19,6 +19,12 @@ export const cases: CaseStudy[] = [
         "Behavior change (inspections compliance)",
         "Regime change",
         "Minimizing civilian harm"
+      ],
+      tailoredGuidance: [
+        "Coercion: Did the sanctions force Saddam Hussein to change course or fully comply?",
+        "Constraint: Did they successfully degrade Iraq's military capacity?",
+        "Signaling: Did the international community send a clear message?",
+        "Attribution: Were the outcomes caused by sanctions, or by the Gulf War and military strikes?"
       ]
     },
     successCriteria: [
@@ -35,7 +41,11 @@ export const cases: CaseStudy[] = [
       { id: "iraq-mechanism", title: "Oil Export Revenue Drop", text: "Before 1990, Iraq exported over 2.5 million barrels of oil per day. By 1991, due to the embargo, oil exports dropped to near zero, depriving the regime of 95% of its foreign exchange earnings.", type: "mechanism", whyItMatters: "Shows exactly how the sanctions crippled Iraq's economy.", limitation: "The regime adapted through smuggling and the black market." },
       { id: "iraq-alternative", title: "Operation Desert Fox (1998)", text: "In 1998, after Iraq halted cooperation with UN inspectors, the US and UK launched a 4-day bombing campaign (Operation Desert Fox) targeting Iraq's military and WMD infrastructure.", type: "alternative_explanation", whyItMatters: "Suggests military force, not just economic sanctions, was used to constrain Iraq.", limitation: "The bombing campaign ended weapons inspections for years." },
       { id: "iraq-comparison", title: "Post-2003 Findings", text: "Following the 2003 US invasion, the Iraq Survey Group (Duelfer Report) concluded that Iraq had secretly destroyed its WMD stockpiles in 1991 but intended to restart the programs once sanctions were lifted.", type: "comparison_problem", whyItMatters: "Shows the sanctions were keeping the WMD program dormant.", limitation: "The intelligence leading up to 2003 was highly flawed." },
-      { id: "iraq-missing", title: "Saddam's Internal Deliberations", text: "Secret recordings of Saddam Hussein's cabinet meetings (captured in 2003) revealed that he prioritized regime survival above all else and feared Iran more than the US.", type: "missing_evidence", whyItMatters: "Explains why sanctions failed to change his behavior—he feared looking weak to domestic rivals and Iran.", limitation: "We only got this evidence after the regime was destroyed." }
+      { id: "iraq-missing", title: "Saddam's Internal Deliberations", text: "Secret recordings of Saddam Hussein's cabinet meetings (captured in 2003) revealed that he prioritized regime survival above all else and feared Iran more than the US.", type: "missing_evidence", whyItMatters: "Explains why sanctions failed to change his behavior—he feared looking weak to domestic rivals and Iran.", limitation: "We only got this evidence after the regime was destroyed." },
+      { id: "iraq-irrelevant-1", title: "Publication of 'Zabiba and the King'", text: "In 2000, Saddam Hussein anonymously published a romance novel titled 'Zabiba and the King' which became a bestseller in Iraq.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence to test evaluation.", limitation: "Irrelevant to sanctions." },
+      { id: "iraq-constraint-2", title: "Decay of the Iraqi Air Force", text: "Due to the embargo on spare parts, by 2003 the Iraqi Air Force, once one of the largest in the Middle East, was almost entirely grounded and non-operational.", type: "success_evidence", whyItMatters: "Strong evidence of military constraint.", limitation: "Also degraded civilian infrastructure." },
+      { id: "iraq-coercion-fail", title: "Oil Smuggling via Turkey and Jordan", text: "Throughout the 1990s, Iraq successfully smuggled billions of dollars of oil through neighboring countries, generating off-the-books revenue for the regime.", type: "failure_or_harm", whyItMatters: "Shows the limits of economic coercion when borders are porous.", limitation: "Still a fraction of pre-war revenue." },
+      { id: "iraq-signal", title: "Global Condemnation", text: "The initial sanctions resolution (661) was passed 13-0 with 2 abstentions (Cuba and Yemen), representing a rare moment of unified global signaling.", type: "success_evidence", whyItMatters: "Evidence of successful diplomatic signaling.", limitation: "The coalition later fractured." }
     ],
     sources: [
       { title: "UN Security Council sanctions information", url: "https://main.un.org/securitycouncil/en/sanctions/information" },
@@ -62,6 +72,12 @@ export const cases: CaseStudy[] = [
         "Changing nuclear behavior",
         "Long-term sustainability of the agreement",
         "Minimizing civilian harm"
+      ],
+      tailoredGuidance: [
+        "Coercion: Did the sanctions force Iran to the negotiating table?",
+        "Constraint: Did they effectively cut Iran out of the global financial system?",
+        "Signaling: Did they demonstrate international resolve against nuclear proliferation?",
+        "Attribution: Did the sanctions cause the JCPOA, or did domestic Iranian politics (Rouhani's election) matter more?"
       ]
     },
     successCriteria: [
@@ -78,7 +94,11 @@ export const cases: CaseStudy[] = [
       { id: "iran-mechanism", title: "SWIFT Disconnection (2012)", text: "In 2012, the EU banned Iranian banks from SWIFT (the global financial messaging system). This effectively cut Iran out of the global banking network, making it nearly impossible to receive payment for oil.", type: "mechanism", whyItMatters: "Demonstrates a highly effective, modern tool of financial isolation.", limitation: "This forced Iran to develop alternative banking channels and trade in local currencies." },
       { id: "iran-alternative", title: "The Election of Hassan Rouhani", text: "In 2013, Hassan Rouhani, a moderate who campaigned on improving the economy and ending isolation, was elected President of Iran, defeating hardline candidates.", type: "alternative_explanation", whyItMatters: "Suggests domestic politics, not just external sanctions, opened the door to a deal.", limitation: "Rouhani was likely elected precisely because the sanctions were hurting so much." },
       { id: "iran-comparison", title: "Oil Export Halved", text: "Between 2011 and 2013, due to coordinated US and EU sanctions, Iran's oil exports fell from 2.5 million barrels a day to just over 1 million, costing the regime billions.", type: "comparison_problem", whyItMatters: "A clear metric showing the economic bite of the sanctions.", limitation: "China and India continued to buy some Iranian oil, preventing total collapse." },
-      { id: "iran-missing", title: "Supreme Leader's Calculations", text: "Ayatollah Khamenei famously distrusts the West. We lack internal memos detailing exactly what convinced him to authorize the 2015 nuclear negotiations despite his deep skepticism.", type: "missing_evidence", whyItMatters: "Leaves us guessing what the tipping point was for the regime's leadership.", limitation: "This information is highly classified in Iran." }
+      { id: "iran-missing", title: "Supreme Leader's Calculations", text: "Ayatollah Khamenei famously distrusts the West. We lack internal memos detailing exactly what convinced him to authorize the 2015 nuclear negotiations despite his deep skepticism.", type: "missing_evidence", whyItMatters: "Leaves us guessing what the tipping point was for the regime's leadership.", limitation: "This information is highly classified in Iran." },
+      { id: "iran-irrelevant-1", title: "Iranian Cinema Awards", text: "In 2012, the Iranian film 'A Separation' won the Academy Award for Best Foreign Language Film, bringing international prestige to Iranian cinema.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence to test evaluation.", limitation: "Irrelevant to sanctions." },
+      { id: "iran-constraint-2", title: "Shipping Insurance Ban", text: "The EU banned European companies from providing insurance to tankers carrying Iranian oil. Since Europe dominated the maritime insurance market, this effectively grounded much of Iran's fleet.", type: "mechanism", whyItMatters: "Shows a highly targeted constraint mechanism.", limitation: "Iran eventually provided sovereign guarantees to bypass it." },
+      { id: "iran-coercion-fail", title: "Centrifuge Expansion (2010-2013)", text: "During the period of the harshest new financial sanctions (2010-2013), Iran actually increased its number of installed centrifuges from about 8,000 to over 19,000.", type: "failure_or_harm", whyItMatters: "Shows that while constraint worked economically, nuclear coercion was failing prior to negotiations.", limitation: "They eventually dismantled most of them in 2015." },
+      { id: "iran-signal", title: "UN Security Council Unanimity", text: "UN sanctions resolutions against Iran in 2006, 2007, and 2008 were passed with the support of both Russia and China, signaling deep global concern.", type: "success_evidence", whyItMatters: "Evidence of successful diplomatic signaling.", limitation: "Russia and China later opposed unilateral US sanctions." }
     ],
     sources: [
       { title: "IAEA: Iran", url: "https://www.iaea.org/newscenter/focus/iran" },
@@ -105,6 +125,12 @@ export const cases: CaseStudy[] = [
         "Economic pressure on the regime",
         "Changing the government's behavior",
         "Supporting internal resistance"
+      ],
+      tailoredGuidance: [
+        "Coercion: Did the sanctions force the government to transition to majority rule?",
+        "Constraint: Did they effectively cut South Africa off from global capital and trade?",
+        "Signaling: Did they delegitimize apartheid internationally?",
+        "Attribution: Did the sanctions end apartheid, or did internal resistance matter more?"
       ]
     },
     successCriteria: [
@@ -120,7 +146,11 @@ export const cases: CaseStudy[] = [
       { id: "sa-mechanism", title: "Sports Boycotts", text: "South Africa was banned from the Olympics starting in 1964 and expelled from international cricket and rugby. A popular slogan was 'No normal sport in an abnormal society.'", type: "mechanism", whyItMatters: "Shows that psychological and cultural isolation can be as painful as economic sanctions.", limitation: "Sports boycotts alone do not topple governments." },
       { id: "sa-alternative", title: "Internal Strikes and UDF", text: "In the 1980s, the United Democratic Front (UDF) coordinated massive internal resistance, while the Congress of South African Trade Unions (COSATU) organized millions of workers in crippling nationwide strikes.", type: "alternative_explanation", whyItMatters: "Provides strong evidence that internal revolution, not external sanctions, was the primary driver of change.", limitation: "The strikes and external sanctions worked together synergistically." },
       { id: "sa-comparison", title: "Economic Growth Rates", text: "South Africa's GDP growth fell from an average of 5.8% in the 1960s (pre-sanctions) to just 1.5% in the 1980s (peak sanctions).", type: "comparison_problem", whyItMatters: "Provides a clear metric of economic stagnation under sanctions.", limitation: "Global recessions and the falling price of gold also contributed to this decline." },
-      { id: "sa-missing", title: "F.W. de Klerk's Internal Memos", text: "While de Klerk publicly claimed sanctions did not force his hand, historians debate how much the looming economic collapse privately influenced the National Party's decision to negotiate.", type: "missing_evidence", whyItMatters: "The psychological impact of sanctions on leadership is hard to measure.", limitation: "Politicians rarely admit to caving to foreign pressure." }
+      { id: "sa-missing", title: "F.W. de Klerk's Internal Memos", text: "While de Klerk publicly claimed sanctions did not force his hand, historians debate how much the looming economic collapse privately influenced the National Party's decision to negotiate.", type: "missing_evidence", whyItMatters: "The psychological impact of sanctions on leadership is hard to measure.", limitation: "Politicians rarely admit to caving to foreign pressure." },
+      { id: "sa-irrelevant-1", title: "South African Wine Exports", text: "In the 1970s, South Africa produced millions of liters of wine, though exports were limited mainly to neighboring African countries.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence.", limitation: "Irrelevant to sanctions." },
+      { id: "sa-constraint-2", title: "Arms Embargo Impact", text: "The mandatory UN arms embargo forced South Africa to pay a massive premium to smuggle weapons and parts, straining the state budget significantly.", type: "success_evidence", whyItMatters: "Strong evidence of military constraint.", limitation: "They still managed to get weapons." },
+      { id: "sa-coercion-fail", title: "Armscor Development", text: "In response to the arms embargo, South Africa developed its own state-owned arms corporation, Armscor, eventually becoming a major arms exporter itself.", type: "failure_or_harm", whyItMatters: "Shows how constraint can lead to import substitution.", limitation: "It was still very expensive for the state." },
+      { id: "sa-signal", title: "UN General Assembly Condemnation", text: "The UN repeatedly declared apartheid a 'crime against humanity,' signaling universal diplomatic rejection of the regime's ideology.", type: "success_evidence", whyItMatters: "Evidence of successful diplomatic signaling.", limitation: "Resolutions don't enforce themselves." }
     ],
     sources: [
       { title: "UN Digital Library", url: "https://digitallibrary.un.org/" },
@@ -146,6 +176,12 @@ export const cases: CaseStudy[] = [
         "Military and strategic constraint",
         "Economic degradation",
         "Norm enforcement"
+      ],
+      tailoredGuidance: [
+        "Coercion: Did the sanctions force Russia to stop the invasion?",
+        "Constraint: Did they successfully degrade Russia's military production and economy?",
+        "Signaling: Did the international community send a clear message of opposition?",
+        "Attribution: Are economic outcomes due to sanctions, or global energy prices?"
       ]
     },
     successCriteria: [
@@ -161,7 +197,11 @@ export const cases: CaseStudy[] = [
       { id: "russia-mechanism", title: "Microchip Shortages", text: "US export controls banned the sale of advanced semiconductors to Russia. By late 2022, Ukrainian forces found Russian tanks and drones using chips scavenged from civilian dishwashers and refrigerators.", type: "mechanism", whyItMatters: "Provides physical proof that technology sanctions constrained military production.", limitation: "Russia set up shell companies in third countries to smuggle chips." },
       { id: "russia-alternative", title: "The 'Shadow Fleet'", text: "To bypass the G7 price cap on Russian oil, Moscow assembled a 'shadow fleet' of hundreds of aging oil tankers with obscured ownership, continuing to sell massive volumes of oil to India and China.", type: "alternative_explanation", whyItMatters: "Explains why the Russian economy did not collapse: they found alternative buyers.", limitation: "Selling oil this way is highly inefficient and less profitable." },
       { id: "russia-comparison", title: "GDP Growth Despite Sanctions", text: "In 2023, the IMF reported that Russia's economy actually grew by 3.6%, driven by massive state spending on the military-industrial complex.", type: "comparison_problem", whyItMatters: "Suggests the sanctions failed to crash the economy.", limitation: "War-driven GDP growth often masks deep underlying economic rot and inflation." },
-      { id: "russia-missing", title: "Long-term Oil Revenue Data", text: "Because Russia has classified most of its economic data since 2022, independent economists struggle to know exactly how much oil revenue is reaching the state budget versus disappearing into corruption.", type: "missing_evidence", whyItMatters: "Makes it incredibly hard to measure the true success of the oil price cap.", limitation: "Requires waiting for post-war analysis." }
+      { id: "russia-missing", title: "Long-term Oil Revenue Data", text: "Because Russia has classified most of its economic data since 2022, independent economists struggle to know exactly how much oil revenue is reaching the state budget versus disappearing into corruption.", type: "missing_evidence", whyItMatters: "Makes it incredibly hard to measure the true success of the oil price cap.", limitation: "Requires waiting for post-war analysis." },
+      { id: "russia-irrelevant-1", title: "Russian Ballet Tours", text: "The famed Bolshoi Ballet had several international tours canceled due to cultural boycotts following the invasion.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence.", limitation: "Irrelevant to military capacity." },
+      { id: "russia-constraint-2", title: "SWIFT Disconnection", text: "Major Russian banks were disconnected from SWIFT, forcing them to use slower and more expensive alternatives for international transactions.", type: "success_evidence", whyItMatters: "Strong evidence of financial constraint.", limitation: "China's alternative system provided a lifeline." },
+      { id: "russia-coercion-fail", title: "Deepened Ties with China", text: "Unable to trade with the West, Russia dramatically increased its trade with China, replacing European imports with Chinese vehicles and electronics.", type: "failure_or_harm", whyItMatters: "Shows how targets adapt by finding new partners.", limitation: "Increases dependence on a single partner." },
+      { id: "russia-signal", title: "UN General Assembly Vote", text: "In March 2022, 141 countries voted to demand Russia immediately end its military operations in Ukraine, a massive signal of global isolation.", type: "success_evidence", whyItMatters: "Evidence of successful diplomatic signaling.", limitation: "Key nations like India and China abstained." }
     ],
     sources: [
       { title: "EU: Sanctions against Russia", url: "https://www.consilium.europa.eu/en/policies/sanctions-against-russia/" },
@@ -187,6 +227,12 @@ export const cases: CaseStudy[] = [
         "State capacity and governance",
         "Long-term sustainability",
         "Security outcomes"
+      ],
+      tailoredGuidance: [
+        "Outcome Change: Did health, education, and infrastructure meaningfully improve?",
+        "Attribution: Were improvements due to aid, or simply the end of the 1990s civil war?",
+        "Local Ownership: Did the aid build local capacity or create dependency on foreign contractors?",
+        "Cost-effectiveness: Was the massive spending efficient, or lost to corruption?"
       ]
     },
     successCriteria: [
@@ -202,7 +248,11 @@ export const cases: CaseStudy[] = [
       { id: "afg-mechanism", title: "Too Much Money, Too Fast", text: "At its peak, foreign aid constituted 100% of Afghanistan's GDP. The Afghan economy could not absorb this influx, leading to massive inflation and a predatory rent-seeking economy.", type: "mechanism", whyItMatters: "Explains how the volume of aid fundamentally broke the local economy.", limitation: "Without that money, the government couldn't have operated at all." },
       { id: "afg-alternative", title: "The Insurgency", text: "The Taliban maintained safe havens in neighboring Pakistan and waged a relentless insurgency, assassinating local officials and destroying infrastructure.", type: "alternative_explanation", whyItMatters: "Suggests the aid failed because it was deployed in an active war zone with external interference.", limitation: "Aid was explicitly intended to win 'hearts and minds' and defeat the insurgency." },
       { id: "afg-comparison", title: "Dependency", text: "By 2020, foreign grants funded 75% of Afghanistan's total public expenditures. The government raised very little tax revenue itself.", type: "comparison_problem", whyItMatters: "Shows that the state had zero long-term sustainability without foreign backing.", limitation: "Poor, war-torn countries always require decades to become self-sufficient." },
-      { id: "afg-missing", title: "Rural Perspectives", text: "Because international monitors could rarely travel outside Kabul due to security threats, we lack reliable data on how much aid actually reached remote rural villages.", type: "missing_evidence", whyItMatters: "Questions the validity of the national success statistics.", limitation: "The Taliban controlled much of rural Afghanistan, blocking access." }
+      { id: "afg-missing", title: "Rural Perspectives", text: "Because international monitors could rarely travel outside Kabul due to security threats, we lack reliable data on how much aid actually reached remote rural villages.", type: "missing_evidence", whyItMatters: "Questions the validity of the national success statistics.", limitation: "The Taliban controlled much of rural Afghanistan, blocking access." },
+      { id: "afg-irrelevant-1", title: "Afghan Cricket Success", text: "The Afghan national cricket team saw a meteoric rise, qualifying for the World Cup and gaining full ICC member status.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence.", limitation: "Unrelated to foreign aid effectiveness." },
+      { id: "afg-outcome-2", title: "Polio Eradication Efforts", text: "Foreign aid funded massive vaccination drives that brought Afghanistan extremely close to eradicating polio, significantly improving child health.", type: "success_evidence", whyItMatters: "Strong evidence of a positive health outcome.", limitation: "The Taliban occasionally banned vaccinators." },
+      { id: "afg-ownership-fail", title: "Parallel Systems", text: "Donors often created their own project management units, bypassing Afghan ministries completely because they viewed them as corrupt or incapable.", type: "failure_or_harm", whyItMatters: "Shows a failure to build local ownership and state capacity.", limitation: "It was faster for delivering immediate relief." },
+      { id: "afg-cost-fail", title: "Contractor Overhead", text: "A massive percentage of US aid went to American contractors for overhead, security, and salaries, meaning very little actually reached the Afghan economy.", type: "failure_or_harm", whyItMatters: "Evidence of poor cost-effectiveness.", limitation: "Security costs in a war zone are unavoidably high." }
     ],
     sources: [
       { title: "SIGAR reports", url: "https://www.sigar.mil/" },
@@ -228,6 +278,12 @@ export const cases: CaseStudy[] = [
         "Community participation and empowerment",
         "Improved local governance",
         "Poverty reduction"
+      ],
+      tailoredGuidance: [
+        "Outcome Change: Did poverty decrease and infrastructure improve?",
+        "Attribution: Were changes due to the project, or other government policies?",
+        "Local Ownership: Did the community actually have a voice, or did elites capture the process?",
+        "Cost-effectiveness: Were the local projects cheaper and better maintained?"
       ]
     },
     successCriteria: [
@@ -243,7 +299,11 @@ export const cases: CaseStudy[] = [
       { id: "ph-mechanism", title: "The Block Grant Mechanism", text: "The project gave block grants of roughly $6,000 to $10,000 directly to community bank accounts, bypassing the often-corrupt municipal mayors.", type: "mechanism", whyItMatters: "Explains how the policy structurally changed who held power over the money.", limitation: "Mayors sometimes retaliated by withdrawing other forms of support." },
       { id: "ph-alternative", title: "Conditional Cash Transfers (4Ps)", text: "During the same period, the Philippines rolled out a massive conditional cash transfer program (Pantawid Pamilya) giving cash directly to poor mothers. This likely had a larger impact on poverty than the infrastructure grants.", type: "alternative_explanation", whyItMatters: "Shows that another concurrent policy might have driven any observed welfare improvements.", limitation: "Cash transfers don't build roads or water systems." },
       { id: "ph-comparison", title: "Typhoon Haiyan Response", text: "After Typhoon Haiyan in 2013, communities that had previously participated in KALAHI-CIDSS rebuilt their infrastructure faster and coordinated relief better than non-participating communities.", type: "comparison_problem", whyItMatters: "Shows a long-term 'social capital' benefit of the aid.", limitation: "Social capital is a side-effect, not a direct measure of poverty reduction." },
-      { id: "ph-missing", title: "Long-term Maintenance Data", text: "There is little data on what happens to these water systems 10 years after the project closes and community committees disband.", type: "missing_evidence", whyItMatters: "Raises the question of whether community-managed infrastructure is sustainable long-term.", limitation: "Donors rarely fund 10-year follow-up surveys." }
+      { id: "ph-missing", title: "Long-term Maintenance Data", text: "There is little data on what happens to these water systems 10 years after the project closes and community committees disband.", type: "missing_evidence", whyItMatters: "Raises the question of whether community-managed infrastructure is sustainable long-term.", limitation: "Donors rarely fund 10-year follow-up surveys." },
+      { id: "ph-irrelevant-1", title: "Miss Universe Victory", text: "In 2015, the Philippines won the Miss Universe pageant, bringing massive national pride.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence.", limitation: "Irrelevant to foreign aid." },
+      { id: "ph-outcome-2", title: "Farm-to-Market Roads", text: "The rural roads built by the communities reduced transport costs for farmers by 15%, increasing their profit margins on crops.", type: "success_evidence", whyItMatters: "Strong evidence of economic outcome change.", limitation: "Only applies to agricultural villages." },
+      { id: "ph-ownership-fail", title: "Political Patronage", text: "In some municipalities, despite the block grant mechanism, local mayors successfully claimed credit for the projects, using them to buy votes.", type: "failure_or_harm", whyItMatters: "Shows a failure to circumvent corrupt local power structures.", limitation: "The infrastructure was still built." },
+      { id: "ph-cost-fail", title: "Delayed Disbursements", text: "Heavy bureaucratic requirements meant it often took 18 months for funds to be released to the village, leading to massive delays and cost overruns.", type: "failure_or_harm", whyItMatters: "Evidence of poor cost-effectiveness in the aid pipeline.", limitation: "Bureaucracy was designed to prevent corruption." }
     ],
     sources: [
       { title: "World Bank: KALAHI-CIDSS Impact Evaluation", url: "https://www.worldbank.org/en/country/philippines/brief/kalahi-cidss-national-community-driven-development-project" },
@@ -269,6 +329,12 @@ export const cases: CaseStudy[] = [
         "State capacity and control",
         "Minimizing civilian harm",
         "Supporting peace negotiations"
+      ],
+      tailoredGuidance: [
+        "Outcome Change: Did violence decrease and state capacity increase?",
+        "Attribution: Was the improvement due to US aid, or Colombian domestic policy?",
+        "Local Ownership: Did the Colombian government align the aid with its own priorities?",
+        "Cost-effectiveness: Was massive military spending efficient given the human rights costs?"
       ]
     },
     successCriteria: [
@@ -285,7 +351,11 @@ export const cases: CaseStudy[] = [
       { id: "col-mechanism", title: "Helicopter Mobility", text: "A key mechanism of Plan Colombia was providing Black Hawk and Huey helicopters, which gave the Colombian military the air mobility to strike FARC camps deep in the jungle.", type: "mechanism", whyItMatters: "Shows exactly how foreign equipment fundamentally changed the balance of the war.", limitation: "Helicopters require expensive, ongoing maintenance and training." },
       { id: "col-alternative", title: "President Uribe's Democratic Security", text: "In 2002, Colombia elected Alvaro Uribe, who implemented a fiercely aggressive domestic military strategy ('Democratic Security') and levied a wealth tax on Colombians to fund the war.", type: "alternative_explanation", whyItMatters: "Argues that domestic political will and local funding drove the victory, not just US money.", limitation: "Uribe’s strategy relied heavily on US intelligence and equipment." },
       { id: "col-comparison", title: "The Balloon Effect (Coca Production)", text: "While US aid eradicated coca in southern Colombia, cultivation simply moved to new regions or across the border into Peru and Bolivia. By 2017, Colombian coca production had reached all-time highs.", type: "comparison_problem", whyItMatters: "Proves that while the counterinsurgency worked, the counternarcotics goal totally failed.", limitation: "Eradication is rarely a permanent solution without crop substitution." },
-      { id: "col-missing", title: "Paramilitary Links", text: "We lack full declassified records showing the extent to which US-funded military units covertly coordinated with illegal right-wing paramilitary death squads during operations.", type: "missing_evidence", whyItMatters: "Leaves a gap in understanding the true human rights cost of the aid.", limitation: "Both governments have incentives to keep this classified." }
+      { id: "col-missing", title: "Paramilitary Links", text: "We lack full declassified records showing the extent to which US-funded military units covertly coordinated with illegal right-wing paramilitary death squads during operations.", type: "missing_evidence", whyItMatters: "Leaves a gap in understanding the true human rights cost of the aid.", limitation: "Both governments have incentives to keep this classified." },
+      { id: "col-irrelevant-1", title: "Record Coffee Exports", text: "In the 2010s, Colombian coffee exports hit record highs due to new international marketing campaigns.", type: "missing_evidence", whyItMatters: "A distractor piece of evidence.", limitation: "Unrelated to security assistance." },
+      { id: "col-outcome-2", title: "Highway Security Restored", text: "US-trained mobile brigades eliminated kidnappings on major intercity highways, reconnecting the national economy.", type: "success_evidence", whyItMatters: "Strong evidence of restored state capacity and economic outcome.", limitation: "Violence moved deeper into rural areas." },
+      { id: "col-ownership-fail", title: "US Defense Contractors", text: "A massive portion of Plan Colombia's budget went directly back to US companies like DynCorp and Sikorsky to provide logistics, spraying, and helicopters.", type: "failure_or_harm", whyItMatters: "Shows poor local ownership; it was a subsidy for US contractors.", limitation: "Colombia lacked the domestic industry to provide these services." },
+      { id: "col-cost-fail", title: "Cost of Eradication", text: "It cost the US an estimated $7,000 to eradicate one hectare of coca via aerial spraying, but a farmer could replant that same hectare for $500.", type: "failure_or_harm", whyItMatters: "Mathematical evidence of extremely poor cost-effectiveness in counternarcotics.", limitation: "It forced cartels to spend money adapting." }
     ],
     sources: [
       { title: "Congressional Research Service reports", url: "https://crsreports.congress.gov/" },
@@ -311,6 +381,12 @@ export const cases: CaseStudy[] = [
         "State capacity",
         "Political openness and human rights",
         "Poverty reduction"
+      ],
+      tailoredGuidance: [
+        "Outcome Change: Did poverty decrease and health improve?",
+        "Attribution: Was the economic miracle driven by aid, or state-directed policies?",
+        "Local Ownership: Did aid align with the Rwandan government's development plans?",
+        "Cost-effectiveness: Did the strong central state ensure efficient use of funds without corruption?"
       ]
     },
     successCriteria: [

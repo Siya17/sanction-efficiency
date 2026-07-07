@@ -106,19 +106,20 @@ export function VerdictBuilder({
 
   const getFindingLabel = (finding: string) => {
     switch (finding) {
-      case "indicator_met": return "Met (Success)";
-      case "indicator_not_met": return "Not Met (Failure)";
-      case "mixed_results": return "Mixed / Complicated";
-      case "context": return "Context";
+      case "supports_success": return "Shows Success / Policy Worked";
+      case "shows_failure": return "Shows Failure / Harm";
+      case "complicates": return "Mixed / Complicates";
+      case "irrelevant": return "Irrelevant / Context";
       default: return finding;
     }
   };
 
   const getFindingColor = (finding: string) => {
     switch (finding) {
-      case "indicator_met": return "bg-green-100 text-green-800 border-green-200";
-      case "indicator_not_met": return "bg-red-100 text-red-800 border-red-200";
-      case "mixed_results": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "supports_success": return "bg-green-100 text-green-800 border-green-200";
+      case "shows_failure": return "bg-red-100 text-red-800 border-red-200";
+      case "complicates": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "irrelevant": return "bg-gray-100 text-gray-800 border-gray-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
@@ -165,8 +166,6 @@ export function VerdictBuilder({
                                 {getFindingLabel(sel.finding)}
                               </span>
                             </div>
-                            <p className="text-sm mt-2 font-medium">Your analysis:</p>
-                            <p className="text-sm italic">"{sel.relevanceExplanation}"</p>
                           </div>
                         );
                       })}
@@ -189,8 +188,6 @@ export function VerdictBuilder({
                         <div className="flex justify-between items-start mb-1">
                           <h4 className="font-semibold">{card.title}</h4>
                         </div>
-                        <p className="text-sm mt-2 font-medium">Your analysis:</p>
-                        <p className="text-sm italic">"{sel.relevanceExplanation}"</p>
                       </div>
                     );
                   })}
