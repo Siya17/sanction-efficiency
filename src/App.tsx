@@ -110,7 +110,7 @@ export default function App() {
               }
             }}
           />
-          <ProgressSteps currentView={lab.view as AppView} />
+          {lab.view !== "investigation" && <ProgressSteps currentView={lab.view as AppView} />}
         </>
       )}
       {renderView()}
