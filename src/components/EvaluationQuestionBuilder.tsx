@@ -78,7 +78,7 @@ export function EvaluationQuestionBuilder({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Actor or group *
+            Actor or group targeted? *
             <InlineHelp term="Actor or group">
               Who is the policy aimed at or who is it trying to help? (e.g., the target government, rural farmers, the military)
             </InlineHelp>
@@ -95,7 +95,7 @@ export function EvaluationQuestionBuilder({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Time period *
+            Over which time period the effect should be observed? *
             <InlineHelp term="Time period">
               When should we judge this? Immediately, after 5 years, or over the long term?
             </InlineHelp>
