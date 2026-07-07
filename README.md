@@ -1,58 +1,157 @@
 # Did Sanctions Work? Evidence Lab
 
-A classroom-ready Vite + React + TypeScript app for a 30-45 minute pair activity about whether sanctions or foreign aid "worked" in real historical cases.
+A classroom web app for asking a hard question in a careful way: did a sanction or foreign aid policy actually work?
 
-Students move through a simple inquiry workflow:
+Students do not hunt for the one correct answer. They choose a real case, decide what "success" should mean, pick evidence, explain what the evidence shows, submit a verdict, and then compare their reasoning with the class.
 
-1. Choose a case.
-2. Define what success means.
-3. Sort evidence into claims.
-4. Build a cautious verdict.
-5. Compare submissions on the class board.
+## Who this is for
 
-The app does not provide a correct answer. It helps students see that "worked" depends on the policy goal, the success criterion, available evidence, the comparison being made, unintended consequences, and missing information.
+This app is designed for teachers running a short classroom investigation in pairs or small groups. It works especially well for social studies, history, economics, political science, international relations, and public policy lessons.
 
-## Features
+Students only need a group name. There are no student accounts, passwords, or grades inside the app.
 
-- 8 curated cases in `src/data/cases.ts`
-- 8 evidence cards per case
-- 5-6 success criteria per case
-- Progress indicator across the five-step classroom flow
-- Activity timing guide for class pacing
-- Button-based evidence sorting, no drag-and-drop
-- Verdict builder with sentence-frame preview
-- localStorage class-board submissions
-- Class-board filters by track and verdict
-- Comparative Mode for verdict, track, confidence, criterion, and missing-evidence patterns
-- Teacher Mode for local case editing, duplication, JSON import/export, and restoring defaults
-- CSV export, print button, and clear-board control
-- **Real-time Collaboration:** Optional Supabase integration for first-come, first-served case claiming and syncing the Class Board across devices.
+## The student workflow
 
-## Tech Stack
+Students move through the lab in this order:
 
-- Vite
-- React
-- TypeScript
-- Supabase (Optional, for real-time sync)
-- Static case data
+1. Enter a group name.
+2. Choose an available case.
+3. Read the case summary.
+4. Build an evaluation question.
+5. Create three indicators:
+   - one indicator for success
+   - one indicator for harm or cost
+   - one indicator for uncertainty
+6. Select at least three evidence cards.
+7. Explain how each selected evidence card connects to an indicator.
+8. Optionally check supporting data snapshots.
+9. Submit a verdict and confidence level.
+10. Compare all group verdicts on the class board.
 
-## Getting Started
+The point is to help students see that "Did it work?" depends on the goal, the people affected, the time period, the evidence available, and the uncertainty that remains.
 
-```powershell
-npm.cmd install
-npm.cmd run dev
-```
+## What students submit
 
-Then open the local URL printed by Vite, usually `http://localhost:5173`.
+Each group submits:
 
-If PowerShell blocks `npm`, use `npm.cmd` rather than `npm`.
+- its evaluation question
+- its three indicators
+- selected evidence cards
+- notes on what the evidence shows
+- an overall verdict
+- a confidence level
+- strongest evidence
+- biggest complication
+- missing evidence or remaining uncertainty
 
-## Supabase Real-time Setup (Optional)
+In Research mode, students can also add their own evidence and citations.
 
-To enable real-time case claiming and Class Board syncing across different devices:
+## Classroom Mode and Research Mode
 
-1. Create a free project at [Supabase](https://supabase.com/).
-2. Run the following SQL in the Supabase SQL Editor:
+The app has two activity modes.
+
+Classroom mode is best for a normal class period. Students use the provided cases and evidence cards. This is the recommended starting mode.
+
+Research mode is for a longer assignment. Students can add outside evidence, write fuller explanations, and include citation details.
+
+You can switch modes from the top navigation after entering the app.
+
+## Recommended lesson plan
+
+A simple 35-45 minute version:
+
+1. Opening question, 3 minutes: What would count as success for this policy?
+2. Choose case, 3 minutes: Groups enter a name and claim a case.
+3. Read case, 5 minutes: Students identify the policy, goal, and difficulty of judging success.
+4. Build question and indicators, 8 minutes: Students define success, harm, and uncertainty.
+5. Select evidence, 10 minutes: Students choose at least three cards and explain how each one helps answer the question.
+6. Submit verdict, 7 minutes: Students choose a verdict and confidence level.
+7. Class board discussion, 7-10 minutes: Compare verdicts, confidence, and missing evidence.
+
+For a shorter class, skip the optional data check. For a longer class, use Research mode and ask students to add one outside source.
+
+## Teacher quick start
+
+If you are using this on this computer:
+
+1. Make sure Node.js LTS is installed from https://nodejs.org/.
+2. Open this project folder.
+3. Double-click `install.cmd` the first time only.
+4. Double-click `start.cmd` whenever you want to run the app.
+5. Open the address shown in the terminal, usually `http://localhost:5173`.
+
+Keep the terminal window open while using the app. Closing it stops the local app.
+
+## If `npm.cmd` is not recognized
+
+This means Windows cannot find Node.js/npm.
+
+Try this first:
+
+1. Install Node.js LTS from https://nodejs.org/.
+2. Close and reopen PowerShell or the terminal.
+3. Double-click `install.cmd` again.
+
+The helper files `install.cmd` and `start.cmd` look for Node.js in the normal Windows location: `C:\Program Files\nodejs\npm.cmd`.
+
+## Using the app with students
+
+For one teacher computer or projector, no online setup is needed. Run `start.cmd`, open the app, and use the class board from that same browser.
+
+For many student devices, you have two easier options:
+
+- Deploy the app online, for example with Vercel.
+- Add Supabase if you want live case claiming and a shared class board across devices.
+
+Without Supabase, each browser keeps its own local class board. That is fine for demos, one-computer use, or testing, but it will not automatically combine submissions from different student laptops.
+
+## Class board
+
+The class board shows submitted group verdicts. It helps the teacher lead discussion around:
+
+- which verdicts were most common
+- which cases produced disagreement
+- whether groups used different definitions of success
+- where confidence was high or low
+- what evidence students still wanted
+
+The board can also export submissions as CSV for later review.
+
+## Teacher Mode
+
+Teacher Mode lets you edit classroom materials without changing code.
+
+You can:
+
+- add a custom case
+- duplicate an existing case
+- edit case summaries
+- edit success criteria
+- edit evidence cards
+- edit sources and teacher notes
+- import or export case JSON
+- restore the default cases
+
+Important: Teacher Mode changes are saved inside the browser you are using. Use Export JSON if you want to back up your edited cases or move them to another computer.
+
+## What is saved where
+
+By default, the app saves work inside the browser on the current computer. This is called local browser storage.
+
+That means:
+
+- refreshing the page usually keeps the local class board
+- using a different browser may show a different board
+- using a different computer will not show the same local board
+- clearing browser data may remove local submissions and teacher edits
+
+If Supabase is configured, case claims and class board submissions can sync across devices.
+
+## Optional Supabase setup
+
+Skip this section unless you want multiple devices to share case claims and class board submissions live.
+
+A technical helper can create a free Supabase project, open the SQL Editor, and run this SQL:
 
 ```sql
 create table public.claimed_cases (
@@ -73,79 +172,89 @@ create table public.submissions (
 alter publication supabase_realtime add table public.claimed_cases;
 alter publication supabase_realtime add table public.submissions;
 ```
-3. Add a `.env` file to the root of your project with your API keys:
+
+Then create a file named `.env.local` in the project folder:
+
 ```env
 VITE_SUPABASE_URL=your_project_url
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
-If these variables are missing, the app will gracefully fall back to `localStorage`.
 
-## Scripts
+Restart the app after changing environment settings.
+
+Note: The in-app Clear board button clears the local browser board. If you are using Supabase, a technical helper may need to clear remote classroom data in Supabase between classes.
+
+## Data and sources
+
+The app includes curated case materials, evidence cards, source links, timelines, indicators, and a few local data snapshots.
+
+The source links are references for students and teachers. The app does not automatically fetch every linked source during class.
+
+Local data snapshots are stored in `public/datasets`. They are included so the app stays reliable even if the classroom internet is slow or an outside data website changes.
+
+## Troubleshooting
+
+If the app does not start, install Node.js LTS, reopen the terminal, and run `install.cmd` again.
+
+If the browser says the page cannot be reached, make sure the terminal running `start.cmd` is still open.
+
+If students cannot pick a case, another group may have claimed it. Choose a different case, or have the original group leave the case. With Supabase, old claims may need to be cleared between classes.
+
+If the class board is empty on another computer, Supabase is probably not configured. Local boards stay inside each browser.
+
+If data snapshots are missing for a case, students can still complete the activity using the case summary and evidence cards.
+
+## Technical helper notes
+
+Install dependencies:
+
+```powershell
+npm.cmd install
+```
+
+Start the local development server:
 
 ```powershell
 npm.cmd run dev
+```
+
+Check TypeScript:
+
+```powershell
 npm.cmd run typecheck
+```
+
+Build the app:
+
+```powershell
 npm.cmd run build
+```
+
+Preview the built app:
+
+```powershell
 npm.cmd run preview
 ```
 
-## Editing Cases
+Environment variables:
 
-Teacher-curated cases live in:
-
-```text
-src/data/cases.ts
+```env
+VITE_APP_TITLE="Did Sanctions Work? Evidence Lab"
+VITE_APP_SUBTITLE="A classroom investigation of sanctions and foreign aid."
+VITE_BOARD_STORAGE_KEY="did-it-work-evidence-lab-submissions"
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-Each case has:
+Only variables that begin with `VITE_` are available to the app.
 
-- `successCriteria`
-- `evidenceCards`
-- source links students can inspect later
-- optional `teacherNote`
+## Deployment
 
-The app does not fetch source links. They are references only.
+The simplest classroom deployment is Vercel:
 
-## Validation Rules
+1. Push the project to GitHub.
+2. Import the GitHub repository into Vercel.
+3. Add any needed `VITE_` environment variables in Vercel.
+4. Deploy.
 
-Students can continue to the verdict builder after they have selected a success criterion and sorted at least 3 evidence cards.
-
-Students can submit after they have filled in the policy aim, strongest evidence, biggest complication, and missing evidence. Verdict and confidence have classroom-friendly defaults but can be changed.
-
-## Class Board Storage
-
-Submissions are stored in the browser under a localStorage key by default. If Supabase is configured, submissions will sync in real-time across all devices.
-
-Use **Clear board** in the app to remove all local submissions. Use **Export CSV** to save the currently filtered board.
-
-## Teacher Mode
-
-Open **Teacher Mode** from the top navigation to edit classroom materials without touching TypeScript files.
-
-Teacher changes are stored in this browser's localStorage. Use **Export JSON** to back up or move edited cases to another device, and **Restore defaults** to remove local edits and recover the original case set.
-
-Teacher Mode supports:
-
-- adding, duplicating, editing, and deleting custom cases
-- editing success criteria, evidence cards, sources, and teacher notes
-- importing/exporting case JSON
-- editing optional timeline and indicator data as JSON arrays
-
-## Environment
-
-Copy `.env.example` to `.env.local` if you want to adjust display text without touching code:
-
-```powershell
-Copy-Item .env.example .env.local
-```
-
-All variables must use the `VITE_` prefix to be available in the app.
-
-## Deployment (Vercel)
-
-The easiest way to get a sharable link for your classroom is to deploy this to Vercel:
-
-1. Push your code to GitHub.
-2. Import the repository in Vercel.
-3. Add the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to Vercel's Environment Variables.
-4. Deploy!
+If you use Supabase, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel before using the deployed classroom link.
