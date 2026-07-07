@@ -10,7 +10,7 @@ import type {
 import { clearSubmissions, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
 import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
-import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions } from "../utils/supabase";
+import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, releaseAllClaims as supabaseReleaseAllClaims, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions } from "../utils/supabase";
 
 // Minimum number of self-researched findings before a group can give a verdict.
 export const MIN_FINDINGS = 2;
@@ -165,6 +165,25 @@ export function useEvidenceLab() {
     setView(targetView);
   }
 
+  // Teacher override: free up a specific case (e.g. a group picked the wrong one)
+  // without needing that group's device.
+  async function releaseClaimedCase(caseId: string, claimGroupName: string) {
+    if (!supabase) return;
+
+    await supabaseReleaseCase(caseId, claimGroupName);
+    const { data } = await getClaimedCases();
+    if (data) applyClaimed(data);
+  }
+
+  // Frees every claimed case at once, e.g. to reset between class sessions.
+  async function releaseAllClaims() {
+    if (!supabase) return;
+
+    await supabaseReleaseAllClaims();
+    const { data } = await getClaimedCases();
+    applyClaimed(data ?? []);
+  }
+
   function refreshStudentEvidence() {
     if (selectedCase) {
       setStudentEvidence(getStudentEvidence(selectedCase.id));
@@ -213,6 +232,8 @@ export function useEvidenceLab() {
       refreshCases,
       selectCase,
       releaseCurrentCase,
+      releaseClaimedCase,
+      releaseAllClaims,
       setView,
       showBoard,
       startCaseSelection,

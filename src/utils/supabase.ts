@@ -41,12 +41,24 @@ export async function releaseCase(caseId: string, groupName: string) {
 
 export async function getClaimedCases() {
   if (!supabase) return { data: [], error: null };
-  
+
   const { data, error } = await supabase
     .from('claimed_cases')
     .select('*');
-    
+
   return { data: data as ClaimedCase[] || [], error };
+}
+
+// Releases every claimed case at once, e.g. to reset between class sessions.
+export async function releaseAllClaims() {
+  if (!supabase) return { error: new Error("Supabase not configured") };
+
+  const { error } = await supabase
+    .from('claimed_cases')
+    .delete()
+    .not('case_id', 'is', null); // case_id is required, so this matches every row
+
+  return { error };
 }
 
 export async function saveSubmission(submission: StudentSubmission, groupName: string) {

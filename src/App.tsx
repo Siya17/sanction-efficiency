@@ -71,9 +71,12 @@ export default function App() {
         <TeacherMode
           cases={lab.cases}
           submissions={lab.submissions}
+          claimedCases={lab.claimedCases}
           onCasesChanged={actions.refreshCases}
           onChooseCase={actions.startCaseSelection}
           onClearBoard={actions.clearBoard}
+          onReleaseClaim={actions.releaseClaimedCase}
+          onReleaseAllClaims={actions.releaseAllClaims}
         />
       );
     }

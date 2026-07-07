@@ -3,6 +3,7 @@ import { indicators as defaultIndicators } from "../data/indicators";
 import { timelines as defaultTimelines } from "../data/timelines";
 import type { CaseIndicator, CaseStudy, EvidenceCard, EvidenceCardType, SourceLink, StudentSubmission, TimelineEvent } from "../types";
 import { evidenceTypeLabels, trackLabels } from "../utils/labels";
+import type { ClaimedCase } from "../utils/supabase";
 import { DiscussionPrompts } from "./DiscussionPrompts";
 import {
   exportCasesToJson,
@@ -22,9 +23,12 @@ import {
 type TeacherModeProps = {
   cases: CaseStudy[];
   submissions: StudentSubmission[];
+  claimedCases: ClaimedCase[];
   onCasesChanged: () => void;
   onChooseCase: () => void;
   onClearBoard: () => void;
+  onReleaseClaim: (caseId: string, groupName: string) => void;
+  onReleaseAllClaims: () => void;
 };
 
 type DraftStatus = "idle" | "editing" | "new";
@@ -125,7 +129,16 @@ function downloadJson(filename: string, json: string) {
   URL.revokeObjectURL(url);
 }
 
-export function TeacherMode({ cases, submissions, onCasesChanged, onChooseCase, onClearBoard }: TeacherModeProps) {
+export function TeacherMode({
+  cases,
+  submissions,
+  claimedCases,
+  onCasesChanged,
+  onChooseCase,
+  onClearBoard,
+  onReleaseClaim,
+  onReleaseAllClaims,
+}: TeacherModeProps) {
   const defaultCaseIds = useMemo(() => new Set(getDefaultCases().map((caseStudy) => caseStudy.id)), []);
   const [customCases, setCustomCasesState] = useState(() => getCustomCases());
   const [draft, setDraft] = useState<CaseStudy | null>(null);
@@ -330,6 +343,16 @@ export function TeacherMode({ cases, submissions, onCasesChanged, onChooseCase, 
     }
   }
 
+  function handleReleaseAllClaims() {
+    const confirmed = window.confirm(
+      `Release all ${claimedCases.length} claimed case${claimedCases.length === 1 ? "" : "s"}? Every group will need to pick again.`,
+    );
+
+    if (confirmed) {
+      onReleaseAllClaims();
+    }
+  }
+
   function restoreDefaults() {
     const confirmed = window.confirm("Restore default cases and remove all local teacher edits?");
 
@@ -400,6 +423,50 @@ export function TeacherMode({ cases, submissions, onCasesChanged, onChooseCase, 
           Clearing removes every submitted verdict from this browser's local class board. Students cannot do this
           from the Class Board view.
         </p>
+      </section>
+
+      <section className="teacher-panel">
+        <div className="section-heading-row">
+          <h2>Case claims</h2>
+          <button
+            className="danger-button"
+            type="button"
+            disabled={claimedCases.length === 0}
+            onClick={handleReleaseAllClaims}
+          >
+            Release all ({claimedCases.length})
+          </button>
+        </div>
+        <p className="hint">
+          Release a case if a group picked the wrong one, or release everything to start a fresh session — cases
+          become available to claim again immediately. This only applies when live case-claiming (Supabase) is
+          configured.
+        </p>
+        {claimedCases.length === 0 ? (
+          <p className="empty-text">No cases are currently claimed.</p>
+        ) : (
+          <ul className="claim-list">
+            {claimedCases.map((claim) => {
+              const caseStudy = cases.find((item) => item.id === claim.case_id);
+
+              return (
+                <li className="claim-row" key={claim.case_id}>
+                  <span>
+                    <strong>{caseStudy?.country ?? claim.case_id}</strong>
+                    <span className="claim-group"> — claimed by {claim.group_name}</span>
+                  </span>
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    onClick={() => onReleaseClaim(claim.case_id, claim.group_name)}
+                  >
+                    Release
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
 
       {submissions.length > 0 ? <DiscussionPrompts submissions={submissions} /> : null}

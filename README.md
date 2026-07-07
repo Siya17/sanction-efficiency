@@ -106,12 +106,26 @@ Comparative mode summarizes class submissions across verdicts, confidence, track
 
 ## Teacher Mode
 
-Teacher Mode is the app's teacher-facing area. There is no login or password gate on it — like a projector-only laptop, it is meant to be reached by the teacher, not filtered out for students — but its actions (editing cases, clearing the board) are kept out of the everyday student views.
+Teacher Mode is the app's teacher-facing area. Its actions (editing cases, clearing the board) are kept out of the everyday student views.
+
+**How to open it:** the "Teacher Mode" tab is hidden from the navigation bar by default. To reveal it, add `?teacher=true` to the end of the app's URL and load the page, for example:
+
+- Local dev: `http://localhost:5173/?teacher=true`
+- Deployed site: `https://your-site.vercel.app/?teacher=true`
+
+Once the page has loaded with that in the address bar, the tab stays visible while you click around the app (Home, Cases, Class Board, etc.) — you only need to add it once per browser session. Loading the app fresh without `?teacher=true` hides the tab again.
+
+This is a hidden URL, not real access control — anyone who sees the address bar (for example on a projected screen) or guesses the parameter gets full teacher access, including editing cases and clearing the board. Don't project or screen-share while `?teacher=true` is in the address bar.
 
 **Class board controls:**
 
 - clear every submitted verdict from this browser's local class board (destructive; asks for confirmation first)
 - see auto-generated discussion prompts once groups have submitted — e.g. the most common verdict, which cases had high confidence, and how success tests changed the picture
+
+**Case claims** (only does something when Supabase live case-claiming is configured):
+
+- release a single claimed case — use this if a group picked the wrong case, or you just want to free it up for someone else, without needing that group's device
+- release every claimed case at once with **Release all** — use this between class periods so the next session starts with every case available again
 
 **Case editor** — edit classroom materials without changing code:
 
