@@ -23,7 +23,7 @@ export function Login({ onLogin }: LoginProps) {
       <div className="login-card">
         <div className="login-head">
           <span className="brand-mark">?</span>
-          <h1>Did It Work?</h1>
+          <h1>Did Sanctions Work? Did Foreign Aid Work?</h1>
           <p className="subtitle">Evidence Lab</p>
         </div>
 

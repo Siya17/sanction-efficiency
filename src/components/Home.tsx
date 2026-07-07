@@ -20,8 +20,8 @@ export function Home({ cases, onStart, onBoard }: HomeProps) {
     <main className="page">
       <section className="hero-section">
         <div className="hero-copy">
-          <p className="eyebrow">Did Foreign Aid Work? Evidence Lab</p>
-          <h1>Did Sanctions Work?</h1>
+          <p className="eyebrow">Evidence Lab</p>
+          <h1>Did Sanctions Work? Did Foreign Aid Work?</h1>
           <p className="subtitle">Judge whether real sanctions and foreign-aid policies succeeded.</p>
           <p className="intro">
             "Did it work?" sounds simple, but success can mean many things. In this activity, your group will choose a real-world case, define what a successful outcome looks like, and search for evidence to support your conclusion.
