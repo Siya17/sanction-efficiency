@@ -858,23 +858,6 @@ textarea {
   margin: 0.6rem 0 0;
 }
 
-.discussion-prompts {
-  display: grid;
-  gap: 0.45rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 0.75rem;
-}
-
-.discussion-prompts p {
-  background: #fffdf8;
-  border: 1px solid #dfd5c4;
-  border-radius: 8px;
-  color: #25302f;
-  font-weight: 800;
-  margin: 0;
-  padding: 0.75rem;
-}
-
 .verdict-badge.worked {
   background: #d8ece8;
   color: #0b5b53;
@@ -911,8 +894,7 @@ textarea {
 }
 
 @media (max-width: 900px) {
-  .progress-steps,
-  .discussion-prompts {
+  .progress-steps {
     grid-template-columns: 1fr;
   }
 }
@@ -1314,15 +1296,25 @@ textarea {
 .json-editor-section,
 .warning-box,
 .status-message,
-.error-message {
+.error-message,
+.teacher-panel {
   background: #fffdf8;
   border: 1px solid #dfd5c4;
   border-radius: 8px;
 }
 
 .case-manager-panel,
-.case-editor-panel {
+.case-editor-panel,
+.teacher-panel {
   padding: 1rem;
+}
+
+.teacher-panel {
+  margin-bottom: 1rem;
+}
+
+.teacher-panel .hint {
+  margin: 0.5rem 0 0;
 }
 
 .case-manager-panel {

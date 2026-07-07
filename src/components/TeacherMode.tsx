@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { indicators as defaultIndicators } from "../data/indicators";
 import { timelines as defaultTimelines } from "../data/timelines";
-import type { CaseIndicator, CaseStudy, EvidenceCard, EvidenceCardType, SourceLink, TimelineEvent } from "../types";
+import type { CaseIndicator, CaseStudy, EvidenceCard, EvidenceCardType, SourceLink, StudentSubmission, TimelineEvent } from "../types";
 import { evidenceTypeLabels, trackLabels } from "../utils/labels";
+import { DiscussionPrompts } from "./DiscussionPrompts";
 import {
   exportCasesToJson,
   getCustomCases,
@@ -20,8 +21,10 @@ import {
 
 type TeacherModeProps = {
   cases: CaseStudy[];
+  submissions: StudentSubmission[];
   onCasesChanged: () => void;
   onChooseCase: () => void;
+  onClearBoard: () => void;
 };
 
 type DraftStatus = "idle" | "editing" | "new";
@@ -122,7 +125,7 @@ function downloadJson(filename: string, json: string) {
   URL.revokeObjectURL(url);
 }
 
-export function TeacherMode({ cases, onCasesChanged, onChooseCase }: TeacherModeProps) {
+export function TeacherMode({ cases, submissions, onCasesChanged, onChooseCase, onClearBoard }: TeacherModeProps) {
   const defaultCaseIds = useMemo(() => new Set(getDefaultCases().map((caseStudy) => caseStudy.id)), []);
   const [customCases, setCustomCasesState] = useState(() => getCustomCases());
   const [draft, setDraft] = useState<CaseStudy | null>(null);
@@ -319,6 +322,14 @@ export function TeacherMode({ cases, onCasesChanged, onChooseCase }: TeacherMode
     }
   }
 
+  function handleClearBoard() {
+    const confirmed = window.confirm("Clear all verdicts from this browser's class board? This cannot be undone.");
+
+    if (confirmed) {
+      onClearBoard();
+    }
+  }
+
   function restoreDefaults() {
     const confirmed = window.confirm("Restore default cases and remove all local teacher edits?");
 
@@ -372,6 +383,26 @@ export function TeacherMode({ cases, onCasesChanged, onChooseCase }: TeacherMode
 
       {message ? <p className="status-message">{message}</p> : null}
       {error ? <p className="error-message">{error}</p> : null}
+
+      <section className="teacher-panel">
+        <div className="section-heading-row">
+          <h2>Class board controls</h2>
+          <button
+            className="danger-button"
+            type="button"
+            disabled={submissions.length === 0}
+            onClick={handleClearBoard}
+          >
+            Clear board ({submissions.length})
+          </button>
+        </div>
+        <p className="hint">
+          Clearing removes every submitted verdict from this browser's local class board. Students cannot do this
+          from the Class Board view.
+        </p>
+      </section>
+
+      {submissions.length > 0 ? <DiscussionPrompts submissions={submissions} /> : null}
 
       <div className="teacher-layout">
         <section className="case-manager-panel">

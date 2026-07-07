@@ -70,8 +70,10 @@ export default function App() {
       return (
         <TeacherMode
           cases={lab.cases}
+          submissions={lab.submissions}
           onCasesChanged={actions.refreshCases}
           onChooseCase={actions.startCaseSelection}
+          onClearBoard={actions.clearBoard}
         />
       );
     }
@@ -89,7 +91,6 @@ export default function App() {
       <ClassBoard
         submissions={lab.submissions}
         onChooseCase={actions.startCaseSelection}
-        onClear={actions.clearBoard}
         onCompare={() => actions.setView("compare")}
       />
     );

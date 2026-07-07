@@ -12,16 +12,15 @@ Students only need a group name. There are no student accounts, passwords, or gr
 
 ## Current student workflow
 
-Students move through a guided four-step activity:
-
-1. Enter a group name.
-2. Choose one real sanctions or foreign-aid case.
-3. Read a plain-English case briefing with glossary help for difficult terms.
-4. Choose a success test from the case-specific options.
-5. Research and record at least two findings from outside sources.
-6. Classify each finding as evidence that the policy worked, failed/backfired, or remains complicated.
-7. Submit a verdict, confidence level, strongest evidence, biggest complication, and missing evidence.
-8. Compare group verdicts on the class board.
+1. **Enter a group name** on the login screen. No password, no student account.
+2. **Choose one real case** — a sanctions case or a foreign-aid case — from the case grid. If Supabase is connected, a case a group has claimed is locked for everyone else until they move on or release it.
+3. Work through the four-step guided investigation for that case:
+   1. **Meet the case** — a plain-English briefing (what happened, what was tried, the goal, why it's hard to judge). Hard terms are underlined; hovering or focusing one shows a plain-English definition.
+   2. **Define success** — pick one of the case's success tests (e.g. "behavior change," "civilian harm") and optionally explain it in their own words.
+   3. **Find evidence** — research at least two findings from outside sources, record what each shows, a key number or quote, the source, a reliability rating, and whether it suggests the policy worked, failed, or complicates the picture.
+   4. **Give verdict** — an overall verdict, confidence level, strongest evidence, biggest complication, and what's still missing — plus an auto-built "share-out sentence" summarizing the group's position.
+4. Submit the verdict to the **Class Board**.
+5. Optionally open **Compare cases** to see patterns across every group's submissions.
 
 The key classroom question is not "what is the right answer?" It is: what goal are we judging, what evidence supports the judgment, and how confident should we be about causation?
 
@@ -48,18 +47,20 @@ The app's guided workflow supports this same logic in more structured form.
 Each group submits:
 
 - selected case
-- chosen success test
-- optional note explaining what success means in their own words
-- at least two self-researched findings
-- source title and optional URL for each finding
-- source reliability rating
-- explanation of how each finding connects to the success test
-- limitation for each finding
-- overall verdict
+- chosen success test, and an optional note on what success means in their own words
+- at least two self-researched findings, each with:
+  - a title and a one-or-two-sentence summary of what it shows
+  - an optional key number or quote
+  - a source title and optional URL
+  - a reliability rating (high / medium / low / not sure yet)
+  - what the finding suggests (worked / failed or backfired / complicates the picture)
+  - how it connects to the group's success test
+  - what the finding cannot prove
+- overall verdict (worked / failed / mixed / cannot judge yet)
 - confidence level
-- strongest evidence
+- strongest evidence (chosen from the group's own findings)
 - biggest complication or contrary evidence
-- missing evidence or remaining uncertainty
+- what evidence is still missing to be sure
 
 ## Cases and materials
 
@@ -87,26 +88,32 @@ The `GlossaryText` component highlights terms in case briefings and shows plain-
 
 ## Class board
 
-The class board shows submitted group verdicts. It helps the teacher lead discussion around:
+The class board shows every submitted group verdict in one table, with columns for the case, success test, verdict, confidence, strongest evidence, biggest complication, and missing evidence. Each row can also expand to show the group's researched findings.
 
-- which verdicts were most common
-- whether sanctions and aid cases produced different patterns
-- how success tests changed the verdict
-- where confidence was high or low
-- what evidence groups still wanted
-- which findings were strongest or most contested
+From the board, anyone can:
 
-The board can be filtered and exported as CSV.
+- filter by track (sanctions / aid) or verdict
+- add another verdict
+- open Compare cases
+- export the current view as CSV
+- print the board
+
+Clearing the board and viewing auto-generated discussion prompts are teacher-only actions — see **Teacher Mode** below.
 
 ## Comparative mode
 
-Comparative mode summarizes class submissions across verdicts, confidence, tracks, success criteria, and missing-evidence keywords. Use it after several groups submit so students can compare patterns instead of only presenting one case at a time.
+Comparative mode summarizes class submissions across verdicts, confidence, tracks, and success criteria, plus a word cloud of what evidence groups said was still missing. It is reachable by anyone from the class board ("Compare cases") once a few groups have submitted, so students can look for patterns instead of only discussing one case at a time.
 
 ## Teacher Mode
 
-Teacher Mode lets you edit classroom materials without changing code.
+Teacher Mode is the app's teacher-facing area. There is no login or password gate on it — like a projector-only laptop, it is meant to be reached by the teacher, not filtered out for students — but its actions (editing cases, clearing the board) are kept out of the everyday student views.
 
-You can:
+**Class board controls:**
+
+- clear every submitted verdict from this browser's local class board (destructive; asks for confirmation first)
+- see auto-generated discussion prompts once groups have submitted — e.g. the most common verdict, which cases had high confidence, and how success tests changed the picture
+
+**Case editor** — edit classroom materials without changing code:
 
 - add a custom case
 - duplicate an existing case
@@ -132,7 +139,17 @@ That means:
 - using a different computer will not show the same local board
 - clearing browser data may remove local submissions and teacher edits
 
-If Supabase is configured, case claims and class board submissions can sync across devices.
+If Supabase is configured, case claims and class board submissions can sync across devices. The exact database schema it expects lives in **`supabase-schema.sql`** — see the setup guide below.
+
+## Environment variables
+
+Copy `.env.example` to `.env` for local development (or set the same names in your Vercel project's Environment Variables for a deployed site):
+
+- `VITE_APP_TITLE`, `VITE_APP_SUBTITLE` — optional branding text.
+- `VITE_BOARD_STORAGE_KEY` — the local storage key for the per-browser fallback board.
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — optional. Set **both** to turn on the shared, real-time class board and live case-claiming; leave either blank and the app quietly falls back to the local per-browser board.
+
+`.env` is gitignored — never commit real Supabase keys to the repository (the anon key is safe to expose in a deployed app, but keep it out of source control regardless).
 
 ## Teacher quick start
 
@@ -248,6 +265,8 @@ end $$;
    - Click **Add**
 6. Click the big **Deploy** button.
 7. Wait a couple of minutes, and Vercel will give you a live link to your website! Share this link with your students.
+
+Vercel routing and caching are already configured in **`vercel.json`** (refreshing the page on any screen works, and updates reach students automatically on the next deploy) — you don't need to change anything there.
 
 ### Troubleshooting
 

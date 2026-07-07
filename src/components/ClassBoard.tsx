@@ -5,7 +5,6 @@ import { submissionsToCsv } from "../utils/submissions";
 
 type ClassBoardProps = {
   submissions: StudentSubmission[];
-  onClear: () => void;
   onCompare: () => void;
   onChooseCase: () => void;
 };
@@ -18,7 +17,7 @@ function matchesFilter(submission: StudentSubmission, filter: Filter) {
   return submission.verdict === filter;
 }
 
-export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: ClassBoardProps) {
+export function ClassBoard({ submissions, onCompare, onChooseCase }: ClassBoardProps) {
   const [filter, setFilter] = useState<Filter>("all");
 
   const filteredSubmissions = useMemo(
@@ -34,13 +33,6 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
     }),
     [submissions],
   );
-
-  function handleClear() {
-    const confirmed = window.confirm("Clear all verdicts from this browser's class board?");
-    if (confirmed) {
-      onClear();
-    }
-  }
 
   function handleExport() {
     const csv = submissionsToCsv(filteredSubmissions);
@@ -60,12 +52,7 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
         <div>
           <p className="eyebrow">Step 5</p>
           <h1>Class Board</h1>
-          <div className="discussion-prompts">
-            <p>Why is "Did it work?" hard to answer without deciding what success means?</p>
-            <p>Which verdict changed most depending on the success test chosen?</p>
-            <p>Where did a policy meet its goal but also cause serious harm?</p>
-            <p>What missing evidence would make you more confident?</p>
-          </div>
+          <p>See every group's verdict so far, then use Compare cases to look for patterns across the class.</p>
         </div>
         <div className="board-actions">
           <select
@@ -97,14 +84,6 @@ export function ClassBoard({ submissions, onClear, onCompare, onChooseCase }: Cl
           </button>
           <button className="secondary-button" type="button" onClick={() => window.print()}>
             Print
-          </button>
-          <button
-            className="danger-button"
-            type="button"
-            disabled={submissions.length === 0}
-            onClick={handleClear}
-          >
-            Clear board
           </button>
         </div>
       </div>
