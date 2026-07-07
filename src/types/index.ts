@@ -132,6 +132,7 @@ export type CaseSummary = {
   policyGoal: string;
   whyHardToJudge: string;
   possibleSuccessAngles: string[];
+  tailoredGuidance?: string[];
 };
 
 export type CaseStudy = {
@@ -178,16 +179,15 @@ export type IndicatorSuggestion = {
 };
 
 export type StudentEvidenceFinding =
-  | "indicator_met"
-  | "indicator_not_met"
-  | "mixed_results"
-  | "context";
+  | "supports_success"
+  | "shows_failure"
+  | "complicates"
+  | "irrelevant";
 
 export type StudentEvidenceSelection = {
   cardId: string;
   indicatorId?: string;
   finding: StudentEvidenceFinding;
-  relevanceExplanation: string;
 };
 
 export type StudentSubmission = {

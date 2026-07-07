@@ -52,9 +52,8 @@ export function EvidenceSelector({
                       if (e.target.checked) {
                         onUpdateSelection({
                           cardId: card.id,
-                          finding: "indicator_met",
-                          indicatorId: studentIndicators.length > 0 ? studentIndicators[0].id : undefined,
-                          relevanceExplanation: ""
+                          finding: "supports_success",
+                          indicatorId: studentIndicators.length > 0 ? studentIndicators[0].id : undefined
                         });
                         setExpandedCards({ ...expandedCards, [card.id]: true });
                       } else {
@@ -93,54 +92,51 @@ export function EvidenceSelector({
 
                       {isSelected && selection && (
                         <div className="mt-4 p-4 bg-white border border-indigo-200 rounded-md">
-                          <h4 className="font-semibold text-indigo-900 mb-3">How are you using this evidence?</h4>
+                          <h4 className="font-semibold text-indigo-900 mb-3">How does this evidence help your evaluation?</h4>
                           
                           <div className="space-y-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">Which indicator does this answer? *</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">Which indicator does this answer? (Optional)</label>
                               <select 
                                 value={selection.indicatorId || "none"}
                                 onChange={(e) => onUpdateSelection({ 
                                   ...selection, 
                                   indicatorId: e.target.value === "none" ? undefined : e.target.value 
                                 })}
-                                className="w-full p-2 border rounded-md bg-white"
+                                className="w-full p-2 border rounded-md bg-white text-sm"
                               >
+                                <option value="none">General Context (No specific indicator)</option>
                                 {studentIndicators.map(ind => (
                                   <option key={ind.id} value={ind.id}>
                                     Indicator: {ind.name || "(Unnamed)"}
                                   </option>
                                 ))}
-                                <option value="none">General Context (No specific indicator)</option>
                               </select>
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">What does this evidence show? *</label>
-                              <select 
-                                required
-                                value={selection.finding}
-                                onChange={(e) => onUpdateSelection({ ...selection, finding: e.target.value as StudentEvidenceFinding })}
-                                className="w-full p-2 border rounded-md bg-white"
-                              >
-                                <option value="indicator_met">The indicator was met (Success/Positive)</option>
-                                <option value="indicator_not_met">The indicator was NOT met (Failure/Negative)</option>
-                                <option value="mixed_results">Mixed results / Complicated</option>
-                                <option value="context">Just background context</option>
-                              </select>
-                            </div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">What does this evidence show? *</label>
+                              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <label className={`border p-3 rounded-lg flex items-start gap-2 cursor-pointer transition-colors ${selection.finding === 'supports_success' ? 'bg-green-50 border-green-500' : 'hover:bg-gray-50'}`}>
+                                  <input type="radio" name={`finding-${card.id}`} value="supports_success" checked={selection.finding === 'supports_success'} onChange={() => onUpdateSelection({ ...selection, finding: 'supports_success' })} className="mt-1" />
+                                  <span className="text-sm font-medium">Relevant: Shows success/policy worked</span>
+                                </label>
+                                
+                                <label className={`border p-3 rounded-lg flex items-start gap-2 cursor-pointer transition-colors ${selection.finding === 'shows_failure' ? 'bg-red-50 border-red-500' : 'hover:bg-gray-50'}`}>
+                                  <input type="radio" name={`finding-${card.id}`} value="shows_failure" checked={selection.finding === 'shows_failure'} onChange={() => onUpdateSelection({ ...selection, finding: 'shows_failure' })} className="mt-1" />
+                                  <span className="text-sm font-medium">Relevant: Shows failure/harm</span>
+                                </label>
 
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Explain how the data proves this *
-                              </label>
-                              <textarea 
-                                required
-                                value={selection.relevanceExplanation}
-                                onChange={(e) => onUpdateSelection({ ...selection, relevanceExplanation: e.target.value })}
-                                className="w-full p-2 border rounded-md h-20"
-                                placeholder="E.g., This data point shows that the policy caused an immediate drop in..."
-                              />
+                                <label className={`border p-3 rounded-lg flex items-start gap-2 cursor-pointer transition-colors ${selection.finding === 'complicates' ? 'bg-yellow-50 border-yellow-500' : 'hover:bg-gray-50'}`}>
+                                  <input type="radio" name={`finding-${card.id}`} value="complicates" checked={selection.finding === 'complicates'} onChange={() => onUpdateSelection({ ...selection, finding: 'complicates' })} className="mt-1" />
+                                  <span className="text-sm font-medium">Relevant: Complicates/Mixed</span>
+                                </label>
+
+                                <label className={`border p-3 rounded-lg flex items-start gap-2 cursor-pointer transition-colors ${selection.finding === 'irrelevant' ? 'bg-gray-100 border-gray-400' : 'hover:bg-gray-50'}`}>
+                                  <input type="radio" name={`finding-${card.id}`} value="irrelevant" checked={selection.finding === 'irrelevant'} onChange={() => onUpdateSelection({ ...selection, finding: 'irrelevant' })} className="mt-1" />
+                                  <span className="text-sm font-medium">Irrelevant / Just Context</span>
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
