@@ -8,6 +8,7 @@ import { ProgressSteps } from "./components/ProgressSteps";
 import { TeacherMode } from "./components/TeacherMode";
 import { VerdictBuilder } from "./components/VerdictBuilder";
 import { useEvidenceLab } from "./hooks/useEvidenceLab";
+import { addStudentEvidence, deleteStudentEvidence } from "./utils/studentEvidenceStorage";
 import type { AppView } from "./types";
 
 import { Login } from "./components/Login";
@@ -40,16 +41,12 @@ export default function App() {
           studentEvidenceCards={lab.studentEvidence}
           canContinue={lab.canBuildVerdict}
           onAddStudentEvidence={(card) => {
-            import("./utils/studentEvidenceStorage").then((m) => {
-              m.addStudentEvidence(card);
-              actions.refreshStudentEvidence();
-            });
+            addStudentEvidence(card);
+            actions.refreshStudentEvidence();
           }}
           onDeleteStudentEvidence={(cardId) => {
-            import("./utils/studentEvidenceStorage").then((m) => {
-              m.deleteStudentEvidence(cardId);
-              actions.refreshStudentEvidence();
-            });
+            deleteStudentEvidence(cardId);
+            actions.refreshStudentEvidence();
           }}
           onContinue={() => actions.setView("verdict")}
         />

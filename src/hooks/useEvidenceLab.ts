@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getActiveCases } from "../utils/caseStorage";
 import type {
   AppView,
@@ -14,6 +14,16 @@ import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as s
 
 // Minimum number of self-researched findings before a group can give a verdict.
 export const MIN_FINDINGS = 2;
+
+// Realtime events fire on every insert/claim from any group. These signatures let
+// us skip state updates when the data is unchanged, so a student typing a verdict
+// is never interrupted by a needless re-render.
+const submissionSignature = (list: StudentSubmission[]) => list.map((item) => item.id).join("|");
+const claimedSignature = (list: ClaimedCase[]) =>
+  list
+    .map((item) => `${item.case_id}:${item.group_name}`)
+    .sort()
+    .join("|");
 
 export function useEvidenceLab() {
   const [groupName, setGroupName] = useState<string>("");
@@ -32,6 +42,15 @@ export function useEvidenceLab() {
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
   const [studentEvidence, setStudentEvidence] = useState<StudentEvidenceCard[]>([]);
 
+  // Only replace state when the data actually changed, so realtime echoes of a
+  // group's own submission (or duplicate events) never trigger a re-render.
+  const applySubmissions = useCallback((next: StudentSubmission[]) => {
+    setSubmissions((prev) => (submissionSignature(prev) === submissionSignature(next) ? prev : next));
+  }, []);
+  const applyClaimed = useCallback((next: ClaimedCase[]) => {
+    setClaimedCases((prev) => (claimedSignature(prev) === claimedSignature(next) ? prev : next));
+  }, []);
+
   // Initial load
   useEffect(() => {
     setCaseStudies(getActiveCases());
@@ -40,7 +59,7 @@ export function useEvidenceLab() {
     const loadSubmissions = async () => {
       if (supabase) {
         const { data } = await supabaseGetSubmissions();
-        if (data) setSubmissions(data);
+        if (data) applySubmissions(data);
       } else {
         setSubmissions(getLocalSubmissions());
       }
@@ -55,7 +74,7 @@ export function useEvidenceLab() {
 
     const fetchClaimed = async () => {
       const { data } = await getClaimedCases();
-      if (data) setClaimedCases(data);
+      if (data) applyClaimed(data);
     };
 
     fetchClaimed();
@@ -73,7 +92,7 @@ export function useEvidenceLab() {
       .channel('submissions_changes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'submissions' }, async () => {
         const { data } = await supabaseGetSubmissions();
-        if (data) setSubmissions(data);
+        if (data) applySubmissions(data);
       })
       .subscribe();
 
@@ -159,7 +178,7 @@ export function useEvidenceLab() {
       await supabaseSaveSubmission(submission, groupName);
       // It will auto-update via subscription, but let's update local immediately
       const { data } = await supabaseGetSubmissions();
-      if (data) setSubmissions(data);
+      if (data) applySubmissions(data);
     } else {
       saveLocalSubmission(submission);
       setSubmissions(getLocalSubmissions());

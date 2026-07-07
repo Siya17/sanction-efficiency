@@ -179,32 +179,41 @@ Follow these steps exactly.
 1. Go to [Supabase.com](https://supabase.com/) and click **Start your project**.
 2. Sign in (you can use your GitHub account) and create a new project. Name it something like "Evidence Lab". Create a strong database password and save it somewhere. Wait a few minutes for the database to set up.
 3. Once your project is ready, look at the left sidebar and click on **SQL Editor** (it looks like a little code window).
-4. Click **New query** and paste this exact text into the big text box:
+4. Click **New query**, then open the file **`supabase-schema.sql`** from this project, copy everything in it, and paste it into the big text box. (That file is the exact, up-to-date setup the app expects; the same SQL is shown below for reference.)
 
 ```sql
-create table public.claimed_cases (
+create table if not exists public.claimed_cases (
   case_id text primary key,
   group_name text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+  created_at timestamptz not null default timezone('utc'::text, now())
 );
 
-create table public.submissions (
-  id uuid primary key,
+create table if not exists public.submissions (
+  id text primary key,
   group_name text not null,
   case_id text not null,
   verdict text not null,
   data jsonb not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+  created_at timestamptz not null default timezone('utc'::text, now())
 );
 
 -- Disable Row Level Security since this is a public classroom app
 alter table public.claimed_cases disable row level security;
 alter table public.submissions disable row level security;
 
-alter publication supabase_realtime add table public.claimed_cases;
-alter publication supabase_realtime add table public.submissions;
+-- Turn on live updates (safe to run more than once)
+do $$
+begin
+  if not exists (select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'claimed_cases')
+  then alter publication supabase_realtime add table public.claimed_cases; end if;
+
+  if not exists (select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'submissions')
+  then alter publication supabase_realtime add table public.submissions; end if;
+end $$;
 ```
-5. Click the green **Run** button at the bottom right. This creates the tables you need!
+5. Click the green **Run** button at the bottom right. This creates the tables you need! (If you ever re-run it, that's fine — nothing gets erased.)
 6. Now, look at the left sidebar again and click on **Project Settings** (the gear icon at the bottom).
 7. Click on **API** in the settings menu.
 8. Under **Project URL**, copy the `URL` and save it.

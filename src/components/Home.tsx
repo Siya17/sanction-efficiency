@@ -38,7 +38,7 @@ export function Home({ cases, onStart, onBoard }: HomeProps) {
 
         <aside className="workflow-panel">
           <p className="eyebrow">Four steps · about 35 minutes</p>
-          <p className="text-sm text-gray-600 mb-4">There will be no timer, but this is a recommended time allocation.</p>
+          <p className="hint workflow-note">There is no timer — this is just a suggested pace.</p>
           {steps.map((step, index) => (
             <div className="workflow-step" key={step.title}>
               <span>{index + 1}</span>

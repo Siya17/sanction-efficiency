@@ -14,8 +14,6 @@ function isSubmission(value: unknown): value is StudentSubmission {
     typeof submission.country === "string" &&
     (submission.track === "sanctions" || submission.track === "aid") &&
     typeof submission.policy === "string" &&
-    typeof submission.successCriterion === "string" &&
-    typeof submission.policyAim === "string" &&
     (submission.verdict === "worked" ||
       submission.verdict === "failed" ||
       submission.verdict === "mixed" ||
