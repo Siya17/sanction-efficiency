@@ -197,6 +197,10 @@ create table public.submissions (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Disable Row Level Security since this is a public classroom app
+alter table public.claimed_cases disable row level security;
+alter table public.submissions disable row level security;
+
 alter publication supabase_realtime add table public.claimed_cases;
 alter publication supabase_realtime add table public.submissions;
 ```
