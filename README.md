@@ -1,74 +1,138 @@
-# Did Sanctions Work? Evidence Lab
+﻿# Did Sanctions Work? Evidence Lab
 
-A classroom web app for asking a hard question in a careful way: did a sanction or foreign aid policy actually work?
+A classroom web app for asking a deceptively simple question: did a sanction or foreign-aid policy actually work?
 
-Students do not hunt for the one correct answer. They choose a real case, decide what "success" should mean, pick evidence, explain what the evidence shows, submit a verdict, and then compare their reasoning with the class.
+The app is designed for discussion-first international relations teaching. Students choose a real case, decide what "success" should mean, research their own evidence, and submit a cautious verdict to a class board.
 
 ## Who this is for
 
-This app is designed for teachers running a short classroom investigation in pairs or small groups. It works especially well for social studies, history, economics, political science, international relations, and public policy lessons.
+This app is for teachers running a short investigation in pairs or small groups. It works well for social studies, history, economics, political science, international relations, and public policy lessons.
 
 Students only need a group name. There are no student accounts, passwords, or grades inside the app.
 
-## The student workflow
+## Current student workflow
 
-Students move through the lab in this order:
+Students move through a guided four-step activity:
 
 1. Enter a group name.
-2. Choose an available case.
-3. Read the case summary.
-4. Build an evaluation question.
-5. Create three indicators:
-   - one indicator for success
-   - one indicator for harm or cost
-   - one indicator for uncertainty
-6. Select at least three evidence cards.
-7. Explain how each selected evidence card connects to an indicator.
-8. Optionally check supporting data snapshots.
-9. Submit a verdict and confidence level.
-10. Compare all group verdicts on the class board.
+2. Choose one real sanctions or foreign-aid case.
+3. Read a plain-English case briefing with glossary help for difficult terms.
+4. Choose a success test from the case-specific options.
+5. Research and record at least two findings from outside sources.
+6. Classify each finding as evidence that the policy worked, failed/backfired, or remains complicated.
+7. Submit a verdict, confidence level, strongest evidence, biggest complication, and missing evidence.
+8. Compare group verdicts on the class board.
 
-The point is to help students see that "Did it work?" depends on the goal, the people affected, the time period, the evidence available, and the uncertainty that remains.
+The key classroom question is not "what is the right answer?" It is: what goal are we judging, what evidence supports the judgment, and how confident should we be about causation?
+
+## Simple classroom prompt
+
+For a very short version, put this on the board:
+
+| Case | Goal | Outcome | Causal link | Verdict |
+| --- | --- | --- | --- | --- |
+| Sanctions case |  |  |  |  |
+| Aid case |  |  |  |  |
+
+Ask groups to answer:
+
+- What was the stated goal?
+- What evidence suggests success or failure?
+- Was the policy itself responsible for the outcome?
+- What is your short verdict and one piece of evidence?
+
+The app's guided workflow supports this same logic in more structured form.
 
 ## What students submit
 
 Each group submits:
 
-- its evaluation question
-- its three indicators
-- selected evidence cards
-- notes on what the evidence shows
-- an overall verdict
-- a confidence level
+- selected case
+- chosen success test
+- optional note explaining what success means in their own words
+- at least two self-researched findings
+- source title and optional URL for each finding
+- source reliability rating
+- explanation of how each finding connects to the success test
+- limitation for each finding
+- overall verdict
+- confidence level
 - strongest evidence
-- biggest complication
+- biggest complication or contrary evidence
 - missing evidence or remaining uncertainty
 
-In Research mode, students can also add their own evidence and citations.
+## Cases and materials
 
-## Classroom Mode and Research Mode
+The app includes sanctions and foreign-aid cases in `src/data/cases.ts`.
 
-The app has two activity modes.
+Each case includes:
 
-Classroom mode is best for a normal class period. Students use the provided cases and evidence cards. This is the recommended starting mode.
+- case summary
+- policy used
+- stated policy goal
+- why the case is hard to judge
+- possible success criteria
+- optional tailored guidance
+- source links
+- teacher note
+- editable evidence cards, timelines, and indicator data for teacher use
 
-Research mode is for a longer assignment. Students can add outside evidence, write fuller explanations, and include citation details.
+The current student flow emphasizes student-researched findings. Curated case materials still exist for teacher editing, case design, source guidance, timelines, and future extensions.
 
-You can switch modes from the top navigation after entering the app.
+## Glossary support
 
-## Recommended lesson plan
+Important IR terms, organizations, and case-specific names are defined in `src/data/glossary.ts`.
 
-A simple 35-45 minute version:
+The `GlossaryText` component highlights terms in case briefings and shows plain-English definitions on hover or focus. This is meant to reduce front-loaded lecture time and let students start the investigation faster.
 
-1. Opening question, 3 minutes: What would count as success for this policy?
-2. Choose case, 3 minutes: Groups enter a name and claim a case.
-3. Read case, 5 minutes: Students identify the policy, goal, and difficulty of judging success.
-4. Build question and indicators, 8 minutes: Students define success, harm, and uncertainty.
-5. Select evidence, 10 minutes: Students choose at least three cards and explain how each one helps answer the question.
-6. Submit verdict, 7 minutes: Students choose a verdict and confidence level.
-7. Class board discussion, 7-10 minutes: Compare verdicts, confidence, and missing evidence.
+## Class board
 
-For a shorter class, skip the optional data check. For a longer class, use Research mode and ask students to add one outside source.
+The class board shows submitted group verdicts. It helps the teacher lead discussion around:
+
+- which verdicts were most common
+- whether sanctions and aid cases produced different patterns
+- how success tests changed the verdict
+- where confidence was high or low
+- what evidence groups still wanted
+- which findings were strongest or most contested
+
+The board can be filtered and exported as CSV.
+
+## Comparative mode
+
+Comparative mode summarizes class submissions across verdicts, confidence, tracks, success criteria, and missing-evidence keywords. Use it after several groups submit so students can compare patterns instead of only presenting one case at a time.
+
+## Teacher Mode
+
+Teacher Mode lets you edit classroom materials without changing code.
+
+You can:
+
+- add a custom case
+- duplicate an existing case
+- edit case summaries
+- edit success criteria
+- edit evidence cards
+- edit source links and teacher notes
+- edit timeline JSON
+- edit indicator JSON
+- import or export case JSON
+- restore the default cases
+
+Teacher Mode changes are saved in the browser's local storage. Use Export JSON if you want to back up edited cases or move them to another computer.
+
+## What is saved where
+
+By default, the app saves work inside the current browser using local storage.
+
+That means:
+
+- refreshing the page usually keeps the local class board
+- using a different browser may show a different board
+- using a different computer will not show the same local board
+- clearing browser data may remove local submissions and teacher edits
+
+If Supabase is configured, case claims and class board submissions can sync across devices.
 
 ## Teacher quick start
 
@@ -105,53 +169,11 @@ For many student devices, you have two easier options:
 
 Without Supabase, each browser keeps its own local class board. That is fine for demos, one-computer use, or testing, but it will not automatically combine submissions from different student laptops.
 
-## Class board
-
-The class board shows submitted group verdicts. It helps the teacher lead discussion around:
-
-- which verdicts were most common
-- which cases produced disagreement
-- whether groups used different definitions of success
-- where confidence was high or low
-- what evidence students still wanted
-
-The board can also export submissions as CSV for later review.
-
-## Teacher Mode
-
-Teacher Mode lets you edit classroom materials without changing code.
-
-You can:
-
-- add a custom case
-- duplicate an existing case
-- edit case summaries
-- edit success criteria
-- edit evidence cards
-- edit sources and teacher notes
-- import or export case JSON
-- restore the default cases
-
-Important: Teacher Mode changes are saved inside the browser you are using. Use Export JSON if you want to back up your edited cases or move them to another computer.
-
-## What is saved where
-
-By default, the app saves work inside the browser on the current computer. This is called local browser storage.
-
-That means:
-
-- refreshing the page usually keeps the local class board
-- using a different browser may show a different board
-- using a different computer will not show the same local board
-- clearing browser data may remove local submissions and teacher edits
-
-If Supabase is configured, case claims and class board submissions can sync across devices.
-
 ## Optional Supabase setup
 
 Skip this section unless you want multiple devices to share case claims and class board submissions live.
 
-A technical helper can create a free Supabase project, open the SQL Editor, and run this SQL:
+Create a Supabase project, open the SQL Editor, and run this SQL:
 
 ```sql
 create table public.claimed_cases (
@@ -182,27 +204,23 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 
 Restart the app after changing environment settings.
 
-Note: The in-app Clear board button clears the local browser board. If you are using Supabase, a technical helper may need to clear remote classroom data in Supabase between classes.
+## Data and source files
 
-## Data and sources
+Important files:
 
-The app includes curated case materials, evidence cards, source links, timelines, indicators, and a few local data snapshots.
-
-The source links are references for students and teachers. The app does not automatically fetch every linked source during class.
-
-Local data snapshots are stored in `public/datasets`. They are included so the app stays reliable even if the classroom internet is slow or an outside data website changes.
-
-## Troubleshooting
-
-If the app does not start, install Node.js LTS, reopen the terminal, and run `install.cmd` again.
-
-If the browser says the page cannot be reached, make sure the terminal running `start.cmd` is still open.
-
-If students cannot pick a case, another group may have claimed it. Choose a different case, or have the original group leave the case. With Supabase, old claims may need to be cleared between classes.
-
-If the class board is empty on another computer, Supabase is probably not configured. Local boards stay inside each browser.
-
-If data snapshots are missing for a case, students can still complete the activity using the case summary and evidence cards.
+- `src/App.tsx`: top-level app routing between login, home, case selection, investigation, verdict, board, compare, and teacher views
+- `src/hooks/useEvidenceLab.ts`: main app state, local/Supabase submission handling, case claims, and the minimum finding requirement
+- `src/components/GuidedInvestigation.tsx`: four-step student investigation flow
+- `src/components/StudentEvidenceForm.tsx`: self-researched finding form
+- `src/components/VerdictBuilder.tsx`: final verdict form and share-out sentence
+- `src/components/ClassBoard.tsx`: submitted verdict table, filters, print, and CSV export
+- `src/components/ComparativeMode.tsx`: aggregate comparison view
+- `src/components/TeacherMode.tsx`: local case editor and JSON import/export tools
+- `src/data/cases.ts`: default sanctions and aid cases
+- `src/data/glossary.ts`: hover/focus glossary terms
+- `src/data/timelines.ts`: optional case timelines
+- `src/data/indicators.ts`: optional indicator series for teacher materials and extensions
+- `public/datasets`: local data snapshots retained for offline reliability and future classroom use
 
 ## Technical helper notes
 
@@ -247,6 +265,18 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
 Only variables that begin with `VITE_` are available to the app.
+
+## Troubleshooting
+
+If the app does not start, install Node.js LTS, reopen the terminal, and run `install.cmd` again.
+
+If the browser says the page cannot be reached, make sure the terminal running `start.cmd` is still open.
+
+If students cannot pick a case, another group may have claimed it. Choose a different case, or have the original group leave the case. With Supabase, old claims may need to be cleared between classes.
+
+If the class board is empty on another computer, Supabase is probably not configured. Local boards stay inside each browser.
+
+If teacher edits disappear, check whether the browser's local storage was cleared or whether you switched browsers/computers. Export JSON from Teacher Mode to keep a backup.
 
 ## Deployment
 
