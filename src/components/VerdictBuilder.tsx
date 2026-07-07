@@ -167,9 +167,18 @@ export function VerdictBuilder({
           <div className="sentence-frame">
             <h2>Your share-out sentence</h2>
             <p>
-              Judging success as <strong>{successLens || "[your success test]"}</strong>, we say this policy{" "}
-              <strong>{verdictLabels[verdict].toLowerCase()}</strong>, with{" "}
-              <strong>{confidenceLabels[confidence].toLowerCase()}</strong> confidence. Our strongest evidence is{" "}
+              Judging success as <strong>{successLens || "[your success test]"}</strong>, we{" "}
+              {verdict === "cannot_judge_yet" ? (
+                <>
+                  <strong>cannot judge this policy yet</strong>
+                </>
+              ) : (
+                <>
+                  say this policy <strong>{verdictLabels[verdict]?.toLowerCase() || "[verdict]"}</strong>
+                </>
+              )}
+              , with{" "}
+              <strong>{confidenceLabels[confidence]?.toLowerCase() || "[confidence]"}</strong> confidence. Our strongest evidence is{" "}
               <strong>{strongestEvidence || "[strongest evidence]"}</strong>
               {biggestComplication === "No major complications" ? (
                 <>

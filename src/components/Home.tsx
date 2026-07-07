@@ -20,8 +20,8 @@ export function Home({ cases, onStart, onBoard }: HomeProps) {
     <main className="page">
       <section className="hero-section">
         <div className="hero-copy">
-          <p className="eyebrow">Evidence Lab</p>
-          <h1>Did it actually work?</h1>
+          <p className="eyebrow">Did Foreign Aid Work? Evidence Lab</p>
+          <h1>Did Sanctions Work?</h1>
           <p className="subtitle">Judge whether real sanctions and foreign-aid policies succeeded.</p>
           <p className="intro">
             "Did it work?" sounds simple, but success can mean many things. In this activity, your group will choose a real-world case, define what a successful outcome looks like, and search for evidence to support your conclusion.
@@ -43,7 +43,7 @@ export function Home({ cases, onStart, onBoard }: HomeProps) {
             <div className="workflow-step" key={step.title}>
               <span>{index + 1}</span>
               <div>
-                <strong>{step.title}</strong> <span className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded ml-2">{step.time}</span>
+                <strong>{step.title}</strong> <small style={{ display: 'inline-block', backgroundColor: '#f3f4f6', color: '#6b7280', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px', fontSize: '0.875rem' }}>{step.time}</small>
                 <p>{step.detail}</p>
               </div>
             </div>

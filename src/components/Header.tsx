@@ -22,8 +22,8 @@ export function Header({ currentView, onNavigate, boardCount }: HeaderProps) {
       <button className="brand-button" type="button" onClick={() => onNavigate("home")}>
         <span className="brand-mark">?</span>
         <span>
-          <strong>Did It Work?</strong>
-          <small>Evidence Lab</small>
+          <strong>Did Sanctions Work?</strong>
+          <small>Did Foreign Aid Work? Evidence Lab</small>
         </span>
       </button>
 
