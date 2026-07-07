@@ -186,10 +186,10 @@ export function GuidedInvestigation({
           )}
 
           <div className="guided-guidance">
-            <h2>Your job</h2>
+            <h2>Instructions</h2>
             <p>
-              We are not handing you the answer. Search for <strong>real numbers and facts</strong> that help judge
-              whether this policy met your success test — then record what you find below.
+              Search for <strong>real numbers and facts</strong> that help judge
+              whether this policy met your success test, and record what you find below.
             </p>
             <ul>
               <li>Look for hard figures: rates, percentages, amounts, before-and-after comparisons.</li>
@@ -197,11 +197,8 @@ export function GuidedInvestigation({
               <li>Try to find at least one fact that <em>challenges</em> your first impression.</li>
             </ul>
             <p className="hint">
-              Good places to start: the UN, World Bank, IMF, UNICEF, government statistics offices, and reporting from
-              established news organisations. Hover the underlined names for what they are.
-            </p>
-            <p className="guided-sources-line">
-              <GlossaryText text="UN, World Bank, IMF, UNICEF" />
+              Good places to start: government statistics offices, academic reports, and reporting from
+              established news organisations.
             </p>
           </div>
 

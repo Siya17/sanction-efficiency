@@ -170,8 +170,16 @@ export function VerdictBuilder({
               Judging success as <strong>{successLens || "[your success test]"}</strong>, we say this policy{" "}
               <strong>{verdictLabels[verdict].toLowerCase()}</strong>, with{" "}
               <strong>{confidenceLabels[confidence].toLowerCase()}</strong> confidence. Our strongest evidence is{" "}
-              <strong>{strongestEvidence || "[strongest evidence]"}</strong>, but{" "}
-              <strong>{biggestComplication || "[biggest complication]"}</strong> makes us cautious.
+              <strong>{strongestEvidence || "[strongest evidence]"}</strong>
+              {biggestComplication === "No major complications" ? (
+                <>
+                  . We found <strong>no major complications</strong>.
+                </>
+              ) : (
+                <>
+                  , but <strong>{biggestComplication || "[biggest complication]"}</strong> makes us cautious.
+                </>
+              )}
             </p>
           </div>
 

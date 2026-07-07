@@ -1,4 +1,4 @@
-﻿# Did Sanctions Work? Evidence Lab
+# Did Sanctions Work? Evidence Lab
 
 A classroom web app for asking a deceptively simple question: did a sanction or foreign-aid policy actually work?
 
@@ -169,11 +169,17 @@ For many student devices, you have two easier options:
 
 Without Supabase, each browser keeps its own local class board. That is fine for demos, one-computer use, or testing, but it will not automatically combine submissions from different student laptops.
 
-## Optional Supabase setup
+## 🚀 Setting Up the Database and Website (For Beginners)
 
-Skip this section unless you want multiple devices to share case claims and class board submissions live.
+If you want students on different computers to see the same Class Board and lock cases so no two groups pick the same one, you need a database (Supabase) and a live website (Vercel). Both are free!
 
-Create a Supabase project, open the SQL Editor, and run this SQL:
+Follow these steps exactly.
+
+### Step 1: Create a Free Database (Supabase)
+1. Go to [Supabase.com](https://supabase.com/) and click **Start your project**.
+2. Sign in (you can use your GitHub account) and create a new project. Name it something like "Evidence Lab". Create a strong database password and save it somewhere. Wait a few minutes for the database to set up.
+3. Once your project is ready, look at the left sidebar and click on **SQL Editor** (it looks like a little code window).
+4. Click **New query** and paste this exact text into the big text box:
 
 ```sql
 create table public.claimed_cases (
@@ -194,97 +200,29 @@ create table public.submissions (
 alter publication supabase_realtime add table public.claimed_cases;
 alter publication supabase_realtime add table public.submissions;
 ```
+5. Click the green **Run** button at the bottom right. This creates the tables you need!
+6. Now, look at the left sidebar again and click on **Project Settings** (the gear icon at the bottom).
+7. Click on **API** in the settings menu.
+8. Under **Project URL**, copy the `URL` and save it.
+9. Under **Project API keys**, copy the `anon` `public` key and save it. 
 
-Then create a file named `.env.local` in the project folder:
+*You will need both of these keys for Vercel!*
 
-```env
-VITE_SUPABASE_URL=your_project_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
-```
+### Step 2: Put the Code on GitHub
+1. Create a free account on [GitHub.com](https://github.com/).
+2. Create a new repository and upload this project folder to it (you can drag and drop the files or use GitHub Desktop).
 
-Restart the app after changing environment settings.
-
-## Data and source files
-
-Important files:
-
-- `src/App.tsx`: top-level app routing between login, home, case selection, investigation, verdict, board, compare, and teacher views
-- `src/hooks/useEvidenceLab.ts`: main app state, local/Supabase submission handling, case claims, and the minimum finding requirement
-- `src/components/GuidedInvestigation.tsx`: four-step student investigation flow
-- `src/components/StudentEvidenceForm.tsx`: self-researched finding form
-- `src/components/VerdictBuilder.tsx`: final verdict form and share-out sentence
-- `src/components/ClassBoard.tsx`: submitted verdict table, filters, print, and CSV export
-- `src/components/ComparativeMode.tsx`: aggregate comparison view
-- `src/components/TeacherMode.tsx`: local case editor and JSON import/export tools
-- `src/data/cases.ts`: default sanctions and aid cases
-- `src/data/glossary.ts`: hover/focus glossary terms
-- `src/data/timelines.ts`: optional case timelines
-- `src/data/indicators.ts`: optional indicator series for teacher materials and extensions
-- `public/datasets`: local data snapshots retained for offline reliability and future classroom use
-
-## Technical helper notes
-
-Install dependencies:
-
-```powershell
-npm.cmd install
-```
-
-Start the local development server:
-
-```powershell
-npm.cmd run dev
-```
-
-Check TypeScript:
-
-```powershell
-npm.cmd run typecheck
-```
-
-Build the app:
-
-```powershell
-npm.cmd run build
-```
-
-Preview the built app:
-
-```powershell
-npm.cmd run preview
-```
-
-Environment variables:
-
-```env
-VITE_APP_TITLE="Did Sanctions Work? Evidence Lab"
-VITE_APP_SUBTITLE="A classroom investigation of sanctions and foreign aid."
-VITE_BOARD_STORAGE_KEY="did-it-work-evidence-lab-submissions"
-VITE_SUPABASE_URL=your_project_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
-```
-
-Only variables that begin with `VITE_` are available to the app.
-
-## Troubleshooting
-
-If the app does not start, install Node.js LTS, reopen the terminal, and run `install.cmd` again.
-
-If the browser says the page cannot be reached, make sure the terminal running `start.cmd` is still open.
-
-If students cannot pick a case, another group may have claimed it. Choose a different case, or have the original group leave the case. With Supabase, old claims may need to be cleared between classes.
-
-If the class board is empty on another computer, Supabase is probably not configured. Local boards stay inside each browser.
-
-If teacher edits disappear, check whether the browser's local storage was cleared or whether you switched browsers/computers. Export JSON from Teacher Mode to keep a backup.
-
-## Deployment
-
-The simplest classroom deployment is Vercel:
-
-1. Push the project to GitHub.
-2. Import the GitHub repository into Vercel.
-3. Add any needed `VITE_` environment variables in Vercel.
-4. Deploy.
-
-If you use Supabase, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel before using the deployed classroom link.
+### Step 3: Put the Website on the Internet (Vercel)
+1. Go to [Vercel.com](https://vercel.com/) and sign up with your GitHub account.
+2. Click **Add New** and select **Project**.
+3. You will see a list of your GitHub repositories. Click **Import** next to your Evidence Lab project.
+4. On the "Configure Project" screen, look for **Environment Variables** and click the little down arrow to open it.
+5. You need to add two variables here using the keys you saved from Supabase:
+   - Box 1 (Name): type exactly `VITE_SUPABASE_URL`
+   - Box 2 (Value): paste your **Project URL** from Supabase
+   - Click **Add**
+   - Box 1 (Name): type exactly `VITE_SUPABASE_ANON_KEY`
+   - Box 2 (Value): paste your **anon public key** from Supabase
+   - Click **Add**
+6. Click the big **Deploy** button.
+7. Wait a couple of minutes, and Vercel will give you a live link to your website! Share this link with your students.

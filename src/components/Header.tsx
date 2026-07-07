@@ -10,8 +10,11 @@ const navItems: Array<{ view: AppView; label: string }> = [
   { view: "home", label: "Home" },
   { view: "selection", label: "Cases" },
   { view: "board", label: "Class Board" },
-  { view: "teacher", label: "Teacher Mode" },
 ];
+
+if (typeof window !== "undefined" && window.location.search.includes("teacher=true")) {
+  navItems.push({ view: "teacher", label: "Teacher Mode" });
+}
 
 export function Header({ currentView, onNavigate, boardCount }: HeaderProps) {
   return (

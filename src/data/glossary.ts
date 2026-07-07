@@ -10,17 +10,6 @@ export type GlossaryEntry = {
 // definition on hover/focus. Keep every definition to one clear sentence.
 export const glossary: GlossaryEntry[] = [
   // --- Organisations & institutions ---
-  { term: "UN", aliases: ["United Nations"], definition: "The United Nations — the main international body where countries meet to handle war, peace, and global rules." },
-  { term: "UN Security Council", definition: "The part of the United Nations that can order sanctions or military action; its decisions are binding on all members." },
-  { term: "EU", aliases: ["European Union"], definition: "The European Union — a group of European countries that coordinate trade, money, and foreign policy." },
-  { term: "G7", definition: "The Group of Seven — seven large wealthy democracies (US, UK, France, Germany, Italy, Japan, Canada) that coordinate economic policy." },
-  { term: "US", aliases: ["U.S.", "United States"], definition: "The United States of America." },
-  { term: "UK", aliases: ["U.K.", "United Kingdom"], definition: "The United Kingdom (Britain)." },
-  { term: "IMF", definition: "The International Monetary Fund — a global body that lends money to countries and reports on their economies." },
-  { term: "IAEA", definition: "The International Atomic Energy Agency — the UN's nuclear watchdog that inspects countries' nuclear sites." },
-  { term: "NGO", aliases: ["NGOs"], definition: "Non-Governmental Organisation — a private, non-profit group (like a charity) that runs aid or advocacy work." },
-  { term: "World Bank", definition: "A global institution that funds development projects like roads, schools, and water systems in poorer countries." },
-  { term: "UNICEF", definition: "The United Nations Children's Fund — the UN agency focused on children's health and welfare." },
   { term: "SIGAR", definition: "Special Inspector General for Afghanistan Reconstruction — a US watchdog that audited how aid money in Afghanistan was spent." },
 
   // --- Case-specific names ---

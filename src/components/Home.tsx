@@ -7,10 +7,10 @@ type HomeProps = {
 };
 
 const steps = [
-  { title: "Meet the case", detail: "Read what happened, in plain English, with tricky terms explained." },
-  { title: "Define success", detail: "Decide what “working” should actually mean for this case." },
-  { title: "Find evidence", detail: "Research real numbers and facts yourself, and note your sources." },
-  { title: "Give a verdict", detail: "Weigh what you found and defend a careful judgement." },
+  { title: "Meet the case", time: "5 min", detail: "Read what happened, in plain English, with tricky terms explained." },
+  { title: "Define success", time: "5 min", detail: "Decide what “working” should actually mean for this case." },
+  { title: "Find evidence", time: "15 min", detail: "Research real numbers and facts yourself, and note your sources." },
+  { title: "Give a verdict", time: "10 min", detail: "Weigh what you found and defend a careful judgement." },
 ];
 
 export function Home({ cases, onStart, onBoard }: HomeProps) {
@@ -24,31 +24,26 @@ export function Home({ cases, onStart, onBoard }: HomeProps) {
           <h1>Did it actually work?</h1>
           <p className="subtitle">Judge whether real sanctions and foreign-aid policies succeeded.</p>
           <p className="intro">
-            "Did it work?" sounds simple, but it hides a hard question: <strong>work at what?</strong> In this activity
-            your group picks one real case, decides what success should mean, and then goes and finds the evidence
-            yourselves. You will not be handed the answer — you will build it.
+            "Did it work?" sounds simple, but success can mean many things. In this activity, your group will choose a real-world case, define what a successful outcome looks like, and search for evidence to support your conclusion.
           </p>
           <p className="intro">
-            You do not need to know these cases already. Everything you need to understand them is explained as you go,
-            and you can hover any underlined term for a quick definition.
+            You don't need any prior knowledge about these cases. The background information is provided, and you can hover over any underlined term for a quick definition.
           </p>
           <div className="button-row">
             <button type="button" className="primary-button" onClick={onStart}>
               Choose a case
-            </button>
-            <button type="button" className="secondary-button" onClick={onBoard}>
-              View class board
             </button>
           </div>
         </div>
 
         <aside className="workflow-panel">
           <p className="eyebrow">Four steps · about 35 minutes</p>
+          <p className="text-sm text-gray-600 mb-4">There will be no timer, but this is a recommended time allocation.</p>
           {steps.map((step, index) => (
             <div className="workflow-step" key={step.title}>
               <span>{index + 1}</span>
               <div>
-                <strong>{step.title}</strong>
+                <strong>{step.title}</strong> <span className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded ml-2">{step.time}</span>
                 <p>{step.detail}</p>
               </div>
             </div>

@@ -272,7 +272,7 @@ export const cases: CaseStudy[] = [
       whatWasHappening: "To fight poverty, the government and international donors implemented a program where communities themselves proposed, designed, and managed small local infrastructure projects (like water systems or roads).",
       policyUsed: "Community-driven development (CDD) grants and technical assistance.",
       policyGoal: "To let communities identify priorities and manage resources for public goods.",
-      whyHardToJudge: "Success might mean poverty reduction, better local governance, or participation by marginalized groups. Students should ask whether community choice actually improved outcomes, and whether these small gains were protected from local inequalities or elite capture.",
+      whyHardToJudge: "Success might mean poverty reduction, better local governance, or participation by marginalized groups. Consider whether community choice actually improved outcomes, and whether these small gains were protected from local inequalities or elite capture.",
       possibleSuccessAngles: [
         "Welfare improvement (better infrastructure)",
         "Community participation and empowerment",
