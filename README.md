@@ -117,7 +117,7 @@ Once the page has loaded with that in the address bar, the tab stays visible whi
 
 **Signing in:**
 
-- **If Supabase is configured** (see below), the tab opens a real sign-in form. Each teacher signs in with their own email and password (a Supabase Auth account). Accounts aren't self-serve — see "Teacher accounts" in `supabase-schema.sql` for how to create one from the Supabase dashboard. Being signed in also unlocks the destructive actions (removing a verdict, ending a session) at the database level, so a student poking at the browser console can't do those even if they find the anon key.
+- **If Supabase is configured** (see below), the tab opens a real sign-in form. Each teacher signs in with their own email and password (a Supabase Auth account). Accounts aren't self-serve — an admin creates each teacher's login from the Supabase dashboard; see **Step 2: Create Teacher Logins (Passwords)** in the setup guide below for the exact steps, or "Teacher accounts" in `supabase-schema.sql`. Being signed in also unlocks the destructive actions (removing a verdict, ending a session) at the database level, so a student poking at the browser console can't do those even if they find the anon key.
 - **If Supabase is not configured**, there are no accounts to sign in with, so the tab falls back to a shared 4-digit PIN (`VITE_TEACHER_PIN`, default `9876`). This is a soft deterrent only — it lives in the shipped code and is not real security — appropriate for solo local use, not for anything projected or shared.
 
 **Groups panel** — one row per group that has claimed a case or submitted a verdict this session:
@@ -203,17 +203,17 @@ For many student devices, you have two easier options:
 
 Without Supabase, each browser keeps its own local class board. That is fine for demos, one-computer use, or testing, but it will not automatically combine submissions from different student laptops.
 
-## 🚀 Setting Up the Database and Website (For Beginners)
+## 🚀 Setting Up the Database, Teacher Logins, and Website (For Beginners)
 
-If you want students on different computers to see the same Class Board and lock cases so no two groups pick the same one, you need a database (Supabase) and a live website (Vercel). Both are free!
+If you want students on different computers to see the same Class Board and lock cases so no two groups pick the same one, you need a database (Supabase), a login for each teacher, and a live website (Vercel). All free!
 
-Follow these steps exactly.
+Follow these steps exactly, in order.
 
 ### Step 1: Create a Free Database (Supabase)
 1. Go to [Supabase.com](https://supabase.com/) and click **Start your project**.
 2. Sign in (you can use your GitHub account) and create a new project. Name it something like "Evidence Lab". Create a strong database password and save it somewhere. Wait a few minutes for the database to set up.
 3. Once your project is ready, look at the left sidebar and click on **SQL Editor** (it looks like a little code window).
-4. Click **New query**, then open the file **`supabase-schema.sql`** from this project, copy everything in it, and paste it into the big text box. (That file is the exact, up-to-date setup the app expects; the same SQL is shown below for reference.)
+4. Click **New query**, then open the file **`supabase-schema.sql`** from this project, copy everything in it, and paste it into the big text box. (That file is the exact, up-to-date setup the app expects; a trimmed version is shown below for reference — always use the actual file, since it's kept current.)
 
 ```sql
 create table if not exists public.claimed_cases (
@@ -231,8 +231,10 @@ create table if not exists public.submissions (
   created_at timestamptz not null default timezone('utc'::text, now())
 );
 
--- Keep Row Level Security ON and allow the public classroom key full access.
--- (More reliable than disabling RLS, which Supabase turns back on by default.)
+-- Keep Row Level Security ON. Students have no accounts, so claiming cases and
+-- reading/saving verdicts stay open to everyone. Deleting a submitted verdict
+-- is destructive, so that one action is restricted to signed-in teachers only
+-- (see Step 2 below for how a teacher gets a login).
 alter table public.claimed_cases enable row level security;
 alter table public.submissions   enable row level security;
 
@@ -241,8 +243,19 @@ create policy "Public full access to claims" on public.claimed_cases
   for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "Public full access to submissions" on public.submissions;
-create policy "Public full access to submissions" on public.submissions
-  for all to anon, authenticated using (true) with check (true);
+drop policy if exists "Anyone can read submissions" on public.submissions;
+drop policy if exists "Anyone can save submissions" on public.submissions;
+drop policy if exists "Anyone can update submissions" on public.submissions;
+drop policy if exists "Only teachers can delete submissions" on public.submissions;
+
+create policy "Anyone can read submissions" on public.submissions
+  for select to anon, authenticated using (true);
+create policy "Anyone can save submissions" on public.submissions
+  for insert to anon, authenticated with check (true);
+create policy "Anyone can update submissions" on public.submissions
+  for update to anon, authenticated using (true) with check (true);
+create policy "Only teachers can delete submissions" on public.submissions
+  for delete to authenticated using (true);
 
 -- Turn on live updates (safe to run more than once)
 do $$
@@ -264,11 +277,29 @@ end $$;
 
 *You will need both of these keys for Vercel!*
 
-### Step 2: Put the Code on GitHub
+### Step 2: Create Teacher Logins (Passwords)
+
+Once Supabase is connected, Teacher Mode uses real logins instead of a shared PIN — every teacher who needs access gets their own email + password. There is no public sign-up page; you (the admin) create each account by hand, once.
+
+1. In your Supabase project, click **Authentication** in the left sidebar.
+2. Click **Users**, then the **Add user** button (top right).
+3. Fill in the form:
+   - **Email** — the teacher's email address. This is just their username inside the app; the app never emails them anything.
+   - **Password** — a temporary password you choose for them (Supabase requires at least 6 characters; pick something a bit stronger for anything real).
+   - Check the box **Auto Confirm User**. This step matters — without it, Supabase waits for the teacher to click a confirmation link in an email the app never sends, and they'll never be able to sign in.
+4. Click **Create user**.
+5. Repeat steps 2-4 for every teacher who needs Teacher Mode access.
+6. Give each teacher their email and temporary password. They sign in at `your-site.com/?teacher=true` (see **Teacher Mode** above). To change a password later — for a forgotten password or to hand a teacher control of their own — go back to **Authentication -> Users**, click their row, and use the reset option there.
+
+No SQL is needed for this step — Supabase Auth keeps its own list of users, separate from the `claimed_cases`/`submissions` tables above.
+
+*Skipping this step is fine* — if no teacher accounts exist yet, Teacher Mode simply won't let anyone with a Supabase-configured deployment sign in until you add one. There's no fallback PIN once Supabase is connected (the PIN only applies when Supabase is left unconfigured).
+
+### Step 3: Put the Code on GitHub
 1. Create a free account on [GitHub.com](https://github.com/).
 2. Create a new repository and upload this project folder to it (you can drag and drop the files or use GitHub Desktop).
 
-### Step 3: Put the Website on the Internet (Vercel)
+### Step 4: Put the Website on the Internet (Vercel)
 1. Go to [Vercel.com](https://vercel.com/) and sign up with your GitHub account.
 2. Click **Add New** and select **Project**.
 3. You will see a list of your GitHub repositories. Click **Import** next to your Evidence Lab project.
@@ -292,3 +323,9 @@ This means the table has Row Level Security on with no policy allowing access (c
 
 **The class board does not update live across devices**
 Make sure both tables are in the realtime publication — re-running `supabase-schema.sql` handles this. Also confirm `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set in Vercel and that you redeployed after adding them.
+
+**A teacher can't sign in to Teacher Mode ("Incorrect email or password")**
+Most often this means either the account doesn't exist yet, or **Auto Confirm User** wasn't checked when it was created. Fix: go to **Authentication -> Users** in Supabase, check whether the teacher's email is listed. If it's missing, add it (Step 2 above), making sure to check **Auto Confirm User**. If it's listed but they still can't sign in, click their row and reset the password there, then share the new one.
+
+**"Teacher Mode" tab never shows a sign-in form, only a PIN box**
+This means the app doesn't think Supabase is configured. Double-check `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are both set (in Vercel's Environment Variables, or your local `.env`) and that you redeployed / restarted the dev server after setting them — the PIN box is only a fallback for when one or both are missing.
