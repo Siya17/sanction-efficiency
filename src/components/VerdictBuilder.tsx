@@ -8,6 +8,7 @@ type VerdictBuilderProps = {
   successLens: string;
   successNote: string;
   studentEvidenceCards: StudentEvidenceCard[];
+  initialDraft?: StudentSubmission | null;
   onSubmit: (submission: SubmissionDraft) => void;
   onBack: () => void;
 };
@@ -29,14 +30,15 @@ export function VerdictBuilder({
   successLens,
   successNote,
   studentEvidenceCards,
+  initialDraft,
   onSubmit,
   onBack,
 }: VerdictBuilderProps) {
-  const [verdict, setVerdict] = useState<Verdict>("mixed");
-  const [confidence, setConfidence] = useState<Confidence>("medium");
-  const [strongestEvidence, setStrongestEvidence] = useState("");
-  const [biggestComplication, setBiggestComplication] = useState("");
-  const [missingEvidence, setMissingEvidence] = useState("");
+  const [verdict, setVerdict] = useState<Verdict>(initialDraft?.verdict || "mixed");
+  const [confidence, setConfidence] = useState<Confidence>(initialDraft?.confidence || "medium");
+  const [strongestEvidence, setStrongestEvidence] = useState(initialDraft?.strongestEvidence || "");
+  const [biggestComplication, setBiggestComplication] = useState(initialDraft?.biggestComplication || "");
+  const [missingEvidence, setMissingEvidence] = useState(initialDraft?.missingEvidence || "");
 
   const canSubmit =
     strongestEvidence.trim().length > 0 &&

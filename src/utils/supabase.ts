@@ -64,17 +64,24 @@ export async function releaseAllClaims() {
 export async function saveSubmission(submission: StudentSubmission, groupName: string) {
   if (!supabase) return { error: new Error("Supabase not configured") };
   
-  const { data, error } = await supabase
+  submission.groupName = groupName;
+
+  const { error } = await supabase
     .from('submissions')
-    .insert([{
-      id: submission.id,
-      group_name: groupName,
-      case_id: submission.caseId,
-      verdict: submission.verdict,
-      data: submission // Store the full object as JSONB
-    }]);
-    
-  return { data, error };
+    .upsert([{ id: submission.id, group_name: groupName, data: submission }]);
+
+  return { error };
+}
+
+export async function deleteSubmission(id: string) {
+  if (!supabase) return { error: new Error("Supabase not configured") };
+
+  const { error } = await supabase
+    .from('submissions')
+    .delete()
+    .eq('id', id);
+
+  return { error };
 }
 
 export async function getSubmissions() {

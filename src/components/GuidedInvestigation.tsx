@@ -111,7 +111,10 @@ export function GuidedInvestigation({
             </details>
           )}
 
-          <div className="button-row guided-nav">
+          <div className="button-row guided-nav space-between">
+            <button type="button" className="secondary-button" onClick={() => window.print()}>
+              Print worksheet
+            </button>
             <button type="button" className="primary-button" onClick={() => setStep(2)}>
               Next: what would success mean?
             </button>

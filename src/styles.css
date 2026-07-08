@@ -1497,6 +1497,18 @@ textarea {
   width: 1px;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .empty-editor {
   display: grid;
   min-height: 18rem;
@@ -2240,5 +2252,43 @@ textarea {
   .simple-matrix-table select {
     border: 0;
     padding: 0;
+  }
+
+  /* Global print rules */
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .app-header, 
+  .progress-steps,
+  .guided-stepper,
+  .guided-nav,
+  button,
+  .hint,
+  .guided-guidance {
+    display: none !important;
+  }
+
+  .page {
+    padding: 0;
+    max-width: none;
+    margin: 0;
+  }
+
+  .guided-card {
+    border: none;
+    background: transparent;
+    padding: 0;
+  }
+  
+  .guided-card::after {
+    content: "Evidence Notes:\n\n1. ____________________________________________________________________\n\n   ____________________________________________________________________\n\n2. ____________________________________________________________________\n\n   ____________________________________________________________________\n\n3. ____________________________________________________________________\n\n   ____________________________________________________________________";
+    display: block;
+    white-space: pre-wrap;
+    line-height: 2;
+    margin-top: 3rem;
+    font-size: 1.1rem;
+    color: #333;
   }
 }

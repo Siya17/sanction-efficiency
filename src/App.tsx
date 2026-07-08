@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
 import { ComparativeMode } from "./components/ComparativeMode";
@@ -6,6 +7,7 @@ import { Header } from "./components/Header";
 import { Home } from "./components/Home";
 import { ProgressSteps } from "./components/ProgressSteps";
 import { TeacherMode } from "./components/TeacherMode";
+import { TeacherAuth } from "./components/TeacherAuth";
 import { VerdictBuilder } from "./components/VerdictBuilder";
 import { useEvidenceLab } from "./hooks/useEvidenceLab";
 import { addStudentEvidence, deleteStudentEvidence } from "./utils/studentEvidenceStorage";
@@ -16,6 +18,8 @@ import { Login } from "./components/Login";
 export default function App() {
   const lab = useEvidenceLab();
   const { actions } = lab;
+  
+  const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState(false);
 
   function renderView() {
     if (lab.view === "login") {
@@ -60,6 +64,7 @@ export default function App() {
           successLens={lab.successLens}
           successNote={lab.successNote}
           studentEvidenceCards={lab.studentEvidence}
+          initialDraft={lab.editingDraft}
           onBack={() => actions.setView("investigation")}
           onSubmit={actions.submitVerdict}
         />
@@ -67,6 +72,9 @@ export default function App() {
     }
 
     if (lab.view === "teacher") {
+      if (!isTeacherAuthenticated) {
+        return <TeacherAuth onAuthSuccess={() => setIsTeacherAuthenticated(true)} />;
+      }
       return (
         <TeacherMode
           cases={lab.cases}
@@ -92,8 +100,10 @@ export default function App() {
     return (
       <ClassBoard
         submissions={lab.submissions}
+        currentGroupName={lab.groupName}
         onChooseCase={actions.startCaseSelection}
         onCompare={() => actions.setView("compare")}
+        onEditSubmission={actions.editSubmission}
       />
     );
   }

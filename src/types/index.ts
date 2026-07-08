@@ -148,6 +148,7 @@ export type CaseStudy = {
 export type StudentSubmission = {
   id: string;
   caseId: string;
+  groupName?: string;
   country: string;
   track: Track;
   policy: string;

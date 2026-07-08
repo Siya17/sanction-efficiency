@@ -10,7 +10,7 @@ import type {
 import { clearSubmissions, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
 import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
-import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, releaseAllClaims as supabaseReleaseAllClaims, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions, deleteAllSubmissions as supabaseDeleteAllSubmissions } from "../utils/supabase";
+import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, releaseAllClaims as supabaseReleaseAllClaims, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions, deleteAllSubmissions as supabaseDeleteAllSubmissions, deleteSubmission as supabaseDeleteSubmission } from "../utils/supabase";
 
 // Minimum number of self-researched findings before a group can give a verdict.
 export const MIN_FINDINGS = 2;
@@ -37,6 +37,8 @@ export function useEvidenceLab() {
   // What the group decided "success" should mean for this case.
   const [successLens, setSuccessLens] = useState("");
   const [successNote, setSuccessNote] = useState("");
+  
+  const [editingDraft, setEditingDraft] = useState<StudentSubmission | null>(null);
 
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(() => getActiveCases());
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
@@ -152,6 +154,7 @@ export function useEvidenceLab() {
     // Reset the group's working state for the new case.
     setSuccessLens("");
     setSuccessNote("");
+    setEditingDraft(null);
 
     setStudentEvidence(getStudentEvidence(caseStudy.id));
     setView("investigation");
@@ -197,6 +200,30 @@ export function useEvidenceLab() {
     setView("board");
   }
 
+  async function editSubmission(submissionId: string) {
+    const sub = submissions.find(s => s.id === submissionId);
+    if (!sub) return;
+
+    if (supabase) {
+      await supabaseDeleteSubmission(submissionId);
+    }
+    
+    // Also remove locally to prevent flicker
+    const nextSubmissions = submissions.filter(s => s.id !== submissionId);
+    setSubmissions(nextSubmissions);
+
+    // Pre-populate form state
+    setEditingDraft(sub);
+    setSuccessLens(sub.successLens || "");
+    setSuccessNote(sub.successNote || "");
+    
+    // Be sure we have the case selected
+    const c = caseStudies.find(c => c.id === sub.caseId);
+    if (c) setSelectedCase(c);
+    
+    setView("verdict");
+  }
+
   async function endSession() {
     clearSubmissions();
     setSubmissions([]);
@@ -222,6 +249,7 @@ export function useEvidenceLab() {
     selectedCase,
     submissions,
     view,
+    editingDraft,
 
     successLens,
     successNote,
@@ -230,6 +258,7 @@ export function useEvidenceLab() {
       handleLogin,
       refreshStudentEvidence,
       endSession,
+      editSubmission,
       refreshCases,
       selectCase,
       releaseCurrentCase,

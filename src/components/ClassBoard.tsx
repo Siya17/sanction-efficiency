@@ -5,8 +5,10 @@ import { submissionsToCsv } from "../utils/submissions";
 
 type ClassBoardProps = {
   submissions: StudentSubmission[];
+  currentGroupName: string;
   onCompare: () => void;
   onChooseCase: () => void;
+  onEditSubmission: (submissionId: string) => void;
 };
 
 type Filter = "all" | Track | Verdict;
@@ -17,7 +19,7 @@ function matchesFilter(submission: StudentSubmission, filter: Filter) {
   return submission.verdict === filter;
 }
 
-export function ClassBoard({ submissions, onCompare, onChooseCase }: ClassBoardProps) {
+export function ClassBoard({ submissions, currentGroupName, onCompare, onChooseCase, onEditSubmission }: ClassBoardProps) {
   const [filter, setFilter] = useState<Filter>("all");
 
   const filteredSubmissions = useMemo(
@@ -125,6 +127,7 @@ export function ClassBoard({ submissions, onCompare, onChooseCase }: ClassBoardP
                 <th>Strongest evidence</th>
                 <th>Biggest complication</th>
                 <th>Missing evidence</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -163,6 +166,18 @@ export function ClassBoard({ submissions, onCompare, onChooseCase }: ClassBoardP
                           ))}
                         </ul>
                       </details>
+                    )}
+                  </td>
+                  <td>
+                    {submission.groupName === currentGroupName && (
+                      <button 
+                        className="secondary-button" 
+                        type="button" 
+                        onClick={() => onEditSubmission(submission.id)}
+                        style={{ padding: "0.4rem 0.6rem", fontSize: "0.85rem" }}
+                      >
+                        Edit
+                      </button>
                     )}
                   </td>
                 </tr>
