@@ -26,9 +26,8 @@ type TeacherModeProps = {
   claimedCases: ClaimedCase[];
   onCasesChanged: () => void;
   onChooseCase: () => void;
-  onClearBoard: () => void;
+  onEndSession: () => void;
   onReleaseClaim: (caseId: string, groupName: string) => void;
-  onReleaseAllClaims: () => void;
 };
 
 type DraftStatus = "idle" | "editing" | "new";
@@ -135,9 +134,8 @@ export function TeacherMode({
   claimedCases,
   onCasesChanged,
   onChooseCase,
-  onClearBoard,
+  onEndSession,
   onReleaseClaim,
-  onReleaseAllClaims,
 }: TeacherModeProps) {
   const defaultCaseIds = useMemo(() => new Set(getDefaultCases().map((caseStudy) => caseStudy.id)), []);
   const [customCases, setCustomCasesState] = useState(() => getCustomCases());
@@ -335,21 +333,13 @@ export function TeacherMode({
     }
   }
 
-  function handleClearBoard() {
-    const confirmed = window.confirm("Clear all verdicts from this browser's class board? This cannot be undone.");
-
-    if (confirmed) {
-      onClearBoard();
-    }
-  }
-
-  function handleReleaseAllClaims() {
+  function handleEndSession() {
     const confirmed = window.confirm(
-      `Release all ${claimedCases.length} claimed case${claimedCases.length === 1 ? "" : "s"}? Every group will need to pick again.`,
+      "Are you sure you want to completely end this session? This will release all claimed cases and DELETE all student verdicts from the class board. This cannot be undone."
     );
 
     if (confirmed) {
-      onReleaseAllClaims();
+      onEndSession();
     }
   }
 
@@ -409,38 +399,19 @@ export function TeacherMode({
 
       <section className="teacher-panel">
         <div className="section-heading-row">
-          <h2>Class board controls</h2>
+          <h2>Session Management</h2>
           <button
             className="danger-button"
             type="button"
-            disabled={submissions.length === 0}
-            onClick={handleClearBoard}
+            disabled={submissions.length === 0 && claimedCases.length === 0}
+            onClick={handleEndSession}
           >
-            Clear board ({submissions.length})
+            End & Clear Session
           </button>
         </div>
         <p className="hint">
-          Clearing removes every submitted verdict from this browser's local class board. Students cannot do this
-          from the Class Board view.
-        </p>
-      </section>
-
-      <section className="teacher-panel">
-        <div className="section-heading-row">
-          <h2>Case claims</h2>
-          <button
-            className="danger-button"
-            type="button"
-            disabled={claimedCases.length === 0}
-            onClick={handleReleaseAllClaims}
-          >
-            Release all ({claimedCases.length})
-          </button>
-        </div>
-        <p className="hint">
-          Release a case if a group picked the wrong one, or release everything to start a fresh session — cases
-          become available to claim again immediately. This only applies when live case-claiming (Supabase) is
-          configured.
+          Ending the session releases all claimed cases and completely clears the class board for everyone. 
+          Use this to wipe the slate clean for your next class.
         </p>
         {claimedCases.length === 0 ? (
           <p className="empty-text">No cases are currently claimed.</p>

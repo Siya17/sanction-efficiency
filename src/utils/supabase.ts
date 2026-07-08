@@ -89,3 +89,15 @@ export async function getSubmissions() {
   const submissions = (data || []).map(row => row.data as StudentSubmission);
   return { data: submissions, error };
 }
+
+// Deletes every submitted verdict, e.g. to completely wipe the board.
+export async function deleteAllSubmissions() {
+  if (!supabase) return { error: new Error("Supabase not configured") };
+
+  const { error } = await supabase
+    .from('submissions')
+    .delete()
+    .not('id', 'is', null); // id is required, matches all
+
+  return { error };
+}

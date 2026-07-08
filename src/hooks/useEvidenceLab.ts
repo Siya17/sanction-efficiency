@@ -10,7 +10,7 @@ import type {
 import { clearSubmissions, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
 import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
-import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, releaseAllClaims as supabaseReleaseAllClaims, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions } from "../utils/supabase";
+import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, releaseAllClaims as supabaseReleaseAllClaims, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions, deleteAllSubmissions as supabaseDeleteAllSubmissions } from "../utils/supabase";
 
 // Minimum number of self-researched findings before a group can give a verdict.
 export const MIN_FINDINGS = 2;
@@ -175,15 +175,6 @@ export function useEvidenceLab() {
     if (data) applyClaimed(data);
   }
 
-  // Frees every claimed case at once, e.g. to reset between class sessions.
-  async function releaseAllClaims() {
-    if (!supabase) return;
-
-    await supabaseReleaseAllClaims();
-    const { data } = await getClaimedCases();
-    applyClaimed(data ?? []);
-  }
-
   function refreshStudentEvidence() {
     if (selectedCase) {
       setStudentEvidence(getStudentEvidence(selectedCase.id));
@@ -206,10 +197,20 @@ export function useEvidenceLab() {
     setView("board");
   }
 
-  function clearBoard() {
+  async function endSession() {
     clearSubmissions();
     setSubmissions([]);
-    // Optionally: clear Supabase (left out for safety, usually teacher only)
+    
+    if (supabase) {
+      await supabaseReleaseAllClaims();
+      await supabaseDeleteAllSubmissions();
+      
+      const { data: claimData } = await getClaimedCases();
+      applyClaimed(claimData ?? []);
+      
+      const { data: subData } = await supabaseGetSubmissions();
+      applySubmissions(subData ?? []);
+    }
   }
 
   return {
@@ -228,12 +229,11 @@ export function useEvidenceLab() {
     actions: {
       handleLogin,
       refreshStudentEvidence,
-      clearBoard,
+      endSession,
       refreshCases,
       selectCase,
       releaseCurrentCase,
       releaseClaimedCase,
-      releaseAllClaims,
       setView,
       showBoard,
       startCaseSelection,

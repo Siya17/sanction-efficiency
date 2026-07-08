@@ -74,9 +74,8 @@ export default function App() {
           claimedCases={lab.claimedCases}
           onCasesChanged={actions.refreshCases}
           onChooseCase={actions.startCaseSelection}
-          onClearBoard={actions.clearBoard}
+          onEndSession={actions.endSession}
           onReleaseClaim={actions.releaseClaimedCase}
-          onReleaseAllClaims={actions.releaseAllClaims}
         />
       );
     }
