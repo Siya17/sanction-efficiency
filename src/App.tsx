@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CaseSelection } from "./components/CaseSelection";
 import { ClassBoard } from "./components/ClassBoard";
 import { ComparativeMode } from "./components/ComparativeMode";
@@ -11,6 +11,7 @@ import { TeacherAuth } from "./components/TeacherAuth";
 import { VerdictBuilder } from "./components/VerdictBuilder";
 import { useEvidenceLab } from "./hooks/useEvidenceLab";
 import { addStudentEvidence, deleteStudentEvidence } from "./utils/studentEvidenceStorage";
+import { getTeacherSession, onTeacherAuthStateChange, signOutTeacher, supabase } from "./utils/supabase";
 import type { AppView } from "./types";
 
 import { Login } from "./components/Login";
@@ -18,8 +19,26 @@ import { Login } from "./components/Login";
 export default function App() {
   const lab = useEvidenceLab();
   const { actions } = lab;
-  
+
   const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState(false);
+
+  // When Supabase is configured, teacher access is a real logged-in session
+  // (not just in-memory state), so it survives a page refresh and reacts to
+  // signing out in another tab.
+  useEffect(() => {
+    if (!supabase) return;
+
+    getTeacherSession().then((session) => setIsTeacherAuthenticated(Boolean(session)));
+
+    const { data } = onTeacherAuthStateChange((session) => setIsTeacherAuthenticated(Boolean(session)));
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  async function handleTeacherSignOut() {
+    await signOutTeacher();
+    setIsTeacherAuthenticated(false);
+    actions.setView("home");
+  }
 
   function renderView() {
     if (lab.view === "login") {
@@ -84,6 +103,8 @@ export default function App() {
           onChooseCase={actions.startCaseSelection}
           onEndSession={actions.endSession}
           onReleaseClaim={actions.releaseClaimedCase}
+          onRemoveSubmission={actions.removeSubmission}
+          onSignOut={supabase ? handleTeacherSignOut : undefined}
         />
       );
     }

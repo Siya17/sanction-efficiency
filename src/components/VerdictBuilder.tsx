@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { confidenceOptions, verdictOptions } from "../constants/workflow";
-import type { CaseStudy, Confidence, EvidenceSortCategory, StudentEvidenceCard, SubmissionDraft, Verdict } from "../types";
+import type { CaseStudy, Confidence, EvidenceSortCategory, StudentEvidenceCard, StudentSubmission, SubmissionDraft, Verdict } from "../types";
 import { confidenceLabels, verdictLabels } from "../utils/labels";
 
 type VerdictBuilderProps = {

@@ -1324,19 +1324,27 @@ textarea {
 }
 
 .claim-row {
-  align-items: center;
   background: #f3efe7;
   border: 1px solid #dfd5c4;
   border-radius: 8px;
-  display: flex;
-  gap: 0.75rem;
-  justify-content: space-between;
   padding: 0.6rem 0.85rem;
+}
+
+.claim-row > div {
+  width: 100%;
 }
 
 .claim-group {
   color: #65706d;
   font-weight: 500;
+}
+
+.group-activity-row {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-top: 0.4rem;
 }
 
 .case-manager-panel {

@@ -28,6 +28,8 @@ type TeacherModeProps = {
   onChooseCase: () => void;
   onEndSession: () => void;
   onReleaseClaim: (caseId: string, groupName: string) => void;
+  onRemoveSubmission: (submissionId: string) => void;
+  onSignOut?: () => void;
 };
 
 type DraftStatus = "idle" | "editing" | "new";
@@ -128,6 +130,28 @@ function downloadJson(filename: string, json: string) {
   URL.revokeObjectURL(url);
 }
 
+type GroupActivity = {
+  groupName: string;
+  claims: ClaimedCase[];
+  submissions: StudentSubmission[];
+};
+
+function buildGroupActivity(claimedCases: ClaimedCase[], submissions: StudentSubmission[]): GroupActivity[] {
+  const groupNames = new Set<string>();
+  claimedCases.forEach((claim) => groupNames.add(claim.group_name));
+  submissions.forEach((submission) => {
+    if (submission.groupName) groupNames.add(submission.groupName);
+  });
+
+  return Array.from(groupNames)
+    .sort((a, b) => a.localeCompare(b))
+    .map((groupName) => ({
+      groupName,
+      claims: claimedCases.filter((claim) => claim.group_name === groupName),
+      submissions: submissions.filter((submission) => submission.groupName === groupName),
+    }));
+}
+
 export function TeacherMode({
   cases,
   submissions,
@@ -136,6 +160,8 @@ export function TeacherMode({
   onChooseCase,
   onEndSession,
   onReleaseClaim,
+  onRemoveSubmission,
+  onSignOut,
 }: TeacherModeProps) {
   const defaultCaseIds = useMemo(() => new Set(getDefaultCases().map((caseStudy) => caseStudy.id)), []);
   const [customCases, setCustomCasesState] = useState(() => getCustomCases());
@@ -359,6 +385,17 @@ export function TeacherMode({
   }
 
   const warnings = draft ? getCaseWarnings(draft) : [];
+  const groupActivity = useMemo(() => buildGroupActivity(claimedCases, submissions), [claimedCases, submissions]);
+
+  function handleRemoveSubmission(submission: StudentSubmission) {
+    const confirmed = window.confirm(
+      `Remove ${submission.groupName ?? "this group"}'s verdict for ${submission.country}? This cannot be undone.`
+    );
+
+    if (confirmed) {
+      onRemoveSubmission(submission.id);
+    }
+  }
 
   return (
     <main className="page teacher-page">
@@ -391,6 +428,11 @@ export function TeacherMode({
           <button className="danger-button" type="button" disabled={customCases.length === 0} onClick={restoreDefaults}>
             Restore defaults
           </button>
+          {onSignOut ? (
+            <button className="secondary-button" type="button" onClick={onSignOut}>
+              Sign out
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -410,32 +452,49 @@ export function TeacherMode({
           </button>
         </div>
         <p className="hint">
-          Ending the session releases all claimed cases and completely clears the class board for everyone. 
-          Use this to wipe the slate clean for your next class.
+          Ending the session releases all claimed cases and completely clears every group's verdicts from the
+          class board — for every group, not just one. Use it to wipe the slate clean between class periods, or
+          release/remove one group below instead if you only need to fix a single group.
         </p>
-        {claimedCases.length === 0 ? (
-          <p className="empty-text">No cases are currently claimed.</p>
+        {groupActivity.length === 0 ? (
+          <p className="empty-text">No groups have claimed a case or submitted a verdict yet.</p>
         ) : (
           <ul className="claim-list">
-            {claimedCases.map((claim) => {
-              const caseStudy = cases.find((item) => item.id === claim.case_id);
-
-              return (
-                <li className="claim-row" key={claim.case_id}>
-                  <span>
-                    <strong>{caseStudy?.country ?? claim.case_id}</strong>
-                    <span className="claim-group"> — claimed by {claim.group_name}</span>
-                  </span>
-                  <button
-                    className="secondary-button"
-                    type="button"
-                    onClick={() => onReleaseClaim(claim.case_id, claim.group_name)}
-                  >
-                    Release
-                  </button>
-                </li>
-              );
-            })}
+            {groupActivity.map((group) => (
+              <li className="claim-row" key={group.groupName}>
+                <div>
+                  <strong>{group.groupName}</strong>
+                  {group.claims.length === 0 && group.submissions.length === 0 ? (
+                    <span className="claim-group"> — no active case or verdict</span>
+                  ) : null}
+                  {group.claims.map((claim) => {
+                    const caseStudy = cases.find((item) => item.id === claim.case_id);
+                    return (
+                      <div className="group-activity-row" key={claim.case_id}>
+                        <span className="claim-group">Working on {caseStudy?.country ?? claim.case_id}</span>
+                        <button
+                          className="secondary-button"
+                          type="button"
+                          onClick={() => onReleaseClaim(claim.case_id, claim.group_name)}
+                        >
+                          Release
+                        </button>
+                      </div>
+                    );
+                  })}
+                  {group.submissions.map((submission) => (
+                    <div className="group-activity-row" key={submission.id}>
+                      <span className="claim-group">
+                        Submitted {submission.country} — {submission.verdict.replace("_", " ")}
+                      </span>
+                      <button className="danger-button" type="button" onClick={() => handleRemoveSubmission(submission)}>
+                        Remove verdict
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </li>
+            ))}
           </ul>
         )}
       </section>

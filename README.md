@@ -106,26 +106,28 @@ Comparative mode summarizes class submissions across verdicts, confidence, track
 
 ## Teacher Mode
 
-Teacher Mode is the app's teacher-facing area. Its actions (editing cases, clearing the board) are kept out of the everyday student views.
+Teacher Mode is the app's teacher-facing area. Its actions (editing cases, releasing groups, clearing the board) are kept out of the everyday student views and require signing in.
 
 **How to open it:** the "Teacher Mode" tab is hidden from the navigation bar by default. To reveal it, add `?teacher=true` to the end of the app's URL and load the page, for example:
 
 - Local dev: `http://localhost:5173/?teacher=true`
 - Deployed site: `https://your-site.vercel.app/?teacher=true`
 
-Once the page has loaded with that in the address bar, the tab stays visible while you click around the app (Home, Cases, Class Board, etc.) — you only need to add it once per browser session. Loading the app fresh without `?teacher=true` hides the tab again.
+Once the page has loaded with that in the address bar, the tab stays visible while you click around the app (Home, Cases, Class Board, etc.) — you only need to add it once per browser session. Loading the app fresh without `?teacher=true` hides the tab again. The parameter only reveals the *nav tab*; opening it still requires signing in below.
 
-This is a hidden URL, not real access control — anyone who sees the address bar (for example on a projected screen) or guesses the parameter gets full teacher access, including editing cases and clearing the board. Don't project or screen-share while `?teacher=true` is in the address bar.
+**Signing in:**
 
-**Class board controls:**
+- **If Supabase is configured** (see below), the tab opens a real sign-in form. Each teacher signs in with their own email and password (a Supabase Auth account). Accounts aren't self-serve — see "Teacher accounts" in `supabase-schema.sql` for how to create one from the Supabase dashboard. Being signed in also unlocks the destructive actions (removing a verdict, ending a session) at the database level, so a student poking at the browser console can't do those even if they find the anon key.
+- **If Supabase is not configured**, there are no accounts to sign in with, so the tab falls back to a shared 4-digit PIN (`VITE_TEACHER_PIN`, default `9876`). This is a soft deterrent only — it lives in the shipped code and is not real security — appropriate for solo local use, not for anything projected or shared.
 
-- clear every submitted verdict from this browser's local class board (destructive; asks for confirmation first)
+**Groups panel** — one row per group that has claimed a case or submitted a verdict this session:
+
+- release a single group's claimed case — use this if a group picked the wrong case, or you want to free it up for someone else, without needing that group's device
+- remove a single group's submitted verdict from the board — use this to fix a mistaken or duplicate submission without touching anyone else's work
+- **End & Clear Session** releases every claim and deletes every verdict at once — use this between class periods so the next session starts clean. This affects the whole shared board, not just one class period's data if you reuse the same Supabase project across periods, so prefer the per-group controls above when you only need to fix one group.
 - see auto-generated discussion prompts once groups have submitted — e.g. the most common verdict, which cases had high confidence, and how success tests changed the picture
 
-**Case claims** (only does something when Supabase live case-claiming is configured):
-
-- release a single claimed case — use this if a group picked the wrong case, or you just want to free it up for someone else, without needing that group's device
-- release every claimed case at once with **Release all** — use this between class periods so the next session starts with every case available again
+Students can also edit their own submitted verdict from the Class Board ("Edit" next to their row) without any teacher action.
 
 **Case editor** — edit classroom materials without changing code:
 
@@ -161,7 +163,8 @@ Copy `.env.example` to `.env` for local development (or set the same names in yo
 
 - `VITE_APP_TITLE`, `VITE_APP_SUBTITLE` — optional branding text.
 - `VITE_BOARD_STORAGE_KEY` — the local storage key for the per-browser fallback board.
-- `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — optional. Set **both** to turn on the shared, real-time class board and live case-claiming; leave either blank and the app quietly falls back to the local per-browser board.
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — optional. Set **both** to turn on the shared, real-time class board, live case-claiming, and real per-teacher sign-in; leave either blank and the app quietly falls back to the local per-browser board and PIN-based teacher access.
+- `VITE_TEACHER_PIN` — optional, only used as a fallback when Supabase is **not** configured. Defaults to `9876`. Not real security (see Teacher Mode above) — set it to something non-default at minimum, but don't rely on it once you have real users.
 
 `.env` is gitignored — never commit real Supabase keys to the repository (the anon key is safe to expose in a deployed app, but keep it out of source control regardless).
 

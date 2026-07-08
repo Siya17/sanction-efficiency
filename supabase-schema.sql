@@ -47,19 +47,28 @@ create table if not exists public.submissions (
 
 -- ---------------------------------------------------------------------------
 -- Row Level Security
--- This is a public classroom app with no user accounts, so the anon key must be
--- able to read, insert, and delete freely. We keep RLS ENABLED and add a fully
--- permissive policy for the anon (and authenticated) roles. This is more robust
--- than disabling RLS: Supabase enables RLS by default on tables made in the UI
--- and warns about disabled RLS, so an explicit policy avoids the
--- "new row violates row-level security policy" error in every setup path.
+-- Students have no accounts (they just type a group name), so the anon key
+-- must be able to read/insert/update freely for the claim-a-case and
+-- submit-a-verdict flows to work. Teachers sign in with real Supabase Auth
+-- accounts (see "Teacher accounts" below), and get the `authenticated` role.
 --
--- Trade-off: anyone with the public anon key can read/edit the board. That is
--- fine for a classroom — do not store sensitive data here.
+-- claimed_cases: stays fully open to anon. A group must be able to delete its
+-- OWN claim when it finishes a case, and since there is no per-student
+-- identity, RLS can't tell "my claim" from "someone else's claim" — locking
+-- deletes to `authenticated` would also block that normal student flow.
+-- Worst case if abused: a claim gets released early, which just frees the
+-- case up again — mildly annoying, not destructive.
+--
+-- submissions: reading/creating/updating stays open to anon (a group must be
+-- able to save and edit its own verdict), but DELETE is restricted to
+-- `authenticated` (teachers only). Deleting a verdict is destructive and
+-- unrecoverable, and unlike claims, the app never needs to delete a
+-- submission as a student — editing a verdict now overwrites the existing
+-- row (upsert by id) instead of delete-then-recreate. So only the Teacher
+-- Mode "Remove verdict" / "End & Clear Session" actions need delete access,
+-- and those are the actions we want to require a real teacher login for.
 --
 -- Policies are recreated (drop-if-exists) so re-running this file is safe.
--- `for all` covers select/insert/update/delete; using(true)+with check(true)
--- allow every row.
 -- ---------------------------------------------------------------------------
 alter table public.claimed_cases enable row level security;
 alter table public.submissions   enable row level security;
@@ -69,8 +78,37 @@ create policy "Public full access to claims" on public.claimed_cases
   for all to anon, authenticated using (true) with check (true);
 
 drop policy if exists "Public full access to submissions" on public.submissions;
-create policy "Public full access to submissions" on public.submissions
-  for all to anon, authenticated using (true) with check (true);
+drop policy if exists "Anyone can read submissions" on public.submissions;
+drop policy if exists "Anyone can save submissions" on public.submissions;
+drop policy if exists "Anyone can update submissions" on public.submissions;
+drop policy if exists "Only teachers can delete submissions" on public.submissions;
+
+create policy "Anyone can read submissions" on public.submissions
+  for select to anon, authenticated using (true);
+
+create policy "Anyone can save submissions" on public.submissions
+  for insert to anon, authenticated with check (true);
+
+create policy "Anyone can update submissions" on public.submissions
+  for update to anon, authenticated using (true) with check (true);
+
+create policy "Only teachers can delete submissions" on public.submissions
+  for delete to authenticated using (true);
+
+-- ---------------------------------------------------------------------------
+-- Teacher accounts
+-- Teacher Mode uses real Supabase Auth (email + password) instead of a shared
+-- PIN once this project is configured, so each teacher gets their own login.
+-- There is no self-service sign-up screen — create each teacher's account
+-- yourself:
+--   1. In the Supabase dashboard: Authentication -> Users -> Add user.
+--   2. Enter their email + a temporary password.
+--   3. Check "Auto Confirm User" (there is no email step in this flow, so an
+--      unconfirmed account can never sign in otherwise).
+--   4. Share the password with them; they can change it later from the
+--      Supabase dashboard's "reset password" flow, or you can rotate it here.
+-- No SQL is required for this — Supabase Auth manages its own users table.
+-- ---------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------
 -- Realtime

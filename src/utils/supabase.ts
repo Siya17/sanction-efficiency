@@ -1,13 +1,44 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, Session } from '@supabase/supabase-js';
 import type { StudentSubmission } from '../types';
 
 // These will be provided by Vite env variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-export const supabase = supabaseUrl && supabaseAnonKey 
+export const supabase = supabaseUrl && supabaseAnonKey
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
+
+// Teacher accounts are created by an admin in the Supabase dashboard
+// (Authentication > Users > Add user) — there is no self-service sign-up.
+export async function signInTeacher(email: string, password: string) {
+  if (!supabase) return { error: new Error("Supabase not configured") };
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  return { data, error };
+}
+
+export async function signOutTeacher() {
+  if (!supabase) return { error: null };
+
+  const { error } = await supabase.auth.signOut();
+  return { error };
+}
+
+export async function getTeacherSession(): Promise<Session | null> {
+  if (!supabase) return null;
+
+  const { data } = await supabase.auth.getSession();
+  return data.session;
+}
+
+export function onTeacherAuthStateChange(callback: (session: Session | null) => void) {
+  if (!supabase) {
+    return { data: { subscription: { unsubscribe() {} } } };
+  }
+
+  return supabase.auth.onAuthStateChange((_event, session) => callback(session));
+}
 
 export type ClaimedCase = {
   case_id: string;

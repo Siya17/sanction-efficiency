@@ -7,7 +7,7 @@ import type {
   StudentSubmission,
   SubmissionDraft,
 } from "../types";
-import { clearSubmissions, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
+import { clearSubmissions, deleteSubmission as deleteLocalSubmission, getSubmissions as getLocalSubmissions, saveSubmission as saveLocalSubmission } from "../utils/localStorage";
 import { getStudentEvidence } from "../utils/studentEvidenceStorage";
 import { createSubmission } from "../utils/submissions";
 import { supabase, ClaimedCase, claimCase as supabaseClaimCase, releaseCase as supabaseReleaseCase, releaseAllClaims as supabaseReleaseAllClaims, getClaimedCases, saveSubmission as supabaseSaveSubmission, getSubmissions as supabaseGetSubmissions, deleteAllSubmissions as supabaseDeleteAllSubmissions, deleteSubmission as supabaseDeleteSubmission } from "../utils/supabase";
@@ -185,7 +185,12 @@ export function useEvidenceLab() {
   }
 
   async function submitVerdict(draft: SubmissionDraft) {
-    const submission = createSubmission(draft);
+    // Reuse the original id/createdAt when editing so the save overwrites the
+    // existing row in place, instead of deleting it up front (which would lose
+    // the verdict for good if the group abandoned the edit before resubmitting).
+    const submission = editingDraft
+      ? { ...draft, id: editingDraft.id, createdAt: editingDraft.createdAt }
+      : createSubmission(draft);
 
     if (supabase) {
       await supabaseSaveSubmission(submission, groupName);
@@ -197,31 +202,39 @@ export function useEvidenceLab() {
       setSubmissions(getLocalSubmissions());
     }
 
+    setEditingDraft(null);
     setView("board");
   }
 
-  async function editSubmission(submissionId: string) {
+  function editSubmission(submissionId: string) {
     const sub = submissions.find(s => s.id === submissionId);
     if (!sub) return;
 
-    if (supabase) {
-      await supabaseDeleteSubmission(submissionId);
-    }
-    
-    // Also remove locally to prevent flicker
-    const nextSubmissions = submissions.filter(s => s.id !== submissionId);
-    setSubmissions(nextSubmissions);
-
-    // Pre-populate form state
+    // Pre-populate form state. The existing submission is left untouched until
+    // the group actually resubmits, so navigating away mid-edit doesn't lose it.
     setEditingDraft(sub);
     setSuccessLens(sub.successLens || "");
     setSuccessNote(sub.successNote || "");
-    
+    setStudentEvidence(getStudentEvidence(sub.caseId));
+
     // Be sure we have the case selected
     const c = caseStudies.find(c => c.id === sub.caseId);
     if (c) setSelectedCase(c);
-    
+
     setView("verdict");
+  }
+
+  // Teacher override: remove a single group's verdict from the board without
+  // touching anyone else's claims or submissions.
+  async function removeSubmission(submissionId: string) {
+    if (supabase) {
+      await supabaseDeleteSubmission(submissionId);
+      const { data } = await supabaseGetSubmissions();
+      applySubmissions(data ?? []);
+    } else {
+      deleteLocalSubmission(submissionId);
+      setSubmissions(getLocalSubmissions());
+    }
   }
 
   async function endSession() {
@@ -259,6 +272,7 @@ export function useEvidenceLab() {
       refreshStudentEvidence,
       endSession,
       editSubmission,
+      removeSubmission,
       refreshCases,
       selectCase,
       releaseCurrentCase,

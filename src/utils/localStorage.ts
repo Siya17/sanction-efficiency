@@ -44,8 +44,13 @@ export function getSubmissions(): StudentSubmission[] {
 }
 
 export function saveSubmission(submission: StudentSubmission) {
-  const submissions = getSubmissions();
+  const submissions = getSubmissions().filter((existing) => existing.id !== submission.id);
   window.localStorage.setItem(appConfig.boardStorageKey, JSON.stringify([submission, ...submissions]));
+}
+
+export function deleteSubmission(id: string) {
+  const submissions = getSubmissions().filter((existing) => existing.id !== id);
+  window.localStorage.setItem(appConfig.boardStorageKey, JSON.stringify(submissions));
 }
 
 export function clearSubmissions() {
