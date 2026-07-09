@@ -99,7 +99,13 @@ export async function saveSubmission(submission: StudentSubmission, groupName: s
 
   const { error } = await supabase
     .from('submissions')
-    .upsert([{ id: submission.id, group_name: groupName, data: submission }]);
+    .upsert([{
+      id: submission.id,
+      group_name: groupName,
+      case_id: submission.caseId,
+      verdict: submission.verdict,
+      data: submission,
+    }]);
 
   return { error };
 }

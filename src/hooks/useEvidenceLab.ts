@@ -193,7 +193,11 @@ export function useEvidenceLab() {
       : createSubmission(draft);
 
     if (supabase) {
-      await supabaseSaveSubmission(submission, groupName);
+      const { error } = await supabaseSaveSubmission(submission, groupName);
+      if (error) {
+        window.alert("Your verdict could not be saved (" + error.message + "). Please try submitting again.");
+        return;
+      }
       // It will auto-update via subscription, but let's update local immediately
       const { data } = await supabaseGetSubmissions();
       if (data) applySubmissions(data);
